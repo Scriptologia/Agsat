@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Filter;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -16,8 +17,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::where('type','product')->get();
-        if(!$products)  return response()->json(['status' => false, 'message' => 'Ошибка получения категорий из базы']);
+        $products = Product::with('filters')->where('type','product')->get();
+        if(!$products)  return response()->json(['status' => false, 'message' => 'Ошибка получения товаров из базы']);
 
         return response()->json(compact('products'));
     }
@@ -45,14 +46,19 @@ class ProductController extends Controller
                 'name_ru' => 'required|min:3',
                 'name_uk' => 'required|min:3',
                 'slug' => 'required|min:3|unique:products',
-                'category_id' => 'string|nullable',
-                'tags_ru' => 'string|nullable',
-                'tags_uk' => 'string|nullable',
+                'filters' => 'array|nullable',
+                'scidka' => 'numeric|nullable',
+                'price' => 'numeric|nullable',
+                'category_id' => 'integer|nullable',
+                'tags_ru' => 'array|nullable',
+                'tags_uk' => 'array|nullable',
                 'text_ru' => 'string|nullable',
                 'text_uk' => 'string|nullable',
                 'description_ru' => 'string|nullable',
                 'description_uk' => 'string|nullable',
-                'img' => 'nullable|string'//|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'visible' => 'boolean|nullable',
+                'curs_id' => 'integer|nullable',
+                'img' => 'nullable|array'//|image|mimes:jpeg,png,jpg,gif|max:2048',
             ]
         );
         if($validator->fails()) return response()->json(['status' => false, 'message' => $validator->messages()]);
@@ -70,14 +76,17 @@ class ProductController extends Controller
         $product->visible = $request->visible;
         $product->skidka = $request->skidka;
         $product->slug = $request->slug;
-        $product->curs = $request->curs;
+        $product->curs_id = $request->curs_id;
         $product->count = $request->count;
         $product->price = $request->price;
         $product->type = $request->type;
         $product->category_id = $request->category_id;
 
-        if($product->save()) {return response()->json(['status' => true, 'message' => 'Успешно создана!']);}
-        else {return response()->json(['status' => false, 'message' => 'Категория не создана.']);}
+        $prod = $product->save();
+        $product->filters()->attach($request->fields);
+
+        if($prod) {return response()->json(['status' => true, 'message' => 'Успешно создан!']);}
+        else {return response()->json(['status' => false, 'message' => 'Товар не создан.']);}
     }
 
     /**
@@ -119,14 +128,19 @@ class ProductController extends Controller
                 'name_ru' => 'required|min:3',
                 'name_uk' => 'required|min:3',
                 'slug' => 'required|min:3|unique:products,id,' . $request->id,
-                'category_id' => 'string|nullable',
-                'tags_ru' => 'string|nullable',
-                'tags_uk' => 'string|nullable',
+                'filters' => 'string|nullable',
+                'scidka' => 'numeric|nullable',
+                'price' => 'numeric|nullable',
+                'category_id' => 'integer|nullable',
+                'tags_ru' => 'array|nullable',
+                'tags_uk' => 'array|nullable',
                 'text_ru' => 'string|nullable',
                 'text_uk' => 'string|nullable',
                 'description_ru' => 'string|nullable',
                 'description_uk' => 'string|nullable',
-                'img' => 'nullable|string'//|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'visible' => 'boolean|nullable',
+                'curs_id' => 'integer|nullable',
+                'img' => 'nullable|array'//|image|mimes:jpeg,png,jpg,gif|max:2048',
             ]
         );
         if($validator->fails()) return response()->json(['status' => false, 'message' => $validator->messages()]);
@@ -143,13 +157,16 @@ class ProductController extends Controller
         $product->visible = $request->visible;
         $product->skidka = $request->skidka;
         $product->slug = $request->slug;
-        $product->curs = $request->curs;
+        $product->curs_id = $request->curs_id;
         $product->count = $request->count;
         $product->price = $request->price;
         $product->type = $request->type;
         $product->category_id = $request->category_id;
 
-        if($product->save()) {return response()->json(['status' => true, 'message' => 'Успешно обновлен!']);}
+        $prod = $product->save();
+        $product->filters()->sync($request->fields);
+
+        if($prod) {return response()->json(['status' => true, 'message' => 'Успешно обновлен!']);}
         else {return response()->json(['status' => false, 'message' => 'Товар не обнавлен.']);}
     }
 
@@ -161,6 +178,7 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        $product->filters()->detach();
         if($product->delete())  return response()->json(['status' => true, 'message' => 'Успешно удален!']);
         return response()->json(['status' => true, 'message' => 'Удалить не удалось!']);
     }

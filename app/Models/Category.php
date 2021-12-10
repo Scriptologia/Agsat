@@ -13,7 +13,7 @@ class Category extends Model
          'filters' => 'array',
          'tags_ru' => 'array',
          'tags_uk' => 'array',
-         'skidka' => 'integer',
+         'skidka' => 'float',
      ];
      protected $guarded = [];
 

@@ -23,7 +23,7 @@ class CreateCategoriesTable extends Migration
             $table->string('name_uk')->nullable();
             $table->string('description_uk')->nullable();
             $table->json('tags_uk')->nullable();
-            $table->integer('skidka')->default(0);
+            $table->float('skidka', 11,2)->default(0);
             $table->json('filters')->nullable();
             $table->string('img')->nullable();
             $table->boolean('visible')->default(1);

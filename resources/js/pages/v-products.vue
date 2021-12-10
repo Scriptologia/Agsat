@@ -3,7 +3,7 @@
         <div>
             <!--<v-spinner />-->
             <h1>Товары</h1>
-            <b-col lg="12" class="my-1 d-flex justify-content-between">
+            <b-col lg="12" class="my-1 d-flex justify-content-between align-items-end">
                 <b-button  variant="success" @click="info({}, 0, $event.target)"><b-icon-plus></b-icon-plus>Добавить</b-button>
                 <b-form-group
                         label="Filter"
@@ -69,7 +69,7 @@
                     align="right"
             ></b-pagination>
             <!-- Info modal -->
-            <b-modal :id="infoModal.id" :title="infoModal.title" hide-footer @hide="resetInfoModal" size="lg">
+            <b-modal :id="infoModal.id" :title="infoModal.title" hide-footer @hide="resetInfoModal" size="lg" no-enforce-focus>
                 <v-product-edit :product="infoModal.content" :categories="infoModal.freeChildren" :filterOptions="this.$store.state.filters" :curses="this.$store.state.curses"></v-product-edit>
             </b-modal>
         </div>
@@ -109,13 +109,27 @@
                         filterByFormatted: true
                     },
                     { key: 'slug', sortable: true, label:'Slug' },
-                    { key: 'price', sortable: true, label:'Цена' },
+                    { key: 'price', sortable: true, label:'Цена',
+                        formatter: (value, key, item) => {
+                            let its = this.$store.state.curses.find(it => it.id  === item.curs_id)
+                            return its? value + ' ' + its.name : value;
+                        },
+                        sortByFormatted: true,
+                        filterByFormatted: true
+                    },
                     { key: 'skidka', sortable: true, label:'Скидка' },
                     { key: 'img', sortable: false, label:'Изображение' },
                     { key: 'visible', sortable: true, label:'Отображать',
                     formatter: (value, key, item) => {
                         return item.visible? 'видимая' : 'скрытая';
                     },
+                        sortByFormatted: true,
+                        filterByFormatted: true
+                    },
+                    { key: 'created_at', sortable: true, label:'Создан',
+                        formatter: (value, key, item) => {
+                            return this.$options.filters.date(item.created_at, 'date time');
+                        },
                         sortByFormatted: true,
                         filterByFormatted: true
                     },
@@ -152,34 +166,7 @@
                 if(item.slug)  {this.infoModal.title = `Редактирование товара: ${item.name_ru}`;}
                 else {this.infoModal.title = 'Создание товара'}
                 this.infoModal.content =  item
-
-                let newArr = [];
-                this.$store.state.categories.forEach(function (it) {
-                    it.lines = ''
-                    if(it.id !== item.id) {
-                        it.name = it.lines + it.name_ru
-                        newArr.push(it)
-                        function toChildren(children, lines) {
-                            children.forEach(function (it) {
-                                it.lines = ''
-                                it.lines = '-'+lines
-                                if(it.id !== item.id) {
-                                    it.name = it.lines + it.name_ru
-                                    newArr.push(it)
-                                    if(it.children_categories) {
-                                        if(it.id !== item.id) toChildren(it.children_categories, it.lines);
-                                    }
-                                }
-                            })
-                        }
-                        if(it.children_categories) {
-                            if(it.id !== item.id) toChildren(it.children_categories, it.lines, it);
-                        }
-                    }
-                })
-
-                this.infoModal.freeChildren = newArr
-                // this.infoModal.content = JSON.stringify(item, null, 2)
+                this.infoModal.freeChildren = this.treeCategories(this.$store.state.categories, item)
                 this.$root.$emit('bv::show::modal', this.infoModal.id, button)
             },
             resetInfoModal() {
@@ -216,45 +203,68 @@
                     .catch(err => {
                         console.log(err)
                     })
+            },
+            treeCategories(arr, item) {
+                let newArr = []
+                arr.forEach(function (it) {
+                    it.lines = ''
+                    if(it.id !== item.id) {
+                        it.name = it.lines + it.name_ru
+                        newArr.push(it)
+                        function toChildren(children, lines) {
+                            children.forEach(function (it) {
+                                it.lines = ''
+                                it.lines = '-'+lines
+                                if(it.id !== item.id) {
+                                    it.name = it.lines + it.name_ru
+                                    newArr.push(it)
+                                    if(it.children_categories) {
+                                        if(it.id !== item.id) toChildren(it.children_categories, it.lines);
+                                    }
+                                }
+                            })
+                        }
+                        if(it.children_categories) {
+                            if(it.id !== item.id) toChildren(it.children_categories, it.lines, it);
+                        }
+                    }
+                })
+                return newArr;
+            },
+            categoriesToArray (arr){
+                let newArr = []
+                arr.forEach(function (it) {
+                        newArr.push(it)
+                        function toChildren(children) {
+                            children.forEach(function (it) {
+                                    newArr.push(it)
+                                    if(it.children_categories) {
+                                        toChildren(it.children_categories);
+                                    }
+                            })
+                        }
+                        if(it.children_categories) {
+                            toChildren(it.children_categories);
+                        }
+                })
+                return newArr;
             }
         },
         mounted(){
             this.spinner = true
+            let obj = this
             this.GET_PRODUCTS().then(() => {
                 this.spinner = false
             });
-            this.GET_CATEGORIES()
+            this.GET_CATEGORIES().then((item) => {
+                obj.categories = obj.categoriesToArray(item)
+            }).catch((err) => {console.log('Ошибка получения категории!', err)})
             this.GET_CURSES()
         },
         computed: {
             rows() {
                 return this.$store.state.products.length
-            },
-            treeCategories(){
-                let newArr = [];
-                this.$store.state.categories.forEach(function (item) {
-                    newArr.push(item)
-                    function toChildren(children, lines) {
-                        children.forEach(function (item) {
-                            item.lines = '-'+lines
-                            newArr.push(item)
-                            if(item.children_categories) {
-                                toChildren(item.children_categories, item.lines)
-                            }
-                        })
-                    }
-                    if(item.children_categories) {
-                        item.lines = ''
-                        toChildren(item.children_categories, item.lines, item)
-                    }
-                })
-                this.categories = newArr;
-                return newArr;
-                // this.$store.state.categories.filter(it =>  item.id !== it.parent)
-            },
-            // freeChildren(){
-            //
-            // }
+            }
         }
     }
 </script>

@@ -123,6 +123,7 @@
                                             label-align-sm="right"
                                     >
                                         <b-form-input input-id="skidka" v-model.number="skidka" type="number" max="100"
+                                                      step=".01"
                                                       min="0"></b-form-input>
                                     </b-form-group>
                                     <b-form-group

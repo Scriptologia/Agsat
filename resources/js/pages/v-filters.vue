@@ -3,7 +3,7 @@
         <div>
             <!--<v-spinner />-->
             <h1>Фильтры</h1>
-            <b-col lg="12" class="my-1 d-flex justify-content-between">
+            <b-col lg="12" class="my-1 d-flex justify-content-between align-items-end">
                 <b-button  variant="success" @click="info({}, 0, $event.target)"><b-icon-plus></b-icon-plus>Добавить</b-button>
                 <b-form-group
                         label="Filter"
@@ -108,6 +108,13 @@
                     { key: 'visible', sortable: true, label:'Отображать',
                     formatter: (value, key, item) => {
                         return item.visible? 'видимая' : 'скрытая';
+                    },
+                        sortByFormatted: true,
+                        filterByFormatted: true
+                    },
+                    { key: 'created_at', sortable: true, label:'Создан',
+                    formatter: (value, key, item) => {
+                        return this.$options.filters.date(item.created_at, 'date time');
                     },
                         sortByFormatted: true,
                         filterByFormatted: true

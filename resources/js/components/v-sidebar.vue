@@ -29,4 +29,6 @@
 </script>
 
 <style>
+    .nav-item > .active {background: aliceblue;}
+    .nav-item > a:hover {background: antiquewhite;}
 </style>

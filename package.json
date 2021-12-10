@@ -28,7 +28,10 @@
         "vue-template-compiler": "^2.6.12"
     },
     "dependencies": {
+        "@ckeditor/ckeditor5-build-classic": "^31.1.0",
+        "@ckeditor/ckeditor5-vue2": "^1.0.5",
         "cyrillic-slug": "^1.0.1",
+        "v-mask": "^2.3.0",
         "vee-validate": "^3.4.14",
         "vue-multiselect": "^2.1.6",
         "vue-router": "^3.5.3",

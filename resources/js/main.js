@@ -1,5 +1,10 @@
 import Vue from 'vue'
 import { BootstrapVue, IconsPlugin, BootstrapVueIcons } from 'bootstrap-vue'
+import CKEditor from '@ckeditor/ckeditor5-vue2';
+Vue.use( CKEditor );
+// import VueMask from 'v-mask'
+// Vue.use(VueMask);
+
 import Multiselect from 'vue-multiselect'
 import {
     ValidationObserver,
@@ -9,7 +14,7 @@ import {
 } from "vee-validate";
 import ru from "vee-validate/dist/locale/ru.json";
 import * as rules from "vee-validate/dist/rules";
-// import Router from 'vue-router'
+
 import App from './App'
 
 import router from './router/router'
@@ -17,6 +22,8 @@ import store from './vuex/store'
 import vSpinner from './components/v-spinner'
 import bVSpinner from './components/b-v-spinner'
 import { url_slug } from 'cyrillic-slug'
+import dateFilters from './filters/date.fiters'
+import floatNumber from './filters/float-number'
 
 // Импортировать файлы CSS Bootstrap и Bootstrap Vue (порядок важен)
 import 'bootstrap/dist/css/bootstrap.css'
@@ -35,7 +42,8 @@ Vue.use( BootstrapVueIcons )
 // При желании установите плагин компонентов иконок BootstrapVue
 Vue.use(IconsPlugin)
 Vue.use(url_slug)
-// Vue.use(Router)
+Vue.filter('date', dateFilters)
+Vue.filter('floatNumber', floatNumber)
 Vue.component('multiselect', Multiselect)
 Vue.component("ValidationObserver", ValidationObserver);
 Vue.component("ValidationProvider", ValidationProvider);

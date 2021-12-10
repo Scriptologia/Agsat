@@ -23,16 +23,16 @@ class CreateProductsTable extends Migration
             $table->string('description_uk')->nullable();
             $table->json('tags_ru')->nullable();
             $table->json('tags_uk')->nullable();
-            $table->string('text_ru')->nullable();
-            $table->string('text_uk')->nullable();
+            $table->text('text_ru')->nullable();
+            $table->text('text_uk')->nullable();
 
             $table->integer('count')->default(0);
-            $table->integer('price')->default(0);
-            $table->foreignId('curs')->nullable() ->constrained('curs')->onDelete('set null');
-            $table->integer('skidka')->default(0);
+            $table->float('skidka',11,2)->default(0.00);
+            $table->float('price',11,2)->default(0.00);
+            $table->foreignId('curs_id')->nullable() ->constrained('curs')->onDelete('set null');
             $table->json('img')->nullable();
             $table->boolean('visible')->default(1);
-            $table->enum('type', ['product', 'page']);
+            $table->enum('type', ['product', 'page'])->default('product');
             $table->timestamps();
         });
     }

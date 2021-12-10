@@ -10,12 +10,11 @@ class Product extends Model
     use HasFactory;
     protected $casts = [
         'visible' => 'boolean',
-        'filters' => 'array',
         'tags_ru' => 'array',
         'tags_uk' => 'array',
-        'skidka' => 'integer',
-        'price' => 'integer',
         'count' => 'integer',
+        'price' => 'float',
+        'scidka' => 'float',
         'img' => 'array',
     ];
     protected $guarded = [];
@@ -32,20 +31,28 @@ class Product extends Model
     {
         $this->attributes['category_id'] = $value ? $value  : null;
     }
-    public function setCursAttribute($value)
+    public function setCursIdAttribute($value)
     {
-        $this->attributes['curs'] = $value ? $value  : null;
+        $this->attributes['curs_id'] = $value ? $value  : null;
     }
     public function setTagsRuAttribute($value)
     {
-        $this->attributes['tags_ru'] = $value != '[]' ?$value : null;
+        $this->attributes['tags_ru'] = $value != [] ? json_encode($value) : null;
     }
     public function setTagsUkAttribute($value)
     {
-        $this->attributes['tags_uk'] = $value != '[]'? $value : null;
+        $this->attributes['tags_uk'] = $value != []?  json_encode($value) : null;
     }
     public function setImgAttribute($value)
     {
-        $this->attributes['img'] = $value != '[]'? $value : null;
+        $this->attributes['img'] = $value != []? json_encode($value) : null;
+    }
+    public function setTypeAttribute($value)
+    {
+        $this->attributes['type'] = 'product';
+    }
+    public function filters()
+    {
+        return $this->belongsToMany(Filter::class);
     }
 }

@@ -4,7 +4,7 @@
             <!--<v-spinner />-->
             <h1>Валюты</h1>
             <b-alert :show="isBase" variant="danger">Среди валют обязательно должна быть <strong>одна бызовая</strong> и только <strong>одна</strong>.</b-alert>
-            <b-col lg="12" class="my-1 d-flex justify-content-between">
+            <b-col lg="12" class="my-1 d-flex justify-content-between align-items-end">
                 <b-button  variant="success" @click="info({}, 0, $event.target)"><b-icon-plus></b-icon-plus>Добавить</b-button>
                 <b-form-group
                         label="Filter"

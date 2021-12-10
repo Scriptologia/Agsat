@@ -56,7 +56,7 @@ let store = new Vuex.Store({
         GET_PRODUCTS({commit}) {
             return axios.get('/api/product' )
                 .then((products) => {
-                    commit('SET_PRODUCTS_TO_STATE', categories.data.products);
+                    commit('SET_PRODUCTS_TO_STATE', products.data.products);
                     return products.data.products;
                 })
                 .catch((error) => {

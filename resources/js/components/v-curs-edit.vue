@@ -85,6 +85,7 @@
                                         </b-form-group>
                                     </validation-provider>
                                     <b-form-group
+                                            id="tooltip-1"
                                             label=""
                                             label-cols-sm="3"
                                             label-align-sm="right"
@@ -94,6 +95,9 @@
                                                          unchecked-value="0">Базовая
                                         </b-form-checkbox>
                                     </b-form-group>
+                        <b-tooltip target="tooltip-1" triggers="hover">
+                           В Базовой будут отображаться все цены сайта. <br>Ее курс равен 1, а курсы других валют устанавливаются относительно нее
+                        </b-tooltip>
                         <div class="d-flex justify-content-end">
                             <!--<b-button class="ml-2" @click="resetForm()">Reset</b-button>-->
                             <b-button class="ml-2" type="submit" variant="success">Сохранить</b-button>
