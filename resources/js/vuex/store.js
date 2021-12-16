@@ -10,12 +10,28 @@ let store = new Vuex.Store({
         curses: [],
         products: [],
         filters: [],
+        mediaFolders: [],
+        mediaFiles: [],
+        mediaFilesSelected: [],
+        activeFolder: '',
         // spinner: true
     },
     mutations : {
+        SET_MEDIA_SELECTED_FILES_TO_STATE : (state, mediaFilesSelected = []) => {
+            state.mediaFilesSelected = mediaFilesSelected;
+        },
+        SET_MEDIA_ACTIVE_FOLDER_TO_STATE : (state, activeFolder) => {
+            state.activeFolder = activeFolder;
+        },
+        SET_MEDIA_FOLDERS_TO_STATE : (state, mediaFolders) => {
+            state.mediaFolders = mediaFolders;
+        },
+        SET_MEDIA_FILES_TO_STATE : (state, mediaFiles) => {
+            // files = state.mediaFiles.map(item => item.img !== mediaFiles.img);
+            state.mediaFiles = mediaFiles;
+        },
         SET_CURSES_TO_STATE : (state, curses) => {
             state.curses = curses;
-            // state.spinner = false
         },
         SET_CATEGORIES_TO_STATE : (state, categories) => {
             state.categories = categories;
@@ -40,6 +56,46 @@ let store = new Vuex.Store({
                 .catch((error) => {
                     console.log(error);
                     return error;
+                })
+        },
+        GET_MEDIA_FOLDERS({commit, state}, folder) {
+            let url = folder? '/api/media?directory=' + folder : '/api/media'
+            return axios.get(url)
+                .then((res) => {
+                    let data;
+                    let find = true;
+                    function makeMap (arr){
+                        return arr.children.map(function (item) {
+                                if (item.fullUrl === folder) { item.children = res.data.message.folders ;find = false; return item;}
+                                if(item.children){
+                                    makeMap(item)
+                                }
+                            return item;
+                        })
+                    }
+                    if(state.mediaFolders.length){
+                       data =  state.mediaFolders.map(function (item) {
+                          if(find){
+                              if (item.fullUrl === folder) {
+                                  item.children = res.data.message.folders ;find = false; return item;
+                              }
+                              if (item.children) {
+                                  makeMap(item)
+                              }
+                          }
+                            return  item;
+                        })
+                    }
+                    else {
+                        data = res.data.message.folders;
+                    }
+
+                    commit('SET_MEDIA_ACTIVE_FOLDER_TO_STATE', folder);
+                    commit('SET_MEDIA_FOLDERS_TO_STATE', data);
+                    commit('SET_MEDIA_FILES_TO_STATE', res.data.message.files);
+                })
+                .catch((error) => {
+                    console.log('Ошибка получения папок или файлов',error);
                 })
         },
         GET_CURSES({commit}) {
@@ -80,7 +136,8 @@ let store = new Vuex.Store({
         CURSES(state) { return state.curses ; },
         CATEGORIES(state) { return state.categories ; },
         PRODUCTS(state) { return state.products ; },
-        FILTERS(state) { return state.filters ; }
+        FILTERS(state) { return state.filters ; },
+        MEDIA_FOLDERS(state) { return state.mediaFolders ; }
     }
 });
 

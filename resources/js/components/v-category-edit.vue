@@ -296,9 +296,6 @@
             }
         },
         watch: {
-            // filtersObj: function () {
-            //     this.filters = this.filtersObj.map(item => item.id)
-            // },
             skidka: function () {
                 this.skidka = this.skidka > 100 ? 100 : this.skidka;
             }

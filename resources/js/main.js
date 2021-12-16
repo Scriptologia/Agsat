@@ -49,6 +49,24 @@ Vue.component("ValidationObserver", ValidationObserver);
 Vue.component("ValidationProvider", ValidationProvider);
 Vue.component("v-spinner", vSpinner);
 Vue.component("b-v-spinner", bVSpinner);
+
+const DEFAULT_TITLE = 'Магазин | админка';
+router.afterEach((to, from) => {
+    Vue.nextTick(() => {
+        document.title = to.meta.title || DEFAULT_TITLE;
+    });
+});
+
+Vue.directive('click-outside', {
+    bind(el, binding) {
+        el.addEventListener('click', e => e.stopPropagation());
+        document.body.addEventListener('click', binding.value);
+    },
+    unbind(el, binding) {
+        document.body.removeEventListener('click', binding.value);
+    }
+});
+
 const main = new Vue({
     render: h => h(App),
     store, router

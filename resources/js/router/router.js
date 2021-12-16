@@ -43,37 +43,43 @@ let router = new Router({
                 {
                     path: '',
                     name: 'home',
-                    component: vHome
+                    component: vHome,
+                    meta: { title: 'Главная | админка' }
                 },
                 {
                     path: 'filters',
                     name: 'filters',
                     component: vFilters,
-                    props: true
+                    props: true,
+                    meta: { title: 'Фильтры | админка' }
                 },
                 {
                     path: 'curs',
                     name: 'curs',
                     component: vCurs,
-                    props: true
+                    props: true,
+                    meta: { title: 'Валюта | админка' }
                 },
                 {
                     path: 'categories',
                     name: 'categories',
                     component: vCategories,
-                    props: true
+                    props: true,
+                    meta: { title: 'Категория | админка' }
                 },
                 {
                     path: 'products',
                     name: 'products',
                     component: vProducts,
-                    props: true
+                    props: true,
+                    meta: { title: 'Товары | админка' }
                 },
                 {
                     path: '*',
                     name: '404',
                     component: v404,
-                    props: true
+                    props: true,
+                    meta: { title: '404 | админка' }
                 }
             ]
         }
