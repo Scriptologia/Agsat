@@ -6,28 +6,59 @@
                 <b-form @submit.stop.prevent="handleSubmit(onSubmit)">
                     <div class="mb-1 py-2 px-3 bg-light">
                         <b-icon-download variant="info" font-scale="2" class="mr-3 media-manager_icon" @click="dounload()"></b-icon-download>
-                        <b-icon-folder-plus variant="info" font-scale="2" class="mr-3 media-manager_icon" @click="createFolder()"></b-icon-folder-plus>
+                        <b-icon-folder-plus variant="info" font-scale="2" class="mr-3 media-manager_icon"  @click="info({}, 0, $event.target)"></b-icon-folder-plus>
+                        <b-icon-trash variant="danger" font-scale="2" class="mr-3 media-manager_icon"
+                                      v-if="$store.state.mediaFilesSelected.length"
+                                      @click="deleteFiles()"></b-icon-trash>
                     </div>
-                    <b-card class="mb-1" bg-variant="light"></b-card>
+                    <b-card class="mb-1" bg-variant="light">
+                        <vue-dropzone ref="myVueDropzone" id="dropzone" :options="dropzoneOptions" :useCustomSlot=true
+                        @vdropzone-sending="filesToServer"
+                        @vdropzone-success="reloadFilesFolder"
+                        @vdropzone-error="errorUploadFiles"
+                        >
+                            <div class="dropzone-custom-content">
+                                <b-icon-download scale="2" class="mb-3"></b-icon-download>
+                                <h4 >Перетяните сюда файлы или нажмите здесь</h4>
+                            </div>
+                        </vue-dropzone>
+                    </b-card>
                     <b-card class="mb-1" bg-variant="light">
                         <b-row>
                             <media-manager-folders  @show-content-folder="showContentFolder"></media-manager-folders>
                             <media-manager-files :files="files"></media-manager-files>
                         </b-row>
                     </b-card>
-                    <div class="d-flex justify-content-end">
-                        <!--<b-button class="ml-2" type="submit" variant="success" @click="addFiles">Сохранить</b-button>-->
-                    </div>
                 </b-form>
             </validation-observer>
             <media-widget-folder ref="contentMenuFolder"></media-widget-folder>
+
+            <b-modal :id="infoModal.id" :title="infoModal.title" @hide="resetInfoModal" @ok="createFolder()" @close="name=''" @cancel="name=''" ok-title="Создать" ok-variant="success">
+                <template id="create-folder-root">
+                    <validation-provider
+                            name="Имя"
+                            :rules="{ required: true, min: 3 ,regex:'^[a-zA-Z0-9]+$'}"
+                            v-slot="validationContext"
+                    >
+                        <b-form-input
+                                autofocus
+                                v-model="name"
+                                placeholder="Введите имя папки"
+                                :state="getValidationState(validationContext)"
+                                aria-describedby="name-feedback"
+                        ></b-form-input>
+                        <b-form-invalid-feedback id="name-feedback">{{ validationContext.errors[0]}}
+                        </b-form-invalid-feedback>
+                    </validation-provider>
+                </template>
+            </b-modal>
         </div>
     </transition>
 </template>
 
 <script>
     import axios from 'axios'
-    import {mapActions} from 'vuex'
+    import {mapActions, mapMutations} from 'vuex'
     import mediaManagerFolders from './media-manager-folders'
     import mediaManagerFiles from './media-manager-files'
     import mediaWidgetFolder from './media-widget-folder'
@@ -37,17 +68,81 @@
         components: {mediaManagerFolders, mediaManagerFiles, mediaWidgetFolder},
         data() {
             return {
+                spinner: false,
                 folders:[],
                 files: [],
-                spinner: false,
-                slugUrl: ''//this.category.id ? '/' + this.category.slug : ''
+                dropzoneOptions: {
+                    url: '/api/media',
+                    thumbnailWidth: 100,
+                    thumbnailHeight: 100,
+                    thumbnailMethod: "crop",
+                    resizeWidth: 200,
+                    resizeHeight: 200,
+                    acceptedFiles:'image/*',
+                    addRemoveLinks: true,
+                    maxFilesize: 0.5,
+                    headers: { "My-Awesome-Header": "header value" }
+                },
+                name:'',
+                infoModal: {
+                    id: 'create-folder-root',
+                    title: '',
+                    content: ''
+                }
             }
         },
         methods: {
             ...mapActions([
                 'GET_MEDIA_FOLDERS'
             ]),
-            addFiles(files) {
+            ...mapMutations([
+                'SET_MEDIA_SELECTED_FILES_TO_STATE'
+            ]),
+            info(item, index, button) {
+                this.infoModal.title = `Новая папка в родительском каталоге`;
+                this.$root.$emit('bv::show::modal', this.infoModal.id, button)
+            },
+            resetInfoModal() {
+                this.infoModal.title = ''
+                this.infoModal.content = {}
+            },
+            errorUploadFiles(file, message, xhr){
+                this.makeToast(true, message.message, message.status);
+            },
+            deleteFiles() {
+                let self = this
+                this.$bvModal.msgBoxConfirm('Вы действительно хотите удалить?', {
+                    title: 'Внимание !',
+                    buttonSize: 'xlg',
+                    okVariant: 'danger',
+                    okTitle: 'Да',
+                    cancelTitle: 'Нет',
+                    footerClass: 'p-2',
+                    hideHeaderClose: false,
+                    centered: true,
+                    bodyBgVariant:'warning'
+                })
+                    .then(value => {
+                    if (value) {
+                        let deleteFiles = this.$store.state.mediaFilesSelected.map(item => item.realUrl)
+                        let url = '/api/media/delete-files'
+                        axios.post(url,  {images : deleteFiles})
+                            .then((res) => {
+                                this.makeToast(true, res.data.message, res.data.status);
+                                if(res.data.status)  {
+                                    self.SET_MEDIA_SELECTED_FILES_TO_STATE();
+                                    setTimeout(() => {self.GET_MEDIA_FOLDERS(self.$store.state.activeFolder)}, 1000);
+                                }
+                            })
+                            .catch((error) => {
+                                console.log(error);
+                                return error;
+                            });
+                    }
+                })
+                    .catch(err => {
+                        console.log(err)
+                    })
             },
             showContentFolder(data){
                 this.$refs.contentMenuFolder.showContextMenu(data)
@@ -72,66 +167,39 @@
             getValidationState({dirty, validated, valid = null}) {
                 return dirty || validated ? valid : null;
             },
-            resetForm() {
-                this.img = null;
-                this.prev = null;
-
-                this.$nextTick(() => {
-                    this.$refs.observer.reset();
-                });
+            // resetForm() {
+            //     this.img = null;
+            //     this.prev = null;
+            //
+            //     this.$nextTick(() => {
+            //         this.$refs.observer.reset();
+            //     });
+            // },
+            filesToServer(file, xhr, formData){
+                let activeFolder = this.$store.state.activeFolder
+                formData.append('directory',  typeof(activeFolder) !== "undefined" ? activeFolder: '');
             },
-            onSubmit() {
-                if (!this.name_uk) this.name_uk = this.name_ru;
-                if (!this.description_uk) this.description_uk = this.description_ru;
-                if (!this.tags_uk || this.tags_uk === null) this.tags_uk = this.tags_ru;
-                this.filters = this.filtersObj.map(item => item.id);
-                let items = Object.assign({}, this.$data)
-                items.visible = items.visible ? 1 : 0;
-                let formData = new FormData();
-                for (let k in items) {
-                    if (items[k] !== undefined && items[k] !== null && k !== 'spinner' && k !== 'prev' && k !== 'slugUrl' && k !== 'filtersObj') {
-                        if (k === 'filters' || k === 'tags_ru' || k === 'tags_uk') {
-                            items[k] = JSON.stringify(items[k]);
-                        }
-                        formData.append(k, items[k]);
-                    }
-                }
-                axios.post('http://agsat/api/category' + this.slugUrl,
-                    formData,
-                    {
-                        headers: {
-                            'Content-Type': 'multipart/form-data'
-                        }
-                    }
-                )
+            reloadFilesFolder(file, response){
+                console.log(file)
+                console.log(response)
+                this.GET_MEDIA_FOLDERS(this.$store.state.activeFolder);
+            },
+            createFolder(){
+                let url = '/api/media'
+                let data = {directory: this.name}
+                axios.post(url, data, { })
                     .then((res) => {
-                        this.makeToast(true,  this.toastMessage(res.data.message), res.data.status);
-                        if (res.data.status) {
-                            this.GET_CATEGORIES();
-                            setTimeout(() => {
-                                this.$root.$emit('bv::hide::modal', 'media-manager')
-                            }, 1000)
+                        this.makeToast(true, res.data.message, res.data.status);
+                        if(res.data.status)  {
+                            setTimeout(() => {this.GET_MEDIA_FOLDERS()}, 1000);
                         }
                     })
-                    .catch(function (error) {
-                        console.log('Ошибка загрузки или обновлениея : ', error);
+                    .catch((error) => {
+                        console.log(error);
+                        return error;
                     });
+                this.name = ''
             }
-        },
-        computed: {
-            imgSrc: function () {
-                if (this.img) {
-                    var reader = new FileReader();
-                    let vm = this;
-                    reader.readAsDataURL(vm.img);
-                    reader.onload = function (e) {
-                        vm.prev = e.target.result;
-                    }
-                    return this.prev;
-                }
-            }
-        },
-        watch: {
         },
         mounted() {
             this.GET_MEDIA_FOLDERS();

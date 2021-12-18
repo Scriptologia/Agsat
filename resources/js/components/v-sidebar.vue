@@ -12,6 +12,7 @@
                                 <b-nav-item  :to="{name: 'categories'}" @click="hide" exact-active-class="active"><b-icon-diagram3 class="mr-3"></b-icon-diagram3>Категории</b-nav-item>
                                 <b-nav-item  :to="{name: 'filters'}" @click="hide" exact-active-class="active"><b-icon-funnel class="mr-3"></b-icon-funnel>Фильтры</b-nav-item>
                                 <b-nav-item  :to="{name: 'curs'}" @click="hide" exact-active-class="active"><b-icon-cash class="mr-3"></b-icon-cash>Валюты</b-nav-item>
+                                <b-nav-item  :to="{name: 'resizes'}" @click="hide" exact-active-class="active"><b-icon-aspect-ratio class="mr-3"></b-icon-aspect-ratio>Размеры изображений</b-nav-item>
                             <!--</b-collapse>-->
                         </b-nav>
                     </nav>

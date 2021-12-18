@@ -14,6 +14,7 @@ let store = new Vuex.Store({
         mediaFiles: [],
         mediaFilesSelected: [],
         activeFolder: '',
+        resizes: []
         // spinner: true
     },
     mutations : {
@@ -32,6 +33,9 @@ let store = new Vuex.Store({
         },
         SET_CURSES_TO_STATE : (state, curses) => {
             state.curses = curses;
+        },
+        SET_RESIZES_TO_STATE : (state, resizes) => {
+            state.resizes = resizes;
         },
         SET_CATEGORIES_TO_STATE : (state, categories) => {
             state.categories = categories;
@@ -63,32 +67,35 @@ let store = new Vuex.Store({
             return axios.get(url)
                 .then((res) => {
                     let data;
-                    let find = true;
-                    function makeMap (arr){
-                        return arr.children.map(function (item) {
+                    if(folder) {
+                        let find = true;
+                        function makeMap (arr){
+                            return arr.children.map(function (item) {
                                 if (item.fullUrl === folder) { item.children = res.data.message.folders ;find = false; return item;}
                                 if(item.children){
                                     makeMap(item)
                                 }
-                            return item;
-                        })
+                                return item;
+                            })
+                        }
+                        if(state.mediaFolders.length){
+                            data =  state.mediaFolders.map(function (item) {
+                                if(find){
+                                    if (item.fullUrl === folder) {
+                                        item.children = res.data.message.folders ;find = false; return item;
+                                    }
+                                    if (item.children) {
+                                        makeMap(item)
+                                    }
+                                }
+                                return  item;
+                            })
+                        }
+                        else {
+                            data = res.data.message.folders;
+                        }
                     }
-                    if(state.mediaFolders.length){
-                       data =  state.mediaFolders.map(function (item) {
-                          if(find){
-                              if (item.fullUrl === folder) {
-                                  item.children = res.data.message.folders ;find = false; return item;
-                              }
-                              if (item.children) {
-                                  makeMap(item)
-                              }
-                          }
-                            return  item;
-                        })
-                    }
-                    else {
-                        data = res.data.message.folders;
-                    }
+                    else { data = res.data.message.folders}
 
                     commit('SET_MEDIA_ACTIVE_FOLDER_TO_STATE', folder);
                     commit('SET_MEDIA_FOLDERS_TO_STATE', data);
@@ -103,6 +110,17 @@ let store = new Vuex.Store({
                 .then((curses) => {
                     commit('SET_CURSES_TO_STATE', curses.data.curses);
                     return curses.data.curses;
+                })
+                .catch((error) => {
+                    console.log(error);
+                    return error;
+                })
+        },
+        GET_RESIZES({commit}) {
+            return axios.get('/api/resizes' )
+                .then((resizes) => {
+                    commit('SET_RESIZES_TO_STATE', resizes.data.resizes);
+                    return resizes.data.resizes;
                 })
                 .catch((error) => {
                     console.log(error);
@@ -134,6 +152,7 @@ let store = new Vuex.Store({
     },
     getters : {
         CURSES(state) { return state.curses ; },
+        RESIZES(state) { return state.resizes ; },
         CATEGORIES(state) { return state.categories ; },
         PRODUCTS(state) { return state.products ; },
         FILTERS(state) { return state.filters ; },

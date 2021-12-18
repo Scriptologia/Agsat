@@ -11,7 +11,7 @@
                 <b-icon-folder class="mr-1" v-else></b-icon-folder>
                 {{item.name}}
             </span>
-            <media-manager-folders-list :list="item.children" v-if="item.hasChildren" @show-content-menu="emitToParent"></media-manager-folders-list>
+            <media-manager-folders-list :list="item.children" v-if="item.children.length" @show-content-menu="emitToParent"></media-manager-folders-list>
         </li>
     </ul>
 </template>

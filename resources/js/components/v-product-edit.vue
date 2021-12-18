@@ -154,15 +154,22 @@
                                                 <div v-else class="product_files_items">
                                                     <div v-for="(img, index) in images"
                                                          :key="index"
-                                                         class="product_files_item"
+                                                         class="product_files_item selected"
                                                     >
                                                         <img :src="img.img" >
                                                         <b-icon-x-circle-fill
                                                                 variant="danger" class="selected"
-                                                                font-scale="2" animation="pulse"
-                                                                @click="removeSelected(index, img)"
+                                                                font-scale="2"
+                                                                @click="removeSelected(index, img)" title="Удалить"
                                                         >
                                                         </b-icon-x-circle-fill>
+                                                        <span class="selected_main" @click="makeMain(index, img)" v-b-tooltip.hover title="Сделать главной"></span>
+                                                        <b-icon-check
+                                                                v-if="img.main"
+                                                                variant="success" class="main"
+                                                                font-scale="2" title="Сделать главной"
+                                                        >
+                                                        </b-icon-check>
                                                     </div>
                                                 </div>
                                             </b-col>
@@ -245,8 +252,9 @@
                     @ok="addSelectedFiles"
                     ok-variant="success"
                     ok-title="Сохранить"
+                    @hidden="clearSelected()"
             >
-                <v-media-manager ></v-media-manager>
+                <v-media-manager></v-media-manager>
             </b-modal>
         </div>
     </transition>
@@ -304,9 +312,16 @@
             ...mapMutations([
                 'SET_MEDIA_SELECTED_FILES_TO_STATE'
             ]),
+            makeMain(index, item){
+                this.images.map(it => {
+                    it.img === item.img ? it.main = true : it.main = false;
+                    return item;
+                })
+            },
             removeSelected(index, item){
                 this.images.splice(index, 1)
             },
+            clearSelected(){this.SET_MEDIA_SELECTED_FILES_TO_STATE()},
             addSelectedFiles(){
                 let arr = this.$store.state.mediaFilesSelected.map(function (item) {
                     return {img: item.img, main: false}
@@ -449,14 +464,28 @@
          position: relative;
          box-shadow: 0 0 8px 0 #627f83;
     &.selected:before {
-         content: "";
-         position: absolute;
-         right: -1px;
-         top: -1px;
-         border: 20px solid transparent;
-         border-top: 20px solid #f8f9fa;
-         border-right: 20px solid white;
+        content: "";
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 2rem;
+        height: 2rem;
+        border-radius: 50%;
+        background: white;
+        transform: translate(50%, -50%);
      }
+    & .selected_main {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            background: white;
+            border: 1px solid green;
+            transform: translate(-50%, 50%);
+            cursor: pointer;
+        }
     & img {
           object-fit: cover;
           width: 100%;
@@ -465,6 +494,13 @@
     & .selected {
           position: absolute;
         transform: translate(-50%, -50%);
+        cursor: pointer;
+      }
+    & .main {
+        bottom:0;
+        /*right:0;*/
+        position: absolute;
+        transform: translate(-50%, 50%);
       }
     }
     }

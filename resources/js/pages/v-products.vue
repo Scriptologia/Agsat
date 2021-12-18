@@ -118,7 +118,14 @@
                         filterByFormatted: true
                     },
                     { key: 'skidka', sortable: true, label:'Скидка' },
-                    { key: 'img', sortable: false, label:'Изображение' },
+                    { key: 'img', sortable: false, label:'Изображение',
+                        formatter: (value, key, item) => {
+                            let its = value !== null && value.length? value.find(it => it.main === true) : false
+                            return its? 'есть главная' : 'нет главной';
+                        },
+                        sortByFormatted: true,
+                        filterByFormatted: true
+                        },
                     { key: 'visible', sortable: true, label:'Отображать',
                     formatter: (value, key, item) => {
                         return item.visible? 'видимая' : 'скрытая';
@@ -270,5 +277,5 @@
 </script>
 
 <style>
-
+ .prev {width: 30px;height:auto;}
 </style>

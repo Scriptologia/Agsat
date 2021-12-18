@@ -20,10 +20,6 @@
             showContentMenu(item) {
                 this.$emit('show-content-folder',item)
             }
-        },
-        watch : {
-        },
-        mounted() {
         }
     }
 </script>

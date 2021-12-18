@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['as' => 'api.', 'namespace' => 'Api'], function () {
     Route::get('media', 'MediaController@getFolder');
     Route::post('media', 'MediaController@postToFolder');
+    Route::post('media/delete-files', 'MediaController@deleteFiles');
     Route::delete('media', 'MediaController@destroy');
 
     Route::apiResource('product', ProductController::class)->missing(function (Request $request) {
@@ -23,6 +24,9 @@ Route::group(['as' => 'api.', 'namespace' => 'Api'], function () {
     })->except(['edit']);
     Route::apiResource('curs', CursController::class)->missing(function (Request $request) {
         return response()->json(['status' => false, 'message' => 'Такой валюты нет!']);
+    })->except(['edit']);
+    Route::apiResource('resizes', ResizeController::class)->missing(function (Request $request) {
+        return response()->json(['status' => false, 'message' => 'Такого размера нет!']);
     })->except(['edit']);
     Route::apiResource('filter', FilterController::class)->missing(function (Request $request) {
         return response()->json(['status' => false, 'message' => 'Такого фильтра нет!']);

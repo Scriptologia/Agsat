@@ -24,6 +24,8 @@ import bVSpinner from './components/b-v-spinner'
 import { url_slug } from 'cyrillic-slug'
 import dateFilters from './filters/date.fiters'
 import floatNumber from './filters/float-number'
+import vue2Dropzone from 'vue2-dropzone'
+import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 
 // Импортировать файлы CSS Bootstrap и Bootstrap Vue (порядок важен)
 import 'bootstrap/dist/css/bootstrap.css'
@@ -44,6 +46,8 @@ Vue.use(IconsPlugin)
 Vue.use(url_slug)
 Vue.filter('date', dateFilters)
 Vue.filter('floatNumber', floatNumber)
+
+Vue.component("vueDropzone", vue2Dropzone)
 Vue.component('multiselect', Multiselect)
 Vue.component("ValidationObserver", ValidationObserver);
 Vue.component("ValidationProvider", ValidationProvider);

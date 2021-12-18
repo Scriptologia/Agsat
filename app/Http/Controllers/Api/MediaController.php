@@ -4,138 +4,72 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
 class MediaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
     public function getFolder (Request $request){
-        $directory = $request->get('directory')? $request->get('directory') : 'public';
-        $directories = Storage::directories($directory);
+        $directory = $request->get('directory')? $request->get('directory') : '';
+        $directories = Storage::disk('public')->directories($directory);
         $arr = [];
+        $files = [];
         foreach ($directories as $folder) {
-            $subfolders = Storage::directories($folder);
+//            $subfolders = Storage::disk('public')->directories($folder);
             $pieces = explode("/", $folder);
             $name = array_pop($pieces);
             $parent = $directory;
-            $hasChildren = false;
+//            $hasChildren = false;
             $fullUrl = $folder;
-            if($subfolders) $hasChildren = true;
-            $arr[] = ['name' => $name, 'parent' =>$parent, 'hasChildren' => $hasChildren, 'fullUrl' => $fullUrl, 'children' => []];
+//            if($subfolders) $hasChildren = true;
+            $arr[] = ['name' => $name, 'parent' =>$parent,'fullUrl' => $fullUrl, 'children' => []];
         }
-        $files = collect(Storage::files($directory))->map(function($file) use ($directory) {
-            $img = ['img' => Storage::url($file), 'selected' => false, 'folder' => $directory];
+        if($directory !== '') $files = collect(Storage::disk('public')->files($directory))->map(function($file) use ($directory) {
+            $img = ['img' => Storage::url($file), 'selected' => false, 'folder' => $directory, 'realUrl' => $file];
             return $img;
         });
-        return response()->json(['status' => true, 'message' => ['folders' => $arr, 'files' => $files]]);
-    }
 
-    private function makeTreeFolders(){
-
+        return response()->json(['status' => true, 'message' => ['folders' => $arr, 'files' => $files] ], 200);
     }
 
     public function postToFolder(Request $request) {
         $directory = $request->directory;
-        $images = $request->images;
-        if($directory && !$images){
-            if(Storage::makeDirectory($directory)) return response()->json(['status' => true, 'message' => 'Новая папка создана']);
+        $file = $request->file('file');
+        if($directory && !$file){
+            if(Storage::disk('public')->makeDirectory($directory)) return response()->json(['status' => true, 'message' => 'Новая папка создана'], 200);
             return response()->json(['status' => false, 'message' => 'Новая папка не создана']);
         }
-        else if($directory && $images) {
-
+        else if($directory && $file) {
+                $path = Storage::disk('public')->putFileAs($directory, $file, date('h-i-s-d-m-Y').'.'.$file->getClientOriginalExtension());
+                if(!$path) return response()->json(['status' => false, 'message' => 'Не удалось загрузить файл']);
+            return response()->json(['status' => true, 'message' => 'Успешно загружены файл(ы)'], 200);
         }
         else {
-            return response()->json(['status' => false, 'message' => 'Не переданы файлы или не указана папка']);
+            return response()->json(['status' => false, 'message' => 'Не переданы файлы или не указана папка'], 503);
         }
-
-    }
-    public function deleteInFolder() {
-
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function deleteFiles(Request $request)
     {
-        //
+        if ($request->images) {
+                if (Storage::disk('public')->delete($request->images))
+                    return response()->json(['status' => true, 'message' => 'Успешно удален(ы) файл(ы)'], 200);
+                    return response()->json(['status' => false, 'message' => 'Файл(ы) не удалены']);
+                } else {
+                    return response()->json(['status' => false, 'message' => 'Не указаны файлы']);
+                }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Request $request)
     {
-        if($request->get('directory')) {
-            if(Storage::deleteDirectory($request->get('directory')))
-                return response()->json(['status' => true, 'message' => 'Успешна удалена папка и вложенные файлы']);
-            return response()->json(['status' => false, 'message' => 'Парка не удалена']);
+        $directory= $request->get('directory');
+        if($directory) {
+             if(!Storage::disk('public')->has($directory)) return response()->json(['status' => false, 'message' => 'Папка не существует']);
+            if(Storage::disk('public')->deleteDirectory($directory))
+                return response()->json(['status' => true, 'message' => 'Успешна удалена папка и вложенные файлы'], 200);
+            return response()->json(['status' => false, 'message' => 'Папка не удалена']);
         }
-       else if($request->get('images')) {
-            if(Storage::delete($request->get('images')))
-                return response()->json(['status' => true, 'message' => 'Успешно удален(ы) файл(ы)']);
-            return response()->json(['status' => false, 'message' => 'Файл(ы) не удалены']);
-        }
-        else { return response()->json(['status' => false, 'message' => 'Не указана папка или файлы']); }
+        else { return response()->json(['status' => false, 'message' => 'Не указана папка']); }
 
     }
 }

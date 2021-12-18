@@ -8,7 +8,7 @@
                  @click="addSelected(img)"
             >
                 <img :src="img.img" >
-                <b-icon-check variant="success" class="selected" font-scale="2" animation="pulse" v-if="img.selected"></b-icon-check>
+                <b-icon-check variant="success" class="selected" font-scale="2" v-if="img.selected"></b-icon-check>
             </div>
         </div>
     </b-col>
@@ -33,7 +33,7 @@
                     this.selected = this.selected.filter(item => item.img !== img.img)
                 }
                 else {
-                        img.selected = true
+                    img.selected = true
                     this.selected.push(img)
                     }
                 this.SET_MEDIA_SELECTED_FILES_TO_STATE(this.selected)
@@ -56,7 +56,7 @@
 
 <style lang="scss">
     .media-manager_files {
-        &_items {display: flex;}
+        &_items {display: flex; flex-wrap: wrap;}
         &_item {
             width:100px;height:100px;
             border: 1px solid #a0aec0;margin:.5rem;
@@ -75,6 +75,7 @@
                 object-fit: cover;
                 width: 100%;
                 height: 100%;
+                cursor: pointer;
             }
             & .selected {
                 position: absolute;

@@ -99,13 +99,13 @@
                 let medCoord = med.getBoundingClientRect()
                 let clickCoord = item.$event
                 if((this.contextMenuWidth + clickCoord.pageX) >= medCoord.right) {
-                    menu.style.left = medCoord.right - this.contextMenuWidth + "px";
+                    menu.style.left = medCoord.width - this.contextMenuWidth + "px";
                 } else {
                     menu.style.left = clickCoord.pageX - medCoord.left + "px";
                 }
 
                 if((this.contextMenuHeight + clickCoord.pageY) >= medCoord.bottom) {
-                    menu.style.top = medCoord.right - this.contextMenuHeight + "px";
+                    menu.style.top = medCoord.height - this.contextMenuHeight + "px";
                 } else {
                     menu.style.top = clickCoord.pageY - medCoord.top + "px";
                 }
@@ -149,7 +149,7 @@
                                 .then((res) => {
                                     this.makeToast(true, res.data.message, res.data.status);
                                     if(res.data.status)  {
-                                        setTimeout(() => {this.GET_MEDIA_FOLDERS(self.item.parent)}, 1000);
+                                        setTimeout(() => {self.GET_MEDIA_FOLDERS(self.item.parent)}, 1000);
                                     }
                                 })
                                 .catch((error) => {

@@ -6,6 +6,7 @@ import vCategories from '../pages/v-categories'
 import vProducts from '../pages/v-products'
 import vCurs from '../pages/v-curs'
 import vFilters from '../pages/v-filters'
+import vResizes from '../pages/v-resizes'
 import v404 from '../pages/v-404'
 
 Vue.use(Router);
@@ -73,6 +74,13 @@ let router = new Router({
                     component: vProducts,
                     props: true,
                     meta: { title: 'Товары | админка' }
+                },
+                {
+                    path: 'resizes',
+                    name: 'resizes',
+                    component: vResizes,
+                    props: true,
+                    meta: { title: 'Размеры | админка' }
                 },
                 {
                     path: '*',
