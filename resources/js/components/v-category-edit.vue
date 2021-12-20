@@ -96,26 +96,28 @@
                                     >
                                         <b-form-tags input-id="tags_ru" v-model="tags_ru"></b-form-tags>
                                     </b-form-group>
-                                    <validation-provider
-                                            rules="image" v-slot="{ errors, validate }" name="Изображение">
-                                        <b-form-group
-                                                label="Изображение"
-                                                label-cols-sm="3"
-                                                label-align-sm="right"
-                                        >
-                                            <b-form-file
-                                                    v-model="img"
-                                                    type="file"
-                                                    accept="image/*"
-                                                    :state="!Boolean(errors.length)"
-                                                    placeholder="Выберите файл или перетяните его сюда..."
-                                                    drop-placeholder="Перетяните сюда..."
-                                                    @change=" validate"></b-form-file>
-                                            <span>{{ errors[0] }}</span>
-                                            <b-img center :src="imgSrc" :alt="imgSrc.name" v-if="img"
-                                                   style="width:200px;" class="mt-3"></b-img>
-                                        </b-form-group>
-                                    </validation-provider>
+                                    <b-form-group
+                                            label="Выберите иконку:"
+                                            label-cols-sm="3"
+                                            label-align-sm="right"
+                                    >
+                                        <div class="curs_files">
+                                            <b-button class="mr-3" variant="info" @click="info({}, 0, $event.target)">
+                                                <b-icon-plus></b-icon-plus>
+                                                Добавить
+                                            </b-button>
+                                            <p v-if="!img">Нет файла</p>
+                                            <div v-else class="curs_files_item selected">
+                                                <img :src="img">
+                                                <b-icon-x-circle-fill
+                                                        variant="danger" class="selected"
+                                                        font-scale="2"
+                                                        @click="removeImg()" title="Удалить"
+                                                >
+                                                </b-icon-x-circle-fill>
+                                            </div>
+                                        </div>
+                                    </b-form-group>
                                     <b-form-group
                                             label="Скидка"
                                             label-for="skidka"
@@ -124,7 +126,8 @@
                                     >
                                         <b-form-input input-id="skidka" v-model.number="skidka" type="number" max="100"
                                                       step=".01"
-                                                      min="0"></b-form-input>
+                                                      min="0">
+                                        </b-form-input>
                                     </b-form-group>
                                     <b-form-group
                                             label=""
@@ -168,23 +171,38 @@
                             </b-tab>
                         </b-tabs>
                         <div class="d-flex justify-content-end">
-                            <b-button class="ml-2" @click="resetForm()">Reset</b-button>
                             <b-button class="ml-2" type="submit" variant="success">Сохранить</b-button>
                         </div>
                     </b-card>
                 </b-form>
             </validation-observer>
+            <b-modal
+                    :id="infoModal.id"
+                    :title="infoModal.title"
+                    ok-only
+                    @hide="resetInfoModal"
+                    size="lg"
+                    no-enforce-focus
+                    @ok="addSelectedFiles"
+                    ok-variant="success"
+                    ok-title="Сохранить"
+                    @hidden="clearSelected()"
+            >
+                <v-media-manager></v-media-manager>
+            </b-modal>
         </div>
     </transition>
 </template>
 
 <script>
     import axios from 'axios'
-    import {mapActions} from 'vuex'
     import { url_slug } from 'cyrillic-slug'
+    import vMediaManager from '../components/media-manager/v-media-manager'
+    import {mapActions, mapMutations} from 'vuex'
 
     export default {
         name: "v-category-edit",
+        components: {vMediaManager},
         props: {
             category: Object, filterOptions: Array, categories: Array
         },
@@ -195,7 +213,7 @@
                 skidka: Object.keys(this.category).length ? this.category.skidka : 0,
                 filters: [],
                 filtersObj: [],
-                img: this.category.img,
+                img: this.category.img || null,
                 prev: '',
                 category_id: this.category.category_id,
                 name_ru: this.category.name_ru,
@@ -205,13 +223,33 @@
                 description_uk: this.category.description_uk,
                 tags_uk: this.category.tags_uk,
                 visible: Object.keys(this.category).length ? this.category.visible : true,
-                slugUrl: this.category.id ? '/' + this.category.slug : ''
+                slugUrl: this.category.id ? '/' + this.category.slug : '',
+                infoModal: {
+                    id: 'media-manager-modal',
+                    title: '',
+                    content: ''
+                }
             }
         },
         methods: {
             ...mapActions([
                 'GET_CATEGORIES'
             ]),
+            ...mapMutations([
+                'SET_MEDIA_SELECTED_FILES_TO_STATE'
+            ]),
+            addSelectedFiles() {
+                let selected = this.$store.state.mediaFilesSelected;
+                this.img = selected.length ? selected[0].img : this.category.img;
+                this.SET_MEDIA_SELECTED_FILES_TO_STATE()
+            },
+            removeImg() {
+                this.img = null
+                this.SET_MEDIA_SELECTED_FILES_TO_STATE()
+            },
+            clearSelected() {
+                this.SET_MEDIA_SELECTED_FILES_TO_STATE()
+            },
             toastMessage(message){
                 let str = '';
                 if(typeof message === 'object'){
@@ -231,14 +269,6 @@
             },
             getValidationState({dirty, validated, valid = null}) {
                 return dirty || validated ? valid : null;
-            },
-            resetForm() {
-                this.img = null;
-                this.prev = null;
-
-                this.$nextTick(() => {
-                    this.$refs.observer.reset();
-                });
             },
             onSubmit() {
                 if (!this.name_uk) this.name_uk = this.name_ru;
@@ -276,20 +306,17 @@
                     .catch(function (error) {
                         console.log('Ошибка загрузки или обновлениея категории : ', error);
                     });
-            }
+            },
+            info(item, index, button) {
+                this.infoModal.title = 'Медиа менеджер';
+                this.$root.$emit('bv::show::modal', this.infoModal.id, button)
+            },
+            resetInfoModal() {
+                this.infoModal.title = ''
+                this.infoModal.content = {}
+            },
         },
         computed: {
-            imgSrc: function () {
-                if (this.img) {
-                    var reader = new FileReader();
-                    let vm = this;
-                    reader.readAsDataURL(vm.img);
-                    reader.onload = function (e) {
-                        vm.prev = e.target.result;
-                    }
-                    return this.prev;
-                }
-            },
             slugMake: function() {
                 this.slug = this.slug || url_slug(this.name_ru)
                 return this.slug ;
@@ -305,7 +332,6 @@
         }
     }
 </script>
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
 <style>
     .custom-file-input:lang(ru) ~ .custom-file-label::after {

@@ -7,6 +7,8 @@ import vProducts from '../pages/v-products'
 import vCurs from '../pages/v-curs'
 import vFilters from '../pages/v-filters'
 import vResizes from '../pages/v-resizes'
+import vSliders from '../pages/v-sliders'
+import vCompany from '../pages/v-company'
 import v404 from '../pages/v-404'
 
 Vue.use(Router);
@@ -60,6 +62,20 @@ let router = new Router({
                     component: vCurs,
                     props: true,
                     meta: { title: 'Валюта | админка' }
+                },
+                {
+                    path: 'company',
+                    name: 'company',
+                    component: vCompany,
+                    props: true,
+                    meta: { title: 'О компании | админка' }
+                },
+                {
+                    path: 'sliders',
+                    name: 'sliders',
+                    component: vSliders,
+                    props: true,
+                    meta: { title: 'Слайдер | админка' }
                 },
                 {
                     path: 'categories',

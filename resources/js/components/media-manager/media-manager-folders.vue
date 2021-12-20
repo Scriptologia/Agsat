@@ -1,8 +1,8 @@
 <template>
-    <b-col  bg-variant="light" sm="3" class="media-manager_folders">
+    <div  bg-variant="light" class="media-manager_folders">
          <media-manager-folders-list :list="$store.state.mediaFolders" v-if="$store.state.mediaFolders.length" @show-content-menu="showContentMenu"></media-manager-folders-list>
         <p v-else>Нет папок</p>
-    </b-col>
+    </div>
 </template>
 
 <script>

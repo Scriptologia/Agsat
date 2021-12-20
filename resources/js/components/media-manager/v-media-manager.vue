@@ -4,12 +4,24 @@
             <v-spinner v-if="spinner"></v-spinner>
             <validation-observer ref="observer" v-slot="{ handleSubmit }">
                 <b-form @submit.stop.prevent="handleSubmit(onSubmit)">
-                    <div class="mb-1 py-2 px-3 bg-light">
-                        <b-icon-download variant="info" font-scale="2" class="mr-3 media-manager_icon" @click="dounload()"></b-icon-download>
-                        <b-icon-folder-plus variant="info" font-scale="2" class="mr-3 media-manager_icon"  @click="info({}, 0, $event.target)"></b-icon-folder-plus>
-                        <b-icon-trash variant="danger" font-scale="2" class="mr-3 media-manager_icon"
-                                      v-if="$store.state.mediaFilesSelected.length"
-                                      @click="deleteFiles()"></b-icon-trash>
+                    <div class="row mb-1 py-2 px-3 bg-light d-flex">
+                            <!--<b-icon-download variant="info" font-scale="2" class="mr-3 media-manager_icon" @click="dounload()"></b-icon-download>-->
+                            <b-icon-folder-plus variant="info" font-scale="2" class="mr-3 media-manager_icon"  @click="info({}, 0, $event.target)"></b-icon-folder-plus>
+                            <b-icon-trash variant="danger" font-scale="2" class="mr-3 media-manager_icon"
+                                          v-if="$store.state.mediaFilesSelected.length"
+                                          @click="deleteFiles()"></b-icon-trash>
+                            <b-form-select class="col-lg-5 col-md-8" @change="resizeDropzone" >
+                                <template #first>
+                                    <b-form-select-option disabled value="null">Выберите размер изображения</b-form-select-option>
+                                </template>
+                                    <b-form-select-option value="null">Размеры по умолчанию</b-form-select-option>
+                                    <b-form-select-option
+                                            v-for="(item, index) in $store.state.resizes"
+                                            :key="index"
+                                            :value="item"
+                                    >{{item.name}}|{{item.width}}x{{item.height}}|{{item.resizeMimeType}}
+                                    </b-form-select-option>
+                            </b-form-select>
                     </div>
                     <b-card class="mb-1" bg-variant="light">
                         <vue-dropzone ref="myVueDropzone" id="dropzone" :options="dropzoneOptions" :useCustomSlot=true
@@ -33,7 +45,10 @@
             </validation-observer>
             <media-widget-folder ref="contentMenuFolder"></media-widget-folder>
 
-            <b-modal :id="infoModal.id" :title="infoModal.title" @hide="resetInfoModal" @ok="createFolder()" @close="name=''" @cancel="name=''" ok-title="Создать" ok-variant="success">
+            <b-modal :id="infoModal.id" :title="infoModal.title"
+                     @hide="resetInfoModal" @ok="createFolder()"
+                     @close="name=''" @cancel="name=''"
+                     ok-title="Создать" ok-variant="success">
                 <template id="create-folder-root">
                     <validation-provider
                             name="Имя"
@@ -76,8 +91,6 @@
                     thumbnailWidth: 100,
                     thumbnailHeight: 100,
                     thumbnailMethod: "crop",
-                    resizeWidth: 200,
-                    resizeHeight: 200,
                     acceptedFiles:'image/*',
                     addRemoveLinks: true,
                     maxFilesize: 0.5,
@@ -93,11 +106,23 @@
         },
         methods: {
             ...mapActions([
-                'GET_MEDIA_FOLDERS'
+                'GET_MEDIA_FOLDERS', 'GET_RESIZES'
             ]),
             ...mapMutations([
                 'SET_MEDIA_SELECTED_FILES_TO_STATE'
             ]),
+            resizeDropzone(resize){
+                if(resize === null) {
+                    this.$refs.myVueDropzone.dropzone.options.resizeWidth = null
+                    this.$refs.myVueDropzone.dropzone.options.resizeHeight = null
+                    this.$refs.myVueDropzone.dropzone.options.resizeMimeType = null
+                }
+                else {
+                    this.$refs.myVueDropzone.dropzone.options.resizeWidth = resize.width
+                    this.$refs.myVueDropzone.dropzone.options.resizeHeight = resize.height
+                    this.$refs.myVueDropzone.dropzone.options.resizeMimeType = resize.resizeMimeType
+                }
+            },
             info(item, index, button) {
                 this.infoModal.title = `Новая папка в родительском каталоге`;
                 this.$root.$emit('bv::show::modal', this.infoModal.id, button)
@@ -203,6 +228,7 @@
         },
         mounted() {
             this.GET_MEDIA_FOLDERS();
+            this.GET_RESIZES();
         }
     }
 </script>

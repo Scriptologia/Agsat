@@ -109,7 +109,6 @@
                     },
                     { key: 'slug', sortable: true, label:'Slug' },
                     { key: 'skidka', sortable: true, label:'Скидка' },
-                    { key: 'img', sortable: false, label:'Изображение' },
                     { key: 'visible', sortable: true, label:'Отображать',
                     formatter: (value, key, item) => {
                         return item.visible? 'видимая' : 'скрытая';
@@ -177,7 +176,6 @@
                 })
 
                 this.infoModal.freeChildren = newArr
-                // this.infoModal.content = JSON.stringify(item, null, 2)
                 this.$root.$emit('bv::show::modal', this.infoModal.id, button)
             },
             resetInfoModal() {
@@ -249,9 +247,6 @@
                 return newArr;
                 // this.$store.state.categories.filter(it =>  item.id !== it.parent)
             },
-            // freeChildren(){
-            //
-            // }
         }
     }
 </script>

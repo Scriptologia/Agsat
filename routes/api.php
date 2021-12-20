@@ -22,6 +22,12 @@ Route::group(['as' => 'api.', 'namespace' => 'Api'], function () {
     Route::apiResource('product', ProductController::class)->missing(function (Request $request) {
         return response()->json(['status' => false, 'message' => 'Такого товара нет!']);
     })->except(['edit']);
+    Route::apiResource('company', CompanyController::class)->missing(function (Request $request) {
+        return response()->json(['status' => false, 'message' => 'Описание компании нет']);
+    })->except(['edit']);
+    Route::apiResource('sliders', SliderController::class)->missing(function (Request $request) {
+        return response()->json(['status' => false, 'message' => 'Такой слайда нет!']);
+    })->except(['edit']);
     Route::apiResource('curs', CursController::class)->missing(function (Request $request) {
         return response()->json(['status' => false, 'message' => 'Такой валюты нет!']);
     })->except(['edit']);

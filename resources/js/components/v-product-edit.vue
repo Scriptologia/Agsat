@@ -264,7 +264,7 @@
     import axios from 'axios'
     import {mapActions, mapMutations} from 'vuex'
     import { url_slug } from 'cyrillic-slug'
-    import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+    import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
     import vMediaManager from '../components/media-manager/v-media-manager'
 
     export default {
@@ -298,7 +298,7 @@
                 count: this.product.count || 0,
                 visible: Object.keys(this.product).length ? this.product.visible : true,
                 infoModal: {
-                id: 'media-manager-modal',
+                     id: 'media-manager-modal',
                     title: '',
                     content: ''
             },
@@ -389,11 +389,6 @@
                     url: 'http://agsat/api/product' + this.slugUrl,
                     data,
                     method: this.slugUrl ? 'put' : 'post',
-                    // {
-                    //     headers: {
-                    //         'Content-Type': 'multipart/form-data'
-                    //     }
-                    // }
                 })
                     .then((res) => {
                         this.makeToast(true, this.toastMessage(res.data.message), res.data.status);
@@ -453,14 +448,14 @@
         }
     }
 </script>
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
 <style lang="scss">
     .product_files {
-    &_items {display: flex;}
+    &_items {display: flex;flex-wrap: wrap;}
     &_item {
          width:100px;height:100px;
-         border: 1px solid #a0aec0;margin:.5rem;
+         border: 1px solid #a0aec0;
+        margin:.5rem .5rem 1.5rem .5rem ;
          position: relative;
          box-shadow: 0 0 8px 0 #627f83;
     &.selected:before {

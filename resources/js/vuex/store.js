@@ -8,14 +8,15 @@ let store = new Vuex.Store({
     state: {
         categories: [],
         curses: [],
+        sliders: [],
         products: [],
         filters: [],
         mediaFolders: [],
         mediaFiles: [],
         mediaFilesSelected: [],
         activeFolder: '',
+        company: {},
         resizes: []
-        // spinner: true
     },
     mutations : {
         SET_MEDIA_SELECTED_FILES_TO_STATE : (state, mediaFilesSelected = []) => {
@@ -28,8 +29,10 @@ let store = new Vuex.Store({
             state.mediaFolders = mediaFolders;
         },
         SET_MEDIA_FILES_TO_STATE : (state, mediaFiles) => {
-            // files = state.mediaFiles.map(item => item.img !== mediaFiles.img);
             state.mediaFiles = mediaFiles;
+        },
+        SET_SLIDERS_TO_STATE : (state, sliders) => {
+            state.sliders = sliders;
         },
         SET_CURSES_TO_STATE : (state, curses) => {
             state.curses = curses;
@@ -39,15 +42,15 @@ let store = new Vuex.Store({
         },
         SET_CATEGORIES_TO_STATE : (state, categories) => {
             state.categories = categories;
-            // state.spinner = false
         },
         SET_PRODUCTS_TO_STATE : (state, products) => {
             state.products = products;
-            // state.spinner = false
         },
         SET_FILTER_TO_STATE : (state, filters) => {
             state.filters = filters;
-            // state.spinner = false
+        },
+        SET_COMPANY_TO_STATE : (state, company) => {
+            state.company = company;
         }
     },
     actions : {
@@ -116,6 +119,28 @@ let store = new Vuex.Store({
                     return error;
                 })
         },
+        GET_SLIDERS({commit}) {
+            return axios.get('/api/sliders' )
+                .then((sliders) => {
+                    commit('SET_SLIDERS_TO_STATE', sliders.data.sliders);
+                    return sliders.data.sliders;
+                })
+                .catch((error) => {
+                    console.log(error);
+                    return error;
+                })
+        },
+        GET_COMPANY({commit}) {
+            return axios.get('/api/company' )
+                .then((company) => {
+                    commit('SET_COMPANY_TO_STATE', company.data.company);
+                    return company.data.company;
+                })
+                .catch((error) => {
+                    console.log(error);
+                    return error;
+                })
+        },
         GET_RESIZES({commit}) {
             return axios.get('/api/resizes' )
                 .then((resizes) => {
@@ -156,7 +181,8 @@ let store = new Vuex.Store({
         CATEGORIES(state) { return state.categories ; },
         PRODUCTS(state) { return state.products ; },
         FILTERS(state) { return state.filters ; },
-        MEDIA_FOLDERS(state) { return state.mediaFolders ; }
+        MEDIA_FOLDERS(state) { return state.mediaFolders ; },
+        COMPANY(state) { return state.company ; }
     }
 });
 
