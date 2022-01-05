@@ -21,24 +21,11 @@ class FilterController extends Controller
 
         return response()->json(compact('filters'));
     }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
+        if (!auth()->user()->role->permissions->where('slug','filter:create' )->first()) {
+            return response()->json(['status' => false, 'message' => 'У вас нет прав создавать']);
+        }
         $validator = Validator::make($request->all(),
             [
                 'name_ru' => 'required|min:3',
@@ -81,29 +68,6 @@ class FilterController extends Controller
         }
         else {return response()->json(['status' => false, 'message' => 'Фильтр не создана.']);}
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Filter $filter)
-    {
-        return response()->json(['status' => true, 'message' => compact('filter')]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Filter $filter)
-    {
-        return response()->json(['status' => true, 'message' => compact('filter')]);
-    }
-
     /**
      * Update the specified resource in storage.
      *
@@ -113,6 +77,9 @@ class FilterController extends Controller
      */
     public function update(Request $request, Filter $filter)
     {
+        if (!auth()->user()->role->permissions->where('slug','filter:update' )->first()) {
+            return response()->json(['status' => false, 'message' => 'У вас нет прав редактировать']);
+        }
 //        $filter = Filter::where('slug' , $filter)->first();
 //        if(!$filter) return response()->json(['status' => false, 'message' => 'Такого фильтра нет!']);
 
@@ -176,6 +143,9 @@ class FilterController extends Controller
      */
     public function destroy(Filter $filter)
     {
+        if (!auth()->user()->role->permissions->where('slug','filter:delete' )->first()) {
+            return response()->json(['status' => false, 'message' => 'У вас нет прав удалять']);
+        }
         if($filter->delete())  return response()->json(['status' => true, 'message' => 'Успешно удален!']);
         return response()->json(['status' => true, 'message' => 'Удалить не удалось!']);
     }

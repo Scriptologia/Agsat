@@ -33,6 +33,9 @@ class MediaController extends Controller
     }
 
     public function postToFolder(Request $request) {
+        if (!auth()->user()->role->permissions->where('slug','media:create' )->first()) {
+            return response()->json(['status' => false, 'message' => 'У вас нет прав создавать']);
+        }
         $directory = $request->directory;
         $file = $request->file('file');
         if($directory && !$file){
@@ -51,6 +54,9 @@ class MediaController extends Controller
 
     public function deleteFiles(Request $request)
     {
+        if (!auth()->user()->role->permissions->where('slug','media:delete' )->first()) {
+            return response()->json(['status' => false, 'message' => 'У вас нет прав удалять']);
+        }
         if ($request->images) {
                 if (Storage::disk('public')->delete($request->images))
                     return response()->json(['status' => true, 'message' => 'Успешно удален(ы) файл(ы)'], 200);
@@ -62,9 +68,13 @@ class MediaController extends Controller
 
     public function destroy(Request $request)
     {
+        if (!auth()->user()->role->permissions->where('slug','media:delete' )->first()) {
+            return response()->json(['status' => false, 'message' => 'У вас нет прав удалять']);
+        }
         $directory= $request->get('directory');
         if($directory) {
              if(!Storage::disk('public')->has($directory)) return response()->json(['status' => false, 'message' => 'Папка не существует']);
+             if($directory === 'socials') return response()->json(['status' => false, 'message' => 'Папку запрещено удалять']);
             if(Storage::disk('public')->deleteDirectory($directory))
                 return response()->json(['status' => true, 'message' => 'Успешна удалена папка и вложенные файлы'], 200);
             return response()->json(['status' => false, 'message' => 'Папка не удалена']);

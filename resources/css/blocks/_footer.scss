@@ -1,0 +1,61 @@
+footer {
+  background: $bg-menu-1;
+  flex: 0 0 auto;
+  .footer {
+    color:$green-deep;
+    a{
+      color: $green-deep;
+      &:hover {color:$red;text-decoration: none;}
+    }
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 20px 15px;
+    &_company {
+      .logo {
+        height:60px;
+        margin-bottom: 10px;
+        img {
+          width: auto;
+          height: 100%;
+        }
+      }
+      .phone {
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+        margin: 10px 0;
+        &:hover {color:$red}
+      }
+      .socials {
+          display: flex;
+          align-items: center;
+            a {
+              width: 35px;
+              height: 35px;
+              display: flex;
+              align-items: center;
+              margin-right: 10px;
+              border-radius: 50%;
+              justify-content: center;
+              &:hover {
+                background: $bg-yellow;
+              }
+             img {
+               width: 80%;
+               height: 80%;
+              }
+            }
+      }
+    }
+    &_pages {
+      ul {
+        li {
+          font-size: 17px;
+          font-weight: 500;
+          margin:10px 0;
+        }
+      }
+    }
+  }
+}

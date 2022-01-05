@@ -1,0 +1,23 @@
+@mixin icon-i($name) {
+  background-image: url('../images/icons/#{$name}');
+}
+@mixin icon-li($name) {
+  @include before-prefix (mask, url('../images/icons/#{$name}')) ;
+  @include before-prefix (  mask-size, contain) ;
+  @include before-prefix (  mask-repeat, no-repeat) ;
+}
+
+[class*="icon-i"] {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+[class*="icon-li"] {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.icon-li-heart { @include icon-li('heart.svg'); }

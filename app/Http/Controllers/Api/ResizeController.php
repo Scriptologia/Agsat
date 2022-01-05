@@ -29,6 +29,9 @@ class ResizeController extends Controller
      */
     public function store(Request $request)
     {
+        if (!auth()->user()->role->permissions->where('slug','resize:create' )->first()) {
+            return response()->json(['status' => false, 'message' => 'У вас нет прав создавать']);
+        }
         $validator = Validator::make($request->all(),
             [
                 'name' => 'required|min:3',
@@ -44,28 +47,6 @@ class ResizeController extends Controller
         }
         else {return response()->json(['status' => false, 'message' => 'Размер не создан.']);}
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Resize $resize)
-    {
-        return response()->json(['status' => true, 'message' => compact('resize')]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Resize $resize)
-    {
-        return response()->json(['status' => true, 'message' => compact('resize')]);
-    }
     /**
      * Update the specified resource in storage.
      *
@@ -75,6 +56,9 @@ class ResizeController extends Controller
      */
     public function update(Request $request, Resize $resize)
     {
+        if (!auth()->user()->role->permissions->where('slug','resize:update' )->first()) {
+            return response()->json(['status' => false, 'message' => 'У вас нет прав редактировать']);
+        }
         $validator = Validator::make($request->all(),
             [
                 'name' => 'required|min:3',
@@ -98,6 +82,9 @@ class ResizeController extends Controller
      */
     public function destroy(Resize $resize)
     {
+        if (!auth()->user()->role->permissions->where('slug','resize:delete' )->first()) {
+            return response()->json(['status' => false, 'message' => 'У вас нет прав удалять']);
+        }
         if($resize->delete())  return response()->json(['status' => true, 'message' => 'Успешно удален!']);
         return response()->json(['status' => false, 'message' => 'Удалить не удалось!']);
     }

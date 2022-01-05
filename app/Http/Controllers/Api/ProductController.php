@@ -30,6 +30,9 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        if (!auth()->user()->role->permissions->where('slug','product:create' )->first()) {
+            return response()->json(['status' => false, 'message' => 'У вас нет прав создавать']);
+        }
         $validator = Validator::make($request->all(),
             [
                 'name_ru' => 'required|min:3',
@@ -77,29 +80,6 @@ class ProductController extends Controller
         if($prod) {return response()->json(['status' => true, 'message' => 'Успешно создан!']);}
         else {return response()->json(['status' => false, 'message' => 'Товар не создан.']);}
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Product $product)
-    {
-        return response()->json(['status' => true, 'message' => compact('product')]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Product $product)
-    {
-        return response()->json(['status' => true, 'message' => compact('product')]);
-    }
-
     /**
      * Update the specified resource in storage.
      *
@@ -109,6 +89,9 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
+        if (!auth()->user()->role->permissions->where('slug','product:update' )->first()) {
+            return response()->json(['status' => false, 'message' => 'У вас нет прав редактировать']);
+        }
 //        $cat = Category::where('slug' , $product);
 //        if(!$product) return response()->json(['status' => false, 'message' => 'Такой категории нет!']);
 
@@ -167,6 +150,9 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        if (!auth()->user()->role->permissions->where('slug','product:delete' )->first()) {
+            return response()->json(['status' => false, 'message' => 'У вас нет прав удалять']);
+        }
         $product->filters()->detach();
         if($product->delete())  return response()->json(['status' => true, 'message' => 'Успешно удален!']);
         return response()->json(['status' => true, 'message' => 'Удалить не удалось!']);

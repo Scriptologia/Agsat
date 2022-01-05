@@ -1,0 +1,43 @@
+.slider_wraper  {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  font-size: 1em;
+  @include md { font-size: .7em;}
+  @include sd { font-size: .5em;}
+  .slider {
+    width: 100%;
+    display: flex;
+    transition: all 0.5s ease 0s;
+    &_item {
+      min-width: 100%;
+      position: relative;
+     & > img {
+       width: 100%;
+       height: 100%;
+     }
+      a {
+        position: absolute;
+        color: white;
+        top: 50%;
+        left: 50%;
+        font-size: 3em;
+        transform: translate(-50%, -50%);
+      }
+    }
+  }
+  i {
+    position: absolute;
+    top:50%;
+    color:$white;
+    transform: translate(0, -50%);
+    background: $grey-opacity;
+    padding: 13px;
+  }
+  i.left {
+    left:20px;
+  }
+  i.right {
+    right:20px;
+  }
+}

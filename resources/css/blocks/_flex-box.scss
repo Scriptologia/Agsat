@@ -1,0 +1,52 @@
+.flex-box {
+  display: flex;
+  //justify-content: space-between;
+  align-content: stretch;
+  flex-flow: row wrap;
+  align-items: stretch;
+  .flex-item {
+    flex: 1 1 33%;
+    &__zoom {
+      padding:10px;
+      @include before-prefix (border-radius, $border-radius);
+      .aspect-ratio-box {/*устанавливаем пропорции изображения этим блоком*/
+        position: relative;
+        overflow: hidden;/*ограничение размеров при наведении*/
+        &:after {
+          content: '';
+          display: block;
+          padding-bottom: 56.25%;/*высоту/ширину и переводим в проценты*/
+        }
+        img {
+          width:100%;
+          height: 100%;
+          object-fit: cover;/*заполнение блока изображением*/
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          transition: .8s ease;/*анимация при навдении*/
+          &:hover {
+            transform: scale(1.1);/*увеличиваем изображение*/
+          }
+        }
+      }
+      @include max {
+      }
+      @include exlg {
+        //1200px
+      }
+      @include lg {
+        //992px
+      }
+      @include md {
+        //768px
+        flex: 1 1 50%;
+      }
+      @include sd {
+        //576px
+      }
+    }
+  }
+}

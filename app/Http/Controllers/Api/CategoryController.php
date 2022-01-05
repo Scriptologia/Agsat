@@ -14,7 +14,7 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $categories = Category::whereNull('category_id')
             ->with('childrenCategories')
@@ -24,24 +24,18 @@ class CategoryController extends Controller
 
         return response()->json(compact('categories'));
     }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)    {
+    public function store(Request $request)
+    {
+        if (!auth()->user()->role->permissions->where('slug','category:create' )->first()) {
+            return response()->json(['status' => false, 'message' => 'У вас нет прав создавать']);
+        }
+
         $validator = Validator::make($request->all(),
             [
                 'name_ru' => 'required|min:3',
@@ -74,29 +68,6 @@ class CategoryController extends Controller
             if($cat->save()) {return response()->json(['status' => true, 'message' => 'Успешно создана!']);}
             else {return response()->json(['status' => false, 'message' => 'Категория не создана.']);}
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Category $category)
-    {
-        return response()->json(['status' => true, 'message' => compact('category')]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Category $category)
-    {
-        return response()->json(['status' => true, 'message' => compact('category')]);
-    }
-
     /**
      * Update the specified resource in storage.
      *
@@ -106,6 +77,9 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $category)
     {
+        if (!auth()->user()->role->permissions->where('slug','category:update' )->first()) {
+        return response()->json(['status' => false, 'message' => 'У вас нет прав редактировать']);
+        }
         $cat = Category::where('slug' , $category);
         if(!$cat->first()) return response()->json(['status' => false, 'message' => 'Такой категории нет!']);
 
@@ -139,7 +113,6 @@ class CategoryController extends Controller
         if($cat->save()) {return response()->json(['status' => true, 'message' => 'Успешно обновлена!']);}
         else {return response()->json(['status' => false, 'message' => 'Категория не обнавлена.']);}
     }
-
     /**
      * Remove the specified resource from storage.
      *
@@ -148,6 +121,9 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
+        if (!auth()->user()->role->permissions->where('slug','category:delete' )->first()) {
+            return response()->json(['status' => false, 'message' => 'У вас нет прав удалять']);
+        }
         if($category->delete())  return response()->json(['status' => true, 'message' => 'Успешно удалена!']);
         return response()->json(['status' => true, 'message' => 'Удалить не удалось!']);
     }

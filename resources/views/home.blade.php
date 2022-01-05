@@ -1,23 +1,19 @@
-@extends('layouts.main')
-
+@extends('layouts.app')
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Dashboard') }}</div>
-
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-
-                    {{ __('You are logged in!') }}
-                </div>
+<main>
+    @include('blocks.slider')
+    <div class="container">
+        <h1>Оборудование для цифрового телевидения</h1>
+        <div class="category">
+        @foreach($categories as $category)
+            <div class="category_item">
+                <a href="{{$category->slug}}">
+                    <img src="{{$category->img}}" alt=""><h4>{{$category->{'name_'.App::getLocale()} }}</h4>
+                </a>
+                <p>{{$category->{'description_'.App::getLocale()} }}</p>
             </div>
+         @endforeach
         </div>
     </div>
-</div>
+</main>
 @endsection

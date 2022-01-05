@@ -29,6 +29,9 @@ class CursController extends Controller
      */
     public function store(Request $request)
     {
+        if (!auth()->user()->role->permissions->where('slug','curs:create' )->first()) {
+            return response()->json(['status' => false, 'message' => 'У вас нет прав создавать']);
+        }
         $validator = Validator::make($request->all(),
             [
                 'name' => 'required|min:2',
@@ -50,29 +53,6 @@ class CursController extends Controller
         }
         else {return response()->json(['status' => false, 'message' => 'Валюта не создана.']);}
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Curs $curs)
-    {
-        return response()->json(['status' => true, 'message' => compact('curs')]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Curs $curs)
-    {
-        return response()->json(['status' => true, 'message' => compact('curs')]);
-    }
-
     /**
      * Update the specified resource in storage.
      *
@@ -82,6 +62,9 @@ class CursController extends Controller
      */
     public function update(Request $request, Curs $cur)
     {
+        if (!auth()->user()->role->permissions->where('slug','curs:update' )->first()) {
+            return response()->json(['status' => false, 'message' => 'У вас нет прав редактировать']);
+        }
         $validator = Validator::make($request->all(),
             [
                 'name' => 'required|min:2',
@@ -112,6 +95,9 @@ class CursController extends Controller
      */
     public function destroy(Curs $cur)
     {
+        if (!auth()->user()->role->permissions->where('slug','curs:delete' )->first()) {
+            return response()->json(['status' => false, 'message' => 'У вас нет прав удалять']);
+        }
         if($cur->delete())  return response()->json(['status' => true, 'message' => 'Успешно удален!']);
         return response()->json(['status' => false, 'message' => 'Удалить не удалось!']);
     }

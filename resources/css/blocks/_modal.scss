@@ -1,0 +1,39 @@
+.overlay {
+  display: flex;
+  visibility: hidden;
+  position: fixed;
+  width: 100vw;
+  min-height: 100vh;
+  top: 0;
+  left: 0;
+  background-color: #1e3b449c;
+  z-index: 1000;
+  overflow: hidden;
+  height: 500px;
+  align-items: center;
+  opacity:0;
+  transition: all 1s ease-in-out;
+
+
+  &.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  &__body {
+    margin: 0 auto;
+    background-color: bisque;
+    width: fit-content;
+    padding: 20px;
+    position: relative;
+    //z-index:200;
+    .close {
+      position: absolute;
+      right:0;
+      top:0;
+      cursor: pointer;
+    }
+  }
+}
+
+/* добавить при вызове класс .fixed*/

@@ -13,38 +13,52 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::group(['as' => 'api.', 'namespace' => 'Api'], function () {
+
+Route::group(['middleware' => 'auth:sanctum', 'as' => 'api.', 'namespace' => 'Api'], function () {
+    Route::get('get-categories', 'CategoryController@index')->withoutMiddleware(['auth:sanctum']);
+    Route::get('get-sliders', 'SliderController@index')->withoutMiddleware(['auth:sanctum']);
+
     Route::get('media', 'MediaController@getFolder');
     Route::post('media', 'MediaController@postToFolder');
     Route::post('media/delete-files', 'MediaController@deleteFiles');
     Route::delete('media', 'MediaController@destroy');
 
+//    Route::get('create-token', 'TokenController@tokenAbilities')->missing(function (Request $request) {
+//        return response()->json(['status' => false, 'message' => 'Такого токена нет!']);
+//    });
+    Route::get('user/autor', 'UserController@user');
+    Route::apiResource('user', UserController::class)->missing(function (Request $request) {
+        return response()->json(['status' => false, 'message' => 'Такого пользователя нет!']);
+    })->except(['edit', 'show', 'create']);
+    Route::apiResource('role', RoleController::class)->missing(function (Request $request) {
+        return response()->json(['status' => false, 'message' => 'Такой роли нет!']);
+    })->except(['edit', 'show', 'create']);
+    Route::apiResource('permission', PermissionController::class)->missing(function (Request $request) {
+        return response()->json(['status' => false, 'message' => 'Таких прав нет!']);
+    })->except(['edit', 'show', 'create']);
     Route::apiResource('product', ProductController::class)->missing(function (Request $request) {
         return response()->json(['status' => false, 'message' => 'Такого товара нет!']);
-    })->except(['edit']);
+    })->except(['edit', 'show', 'create']);
     Route::apiResource('company', CompanyController::class)->missing(function (Request $request) {
         return response()->json(['status' => false, 'message' => 'Описание компании нет']);
-    })->except(['edit']);
+    })->except(['edit', 'show', 'create']);
     Route::apiResource('sliders', SliderController::class)->missing(function (Request $request) {
         return response()->json(['status' => false, 'message' => 'Такой слайда нет!']);
-    })->except(['edit']);
+    })->except(['edit', 'show', 'create']);
     Route::apiResource('curs', CursController::class)->missing(function (Request $request) {
         return response()->json(['status' => false, 'message' => 'Такой валюты нет!']);
-    })->except(['edit']);
+    })->except(['edit', 'show', 'create']);
     Route::apiResource('resizes', ResizeController::class)->missing(function (Request $request) {
         return response()->json(['status' => false, 'message' => 'Такого размера нет!']);
-    })->except(['edit']);
+    })->except(['edit', 'show', 'create']);
     Route::apiResource('filter', FilterController::class)->missing(function (Request $request) {
         return response()->json(['status' => false, 'message' => 'Такого фильтра нет!']);
-    })->except(['edit']);
+    })->except(['edit', 'show', 'create']);
     Route::apiResource('category', CategoryController::class)->missing(function (Request $request) {
         return response()->json(['status' => false, 'message' => 'Такой категории нет!']);
-    })->except(['update', 'edit']);
+    })->except(['update', 'edit', 'show', 'create']);
     Route::post('category/{category}', 'CategoryController@update')->missing(function (Request $request) {
         return response()->json(['status' => false, 'message' => 'Такой категории нет!']);
     })->name('category.update');
+
 });
-//
-//Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//    return $request->user();
-//});
