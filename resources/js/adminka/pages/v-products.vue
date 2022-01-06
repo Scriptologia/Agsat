@@ -55,6 +55,9 @@
                 <template #cell(edit)="row">
                     <b-icon-pencil @click="info(row.item, row.index, $event.target)" variant="primary" type="button"></b-icon-pencil>
                 </template>
+                <template #cell(double)="row">
+                    <b-icon-front variant="success" @click="doubleCategory(row.item)" type="button"></b-icon-front>
+                </template>
                 <template #cell(delete)="row">
                     <b-icon-trash variant="danger" @click="deleteCategory(row.item)" type="button"></b-icon-trash>
                 </template>
@@ -140,6 +143,7 @@
                         filterByFormatted: true
                     },
                     { key: 'edit',  label:'Ред.' },
+                    { key: 'double',  label:'Дубл.' },
                     { key: 'delete',  label:'Уд.' },
                 ],
                 filter: null,
@@ -178,6 +182,28 @@
             resetInfoModal() {
                 this.infoModal.title = ''
                 this.infoModal.content = {}
+            },
+            doubleCategory(item) {
+                delete item.id
+                 item.slug = item.slug + '-'+Date.now();
+                item.fields = item.filters.map(it => it.id)
+                delete item.filters
+                delete item.updated_at
+                console.log(item)
+                axios({
+                    url: '/api/product',
+                    data : item,
+                    method: 'post',
+                })
+                    .then((res) => {
+                        this.makeToast(true, res.data.message, res.data.status);
+                        if (res.data.status) {
+                            setTimeout(() => {this.GET_PRODUCTS()}, 1000);
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log('Ошибка дублирования товара : ', error);
+                    })
             },
             deleteCategory(item) {
                 this.$bvModal.msgBoxConfirm('Вы действительно хотите удалить?', {

@@ -7,6 +7,7 @@ use App\Models\Filter;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class ProductController extends Controller
 {
@@ -99,7 +100,7 @@ class ProductController extends Controller
             [
                 'name_ru' => 'required|min:3',
                 'name_uk' => 'required|min:3',
-                'slug' => 'required|min:3|unique:products,id,' . $request->id,
+                'slug' => ['required', Rule::unique('products')->ignore($product)],
                 'filters' => 'string|nullable',
                 'scidka' => 'numeric|nullable',
                 'price' => 'numeric|nullable',

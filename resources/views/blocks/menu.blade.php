@@ -10,40 +10,37 @@
         <div class="search">
             <div class="search_input">
                 <div class="input">
-                    <i class="fal fa-search"></i>
+                    <i class="fal fa-times"  v-if="search" @click="searchResult = {}; search = ''"></i>
+                    <i class="fal fa-search" v-else></i>
                     <label for="search"></label>
                     <input type="text" name="" id="search" autocomplete="off" v-model.trim="search" />
                 </div>
                 <button type=button>@lang('text.search')</button>
             </div>
-            <div class="search_result" v-if="searchResult.length">
-                <div class="item">
-                    <a href="">
-                        <div class="item_img">
-                            <img src="{{asset('storage/category/08-01-51-03-01-2022.jpg')}}" alt="">
+            <div class="search_result"  v-cloak v-if="search">
+                <template v-if="searchResult.products && searchResult.products.length">
+                    <div class="item" v-for="(product, index) in searchResult.products" :key="index">
+                        <div class="item_img" v-if="product.img && product.img.find(it => it.main === true)">
+                            <a :href="product.category.slug+'/'+product.slug" >
+                                <img :src="product.img.find(it => it.main === true).img">
+                            </a>
                         </div>
                         <div class="item_text">
-                            <h4>resiver</h4>
-                            <p class="price">450 грн<span class="passive">&nbsp; нет в наличии</span></p>
-                            <p class="description">описание ресивера и вамыва hf hf hrft h rth    ryhrhrhrh  ryhryhrr  rhrhrthми иап па иап итап ита ти а апит а ап и</p>
+                            <a :href="product.category.slug+'/'+product.slug">
+                                <h4>@{{product['name_'+lang]}}</h4>
+                            </a>
+                            <p class="price">@{{parseFloat((product.price * product.curs.curs).toFixed(2))}} грн.
+                                <span class="active" v-if="product.count">&nbsp; @lang('text.yes-product')</span>
+                                <span class="passive" v-else>&nbsp;  @lang('text.no-product')</span>
+                            </p>
+                            <p class="description" v-html="product['text_'+lang]"></p>
                         </div>
-                    </a>
-                </div>
-                <div class="item">
-                    <a href="">
-                        <div class="item_img">
-                            <img src="{{asset('storage/category/08-01-51-03-01-2022.jpg')}}" alt="">
-                        </div>
-                        <div class="item_text">
-                            <h4>resiver</h4>
-                            <p class="price">450 грн<span>&nbsp;есть</span></p>
-                            <p class="description">описание ресивера и вамывами иап па иап итап ита ти а апит а ап и</p>
-                        </div>
-                    </a>
-                </div>
+                    </div>
+                </template>
+                <p v-else>@lang('text.no-result')</p>
             </div>
         </div>
-        <div class="mega-menu" v-if="showMegaMenu">
+        <div class="mega-menu" v-if="showMegaMenu" v-cloak>
             <div class="mega-menu_first-level" v-if="categories.length">
                 <ul>
                     <li v-for="(category, index) in categories" :key="index" @mouseenter.self="showSubCategories(category)" @click="showSubCategories(category)"><p>@{{category['name_'+lang]}}</p><i class="fal fa-chevron-down fa-rotate-270 fa-xs"></i></li>

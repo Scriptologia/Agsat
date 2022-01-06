@@ -106,6 +106,21 @@
                                                 </b-form-input>
                                             </b-form-group>
                                             <b-form-group
+                                                    label="На складе"
+                                                    label-for="count"
+                                                    label-cols-sm="3"
+                                                    label-align-sm="right"
+                                            >
+                                                <b-form-input
+                                                        input-id="count"
+                                                        type="number"
+                                                        v-model.number="count"
+                                                        min="0"
+                                                        step="1"
+                                                       >
+                                                </b-form-input>
+                                            </b-form-group>
+                                            <b-form-group
                                                     label="Цена"
                                                     label-for="price"
                                                     label-cols-sm="3"

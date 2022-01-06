@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Filter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class FilterController extends Controller
 {
@@ -86,7 +87,7 @@ class FilterController extends Controller
         $validator = Validator::make($request->all(),
             [
                 'name_ru' => 'required|min:3',
-                'slug' => 'required|min:3|unique:filters,id,' . $request->id,
+                'slug' => ['required', 'min:3',Rule::unique('filters')->ignore($filter)],
                 'filter_id' => 'nullable',
                 'fields' => 'array'
             ]

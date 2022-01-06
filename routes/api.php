@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['middleware' => 'auth:sanctum', 'as' => 'api.', 'namespace' => 'Api'], function () {
     Route::get('get-categories', 'CategoryController@index')->withoutMiddleware(['auth:sanctum']);
     Route::get('get-sliders', 'SliderController@index')->withoutMiddleware(['auth:sanctum']);
+    Route::get('search', 'SearchController@search')->withoutMiddleware(['auth:sanctum']);
 
     Route::get('media', 'MediaController@getFolder');
     Route::post('media', 'MediaController@postToFolder');
@@ -56,9 +57,9 @@ Route::group(['middleware' => 'auth:sanctum', 'as' => 'api.', 'namespace' => 'Ap
     })->except(['edit', 'show', 'create']);
     Route::apiResource('category', CategoryController::class)->missing(function (Request $request) {
         return response()->json(['status' => false, 'message' => 'Такой категории нет!']);
-    })->except(['update', 'edit', 'show', 'create']);
-    Route::post('category/{category}', 'CategoryController@update')->missing(function (Request $request) {
-        return response()->json(['status' => false, 'message' => 'Такой категории нет!']);
-    })->name('category.update');
+    })->except(['edit', 'show', 'create']);
+//    Route::post('category/{category}', 'CategoryController@update')->missing(function (Request $request) {
+//        return response()->json(['status' => false, 'message' => 'Такой категории нет!']);
+//    })->name('category.update');
 
 });

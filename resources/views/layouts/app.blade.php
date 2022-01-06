@@ -58,7 +58,8 @@
         sliders: [],
         currentSlide: 0,
         sliderInterval:2000,
-        lang:'{{App::getLocale()}}'
+        lang:'{{App::getLocale()}}',
+        interval: ''
     }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>

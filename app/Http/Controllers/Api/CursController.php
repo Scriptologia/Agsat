@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Curs;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class CursController extends Controller
 {
@@ -68,7 +69,7 @@ class CursController extends Controller
         $validator = Validator::make($request->all(),
             [
                 'name' => 'required|min:2',
-                'slug' => 'required|min:2|unique:curs,id,' . $request->id,
+                'slug' => ['required', 'min:2',Rule::unique('curs')->ignore($cur)],
                 'curs' => 'numeric',
 //                'img' => 'required|image',
             ]

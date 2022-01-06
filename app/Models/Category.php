@@ -32,15 +32,15 @@ class Category extends Model
     }
     public function setTagsRuAttribute($value)
     {
-        $this->attributes['tags_ru'] = $value != '[]' ?$value : null;
+        $this->attributes['tags_ru'] = $value != [] ? json_encode($value) : null;
     }
     public function setTagsUkAttribute($value)
     {
-        $this->attributes['tags_uk'] = $value != '[]'? $value : null;
+        $this->attributes['tags_uk'] = $value != [] ? json_encode($value) : null;
     }
     public function setFiltersAttribute($value)
     {
-        $this->attributes['filters'] = $value ? $value : null;
+        $this->attributes['filters'] = $value != [] ? json_encode($value) : null;
     }
     public function getFiltersAttribute($value)
     {

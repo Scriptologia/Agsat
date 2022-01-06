@@ -2,6 +2,7 @@ main {
   //margin-top:15px;
   margin-bottom:15px;
   flex: 1 0 auto;
+  @include scroll (10px, 200px, brown, $green-deep, 8px, $green2, $green-deep);
   //@include md {
   //  margin-top: $header;
   //}

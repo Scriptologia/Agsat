@@ -7,7 +7,12 @@ const app = new Vue({
     data: data,
     methods: {
         axiosSearch(){
-            console.log(this.search)
+                axios('/api/search?q=' + this.search)
+                    .then(res => {
+                        this.searchResult = res.data.message
+                    })
+            clearTimeout(this.interval)
+            this.interval = ''
         },
         hideNavMenu(){
             this.$refs['nav_menu'].classList.remove('nav_show')
@@ -51,12 +56,10 @@ const app = new Vue({
     },
     watch: {
         search: function (newQuestion, oldQuestion) {
+            if(!newQuestion.length) this.searchResult = {};
             if(newQuestion.length >= 4) {
-                axios('/api/search')
-                    .then(res => {
-                        console.log(res.data)
-                        this.searchResult = res.data
-                    })
+                if(this.interval) {return null;}
+                this.interval = setTimeout(() => {this.axiosSearch()}, 1000)
             }
         }
     }

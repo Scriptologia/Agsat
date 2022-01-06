@@ -15,7 +15,7 @@
       color:$white;
       display: flex;
       align-items: center;
-      background: $green-deep;
+      &:hover {background: $green-deep;}
       @include md {
         background: unset;
         padding-left:0;
@@ -154,6 +154,14 @@
         }
       }
       &_result {
+        @include scroll (10px, 200px, brown, $green-deep, 8px, $green2, $green-deep);
+        @include sd {
+          @include scroll (unset, unset, unset, unset, unset, unset, unset);
+        }
+        max-height: 93vh;
+        overflow-y: auto;
+        z-index: 50;
+        width: 100%;
         background: $white;
         box-shadow: 0 3px 11px 1px $grey;
         padding: 1rem;
@@ -162,9 +170,17 @@
         position: absolute;
         top:100%;
         left:0;
+        //i {
+        //  position: absolute;
+        //  right:15px;
+        //  top:15px;
+        //  cursor: pointer;
+        //  &:hover { color:$red; }
+        //}
         .item {
+          display: flex;
+          @include sd {flex-direction: column;}
           a {
-            display: flex;
             text-decoration: none;
           }
           &:not(:last-child) {
@@ -173,26 +189,32 @@
           }
           &_img {
             margin-right: 10px;
-            min-width: 100px;
-            height: 100px;
+            width: 30%;
+            @include sd {width:100%;margin-right: unset;}
+            padding-top: 10px;
             img {
               object-fit: contain;
               width: 100%;
-              height: 100%;
             }
           }
           &_text {
+            width: 70%;
+            @include sd {width:100%;}
             h4 {
+              display: inline-block;
               &:first-letter {text-transform: capitalize;}
               color:$green-grey;
               font-size: 25px;
               line-height: 150%;
+              &:hover { color:$red; }
             }
             .price {
+              text-transform: lowercase;
               color: $green;
               font-weight: 700;
               line-height: 150%;
               .passive {color:$grey-light}
+              .active {color:$green}
             }
             .description {
               &:first-letter {text-transform: capitalize;}

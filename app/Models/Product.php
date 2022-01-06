@@ -55,4 +55,12 @@ class Product extends Model
     {
         return $this->belongsToMany(Filter::class);
     }
+    public function curs()
+    {
+        return $this->belongsTo(Curs::class);
+    }
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 }
