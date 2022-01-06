@@ -46,16 +46,16 @@
         <div class="mega-menu" v-if="showMegaMenu">
             <div class="mega-menu_first-level" v-if="categories.length">
                 <ul>
-                    <li v-for="(category, index) in categories" :key="index" @mouseenter.self="showSubCategories(category)" @click="showSubCategories(category)"><p>@{{category.name_ru}}</p><i class="fal fa-chevron-down fa-rotate-270 fa-xs"></i></li>
+                    <li v-for="(category, index) in categories" :key="index" @mouseenter.self="showSubCategories(category)" @click="showSubCategories(category)"><p>@{{category['name_'+lang]}}</p><i class="fal fa-chevron-down fa-rotate-270 fa-xs"></i></li>
                 </ul>
             </div>
             <div class="mega-menu_second-level">
                 <div class="item" v-for="(category, index) in children_categories" :key="index">
                     <div class="category-header">
-                        <a :href="category.slug">@{{ category.name_ru }}</a>
+                        <a :href="category.slug">@{{ category['name_'+lang] }}</a>
                     </div>
                     <div class="category-items" v-if="category.children_categories.length">
-                        <a :href="subcategory.slug" v-for="(subcategory, index) in category.children_categories.filter(item => item.visible === true)" :key="index">@{{ subcategory.name_ru }}</a>
+                        <a :href="subcategory.slug" v-for="(subcategory, index) in category.children_categories.filter(item => item.visible === true)" :key="index">@{{ subcategory['name_'+lang] }}</a>
                     </div>
                 </div>
             </div>

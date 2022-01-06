@@ -47,6 +47,20 @@
 
     @include('blocks.footer')
 </div>
+<script >
+    let data = {
+        megaMenu:false,
+        categories:[],
+        children_categories: [],
+        showMegaMenu: false,
+        search: '',
+        searchResult: [],
+        sliders: [],
+        currentSlide: 0,
+        sliderInterval:2000,
+        lang:'{{App::getLocale()}}'
+    }
+</script>
 <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
 <script src="{{asset('/js/app.js')}}"></script>
 </body>

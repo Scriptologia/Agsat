@@ -36,8 +36,10 @@
   }
   i.left {
     left:20px;
+    @include sd {left:0;}
   }
   i.right {
     right:20px;
+    @include sd {right:0;}
   }
 }

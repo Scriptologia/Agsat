@@ -2,19 +2,9 @@ window.axios = require('axios')
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
 window.axios.defaults.withCredentials = true;//необходимо для аутентификации в Sanctum-Laravel
 
-var app = new Vue({
+const app = new Vue({
     el: '#app',
-    data: {
-        megaMenu:false,
-        categories:[],
-        children_categories: [],
-        showMegaMenu: false,
-        search: '',
-        searchResult: [],
-        sliders: [],
-        currentSlide: 0,
-        sliderInterval:2000
-    },
+    data: data,
     methods: {
         axiosSearch(){
             console.log(this.search)
