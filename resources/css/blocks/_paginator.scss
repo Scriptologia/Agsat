@@ -1,0 +1,28 @@
+div {
+  .pagination {
+    padding:20px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    .page-item {
+      width: 30px;
+      height: 30px;
+      margin:0 1px;
+      border-radius:3px;
+      background: $white;
+      border:1px solid $grey-opacity;
+      color: $green-deep;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      &:hover {
+        background: $green;
+        a {color:$white ;}
+      }
+      &.active {
+        background: $green;
+        color:$white;
+      }
+    }
+  }
+}

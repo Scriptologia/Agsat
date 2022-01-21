@@ -1,7 +1,6 @@
 <template>
     <transition name="slide">
         <div>
-            <!--<v-spinner v-if="spinner"></v-spinner>-->
             <validation-observer ref="observer" v-slot="{ handleSubmit }">
                 <b-form @submit.stop.prevent="handleSubmit(onSubmit)">
                     <b-card bg-variant="light">
@@ -33,7 +32,7 @@
                                     </validation-provider>
                                     <validation-provider
                                             name="Slug"
-                                            :rules="{ required: true, min: 3 }"
+                                            :rules="{ required: true, min: 3 ,  regex: /^[a-z0-9]+[-]?[a-z0-9]+$/ }"
                                             v-slot="validationContext"
                                     >
                                     <b-form-group
@@ -59,7 +58,7 @@
                                     <div class="row" v-for="(item, index) in fields" :key="index">
                                         <validation-provider class="col-sm p-1"
                                                 name="Slug"
-                                                :rules="{ required: true, min: 3 }"
+                                                :rules="{ required: true, min: 3 ,  regex: /^[a-z0-9]+[-]?[a-z0-9]+$/}"
                                                 v-slot="validationContext"
                                         >
                                             <b-form-group
@@ -184,7 +183,6 @@
                             </b-tab>
                         </b-tabs>
                         <div class="d-flex justify-content-end">
-                            <!--<b-button class="ml-2" @click="resetForm()">Reset</b-button>-->
                             <b-button class="ml-2" type="submit" variant="success">Сохранить</b-button>
                         </div>
                     </b-card>
@@ -300,11 +298,6 @@
                     url: '/api/filter' + this.slugUrl,
                     data,
                     method: this.slugUrl ? 'put' : 'post',
-                    // {
-                    //     headers: {
-                    //         'Content-Type': 'multipart/form-data'
-                    //     }
-                    // }
                 })
                     .then((res) => {
                         this.makeToast(true,  this.toastMessage(res.data.message), res.data.status);

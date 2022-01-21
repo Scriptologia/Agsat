@@ -6,13 +6,13 @@
     </div>
    <nav>
        <div class="container nav">
-       <i class="fal fa-bars fa-lg nav_burger" @click="showNavMenu"></i>
+       <i class="fal fa-bars fa-lg nav_burger" @click="toggleNavMenu"></i>
            <div class="nav_menu" ref="nav_menu">
-               <i class="fal fa-times" @click="hideNavMenu"></i>
+               <i class="fal fa-times" @click="toggleNavMenu"></i>
                <ul class="nav_menu_items">
-                   <li><a href="">Доставка и оплата</a></li>
-                   <li><a href="">Прайс лист</a></li>
-                   <li><a href="">Контакты</a></li>
+                   @foreach($pages as $page)
+                   <li><a href="{{route('page',$page)}}">{{$page->{'name_'.App::getLocale() } }}</a></li>
+                   @endforeach
                </ul>
                <div class="language"><i class="fal fa-globe"></i>
                    &nbsp;<a href="{{ route('setlocale', ['locale' => 'ru']) }}" @if(request()->segment('1') === 'ru') class="active" @endif><span>RU</span></a>&nbsp; |
@@ -25,9 +25,16 @@
                </a>
            </div>
            <div class="right">
-               <div class="contacts"><i class="fas fa-phone fa-rotate-90" @click="showContacts"></i>
+               <div class="contacts"><i class="fas fa-phone fa-rotate-90" @click="showModal('contacts')"></i>
                </div>
-               <div class="basket"><i class="fal fa-shopping-cart"></i><span class="basket_price">320 грн.</span></div></div>
+               <div class="basket"  v-cloak>
+                   <a href="{{route('basket')}}">
+                       <i class="fal fa-shopping-cart"></i>
+                       <span class="basket_price" v-if="basket.totalPrice">@{{ basket.totalPrice }} грн.</span>
+                       <span class="basket_number" v-if="basket.totalNumber">@{{ basket.totalNumber }}</span>
+                   </a>
+               </div>
+           </div>
        </div>
    </nav>
     <div class="logo_panel">
@@ -39,7 +46,7 @@
             </div>
             <div class="right">
                 <div class="contacts">
-                    <i class="fas fa-phone fa-rotate-90" @click="showContacts"></i>&nbsp;<span>{{$company->phones[0]}}</span>
+                    <i class="fas fa-phone fa-rotate-90" @click="showModal('contacts')"  v-cloak></i>&nbsp;<span>{{$company->phones[0]}}</span>
                 </div>
                 <div class="language"><i class="fal fa-globe"></i>
                     <a href="{{ route('setlocale', ['locale' => 'ru']) }}" @if(request()->segment('1') === 'ru') class="active" @endif><span>RU</span></a>&nbsp; |
@@ -48,9 +55,9 @@
             </div>
             </div>
         </div>
-    <div class="layout_modal" ref="contacts" @click="hideContacts">
+    <div class="layout_modal" ref="contacts" @click="hideModal('contacts')">
         <div class="modal_content contacts_list">
-            <i class="fal fa-times" @click="hideContacts"></i>
+            <i class="fal fa-times" @click="hideModal('contacts')"></i>
             <h3>@lang('text.contacts')</h3>
             <hr>
             <ul>

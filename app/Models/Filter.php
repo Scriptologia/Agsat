@@ -26,5 +26,8 @@ class Filter extends Model
         return $this->hasMany(Filter::class);
     }
 
+    public function products (){
+        return $this->belongsToMany(Product::class);
+    }
 
 }

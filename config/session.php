@@ -155,7 +155,8 @@ return [
     |
     */
 
-    'domain' => env('SESSION_DOMAIN', null),
+//    'domain' => '.agsat',
+    'domain' => env('SESSION_DOMAIN', 'agsat'),
 
     /*
     |--------------------------------------------------------------------------

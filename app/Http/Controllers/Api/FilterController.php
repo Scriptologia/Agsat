@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Filter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -149,5 +150,18 @@ class FilterController extends Controller
         }
         if($filter->delete())  return response()->json(['status' => true, 'message' => 'Успешно удален!']);
         return response()->json(['status' => true, 'message' => 'Удалить не удалось!']);
+    }
+
+    public function getFilters (Request $request, Category $category){
+        $filt = $this->getFilterParents($category);
+        $ids = collect($filt)->flatten()->unique();
+        $filters = Filter::with('fields')->whereIn('id', $ids)->get();
+        return response()->json(['status' => true, 'message' => $filters]);
+    }
+    protected function getFilterParents ($item, &$filt = []) {
+        $filt[] = $item->filters;
+        $parent = $item->parentCategory;
+        if($parent) { $this->getFilterParents($parent, $filt);}
+        return $filt;
     }
 }

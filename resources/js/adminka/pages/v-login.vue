@@ -4,7 +4,6 @@
             <h1>Вход</h1>
             <validation-observer ref="observer" v-slot="{ handleSubmit }">
                 <b-form @submit.stop.prevent="handleSubmit(onSubmit)">
-                    <!--<b-card bg-variant="light">-->
                         <validation-provider
                                 name="E-mail"
                                 :rules="{ required: true,email }"
@@ -12,12 +11,11 @@
                         >
                             <b-form-group
                                     label="E-mail:"
-                                    :label-for="email"
+                                    label-for="email"
                                     label-cols-sm="4"
                                     label-align-sm="right"
                             >
-                                <b-form-input :id="email"
-                                              name="email"
+                                <b-form-input id="email"
                                               v-model="email"
                                               :state="getValidationState(validationContext)"
                                               aria-describedby="email-feedback">
@@ -34,12 +32,12 @@
                         >
                             <b-form-group
                                     label="Пароль"
-                                    :label-for="password"
+                                    label-for="password"
                                     label-cols-sm="4"
                                     label-align-sm="right"
                             >
-                                <b-form-input :id="password"
-                                              name="password"
+                                <b-form-input id="password"
+                                              type="password"
                                               v-model="password"
                                               :state="getValidationState(validationContext)"
                                               aria-describedby="password-feedback">
@@ -52,7 +50,6 @@
                         <div class="d-flex justify-content-end">
                             <b-button class="ml-2" type="submit" variant="success">Войти</b-button>
                         </div>
-                    <!--</b-card>-->
                 </b-form>
             </validation-observer>
         </div>
@@ -76,11 +73,8 @@
                    axios.post('/login',{password: this.password, email: this.email})
                         .then(res => {
                             localStorage.setItem('x_xsrf_token',res.config.headers['X-XSRF-TOKEN'])
-                            // this.makeToast(true, this.toastMessage(res.data.message), res.data.status);
-                            // setTimeout(() => {
                             store.dispatch('GET_USER')
                             this.$router.push({name: 'home'})
-                            // }, 1000)
                         })
                         .catch(err => {
                             this.makeToast(true, this.toastMessage(err.response.data.errors.email[0]), false);

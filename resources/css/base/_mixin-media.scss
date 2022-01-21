@@ -27,3 +27,8 @@
     @content;
   }
 }
+@mixin ud() {
+  @media screen and (max-width: 400px) {
+    @content;
+  }
+}

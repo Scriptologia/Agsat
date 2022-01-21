@@ -31,6 +31,7 @@ class CreateProductsTable extends Migration
             $table->float('price',11,2)->default(0.00);
             $table->foreignId('curs_id')->nullable() ->constrained('curs')->onDelete('set null');
             $table->json('img')->nullable();
+            $table->json('dop_products')->nullable();
             $table->boolean('visible')->default(1);
             $table->enum('type', ['product', 'page'])->default('product');
             $table->timestamps();

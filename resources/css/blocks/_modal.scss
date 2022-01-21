@@ -1,39 +1,111 @@
-.overlay {
-  display: flex;
-  visibility: hidden;
+//.overlay {
+//  display: flex;
+//  visibility: hidden;
+//  position: fixed;
+//  width: 100vw;
+//  min-height: 100vh;
+//  top: 0;
+//  left: 0;
+//  background-color: #1e3b449c;
+//  z-index: 1000;
+//  overflow: hidden;
+//  height: 500px;
+//  align-items: center;
+//  opacity:0;
+//  transition: all 1s ease-in-out;
+//
+//
+//  &.active {
+//    opacity: 1;
+//    visibility: visible;
+//  }
+//
+//  &__body {
+//    margin: 0 auto;
+//    background-color: bisque;
+//    width: fit-content;
+//    padding: 20px;
+//    position: relative;
+//    //z-index:200;
+//    .close {
+//      position: absolute;
+//      right:0;
+//      top:0;
+//      cursor: pointer;
+//    }
+//  }
+//}
+
+/* добавить при вызове класс .fixed*/
+
+
+.layout_modal {
+  transition: all .5s ease-in-out;
+  display: none;
   position: fixed;
-  width: 100vw;
-  min-height: 100vh;
-  top: 0;
-  left: 0;
-  background-color: #1e3b449c;
-  z-index: 1000;
-  overflow: hidden;
-  height: 500px;
-  align-items: center;
-  opacity:0;
-  transition: all 1s ease-in-out;
-
-
-  &.active {
-    opacity: 1;
-    visibility: visible;
+  top:0;
+  left:0;
+  z-index: 100;
+  background: $layout-modal;
+  width:100%;
+  height:100%;
+}
+.modal_content {
+  width: fit-content;
+  i {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    cursor: pointer;
+    &:hover {
+      color: $red;
+    }
   }
-
-  &__body {
-    margin: 0 auto;
-    background-color: bisque;
-    width: fit-content;
-    padding: 20px;
-    position: relative;
-    //z-index:200;
-    .close {
-      position: absolute;
-      right:0;
-      top:0;
-      cursor: pointer;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 1rem;
+  z-index: 100;
+  min-width:200px;
+  min-height:200px;
+  border-radius: $border-radius $border-radius $border-radius $border-radius;
+  border: 3px solid $white;
+  color:$green-grey;
+  a {
+    color:$green-grey;
+  }
+  .socials {
+    display: flex;
+    align-items: center;
+    li {margin: 5px;
+      a {
+        border-radius: 50%;
+        width: 25px;
+        height: 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        img {
+          width: 80%;
+          height: 80%;
+        }
+        &:hover {
+          background: $bg-logo;
+        }
+      }
+    }
+  }
+  .icon-center {
+    color: $green;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100px;
+    &.error {color:$red;}
+    i {position: unset;
+    &:hover{color:inherit}
     }
   }
 }
-
-/* добавить при вызове класс .fixed*/

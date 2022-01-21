@@ -1,0 +1,100 @@
+.basket-products {
+  &_items {
+    .item {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      @include md {padding-bottom: 20px;}
+      &:not(:last-child) {
+        border-bottom: 1px solid $bg-logo;
+      }
+      &_img {
+        width:150px;
+        margin: 0 10px;
+        @include md {margin:10px;}
+        img {
+          width:100%;
+        }
+      }
+      &_name {
+        font-size: 18px;
+        font-weight: 600;
+        width: 200px;
+        margin: 0 10px;
+        line-height: 100%;
+        @include lg {width: 150px;}
+        @include md { flex: 1 0 auto;margin-bottom: 20px;}
+      }
+      &_count {
+        display: flex;
+        align-items: center;
+        flex: 1 0 auto;
+        justify-content: end;
+        @include md { flex: 1 0 100%;}
+        @include ud { flex-wrap: wrap;}
+        &_form {
+          display: flex;
+          align-items: center;
+          width: 55px;
+          margin: 0 20px;
+          @include sd {width: 60px;}
+        }
+        &_price {
+          font-size: 15px;
+          margin: 0 10px;
+          min-width: 80px;
+          @include lg {margin:0 10px;}
+        }
+        &_all-price {
+          font-size: 25px;
+          font-weight: 600;
+          margin: 0 10px;
+          color: $green;
+          min-width: 130px;
+          display: flex;
+          justify-content: end;
+          @include lg {margin:0 10px;}
+          @include sd {font-size: 21px;}
+          @include md { min-width: 120px;}
+          @include ud { margin-top: 20px;width: 150px;}
+        }
+        &_delete {
+          color:$green-deep;
+          cursor: pointer;
+          @include ud { margin-top: 20px;}
+          &:hover {color:$red;}
+        }
+      }
+    }
+    .price {
+      display: flex;
+      align-items: baseline;
+      justify-content: end;
+      margin: 20px 0;
+      &_label {
+        font-size: 25px;
+        font-weight: 600;
+        margin-right: 20px;
+      }
+      &_price {
+        font-size: 25px;
+        font-weight: 600;
+        color: $green;
+      }
+    }
+  }
+  .basket-form {
+    width: 500px;
+    margin: auto;
+    @include sd {
+      width:100%;
+    }
+    .error {
+      border:1px solid $red;
+    }
+    &_button {
+      display: flex;
+      justify-content: end;
+    }
+  }
+}

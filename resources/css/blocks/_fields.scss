@@ -165,7 +165,6 @@ input[type=checkbox] {
   position: absolute;
   z-index: -1;
   opacity: 0;
-
   &+label {
     display: inline-flex;
     align-items: center;
@@ -212,3 +211,46 @@ input[type=checkbox] {
     background-color: $disabled-checkbox-color;
   }
 }
+
+/* text-field */
+input[type=text], input[type=number], input[type=tel], select {
+  & > label {
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+  & {
+    display: block;
+    width: 100%;
+    height: calc(2.25rem + 2px);
+    padding: 0.375rem 0.75rem;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color:$green-deep;
+    background-color: $white;
+    background-clip: padding-box;
+    border: 1px solid #bdbdbd;
+    border-radius: 0.25rem;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+
+    &::placeholder {
+      color: #212529;
+      opacity: 0.4;
+    }
+    &:focus {
+      color: $green-deep;
+      background-color: $white;
+      border-color: $input-border;
+      outline: 0;
+      box-shadow: 0 0 0 0.2rem $input-shadow;
+    }
+    &:disabled,&[readonly] {
+      background-color: #f5f5f5;
+      opacity: 1;
+    }
+  }
+}
+
+
+

@@ -1,5 +1,27 @@
 button {
-
+  &.button-green {
+    background: $green-light;
+    border:1px solid $green-light;
+    font-size: 20px;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 3px;
+    &:hover {
+      background: $green;
+      border:1px solid $green;
+    }
+  }
+  &.button-green_light {
+    font-size: 20px;
+    color: $green;
+    padding: 5px 10px;
+    border-radius: 3px;
+    float: right;
+    border: 1px solid green;
+    &:hover {
+      background: $green-light2;
+    }
+  }
 }
 .btn {
   

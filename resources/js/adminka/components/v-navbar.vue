@@ -3,7 +3,11 @@
         <b-navbar toggleable="lg" type="dark" variant="info">
             <div  v-b-toggle.sidebar-border><b-icon-box-arrow-in-right font-scale="2" variant="white" class="mr-3"></b-icon-box-arrow-in-right></div>
 
-            <b-navbar-brand href="/">{{$store.state.company.name}}</b-navbar-brand>
+            <b-navbar-brand href="/" class="navbar_logo">
+                <img :src="$store.state.company.logo" class="h-100">
+            </b-navbar-brand>
+            <!--<b-navbar-brand href="/">{{$store.state.company.name}}</b-navbar-brand>-->
+
             <!--<b-button v-b-toggle.sidebar-no-header>Toggle Sidebar</b-button>-->
 
             <!--<b-button target="nav-collapse"></b-button>-->
@@ -63,6 +67,12 @@
     }
 </script>
 
-<style scoped>
-
+<style lang="scss">
+.navbar {
+    &_logo {
+        display: flex !important;
+        align-items: center;
+        height: 39px;
+    }
+}
 </style>

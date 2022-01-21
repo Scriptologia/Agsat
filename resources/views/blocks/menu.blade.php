@@ -1,8 +1,8 @@
 <div class="menu-block">
-    <div class="container menu-items">
+    <div class="container menu-items"  v-cloak>
         <div class="menu-button" @click="showMegaMenu = !showMegaMenu">
             <i class="fal fa-chevron-down fa-lg mobile" :class="{'fa-rotate-180' : showMegaMenu}"></i>
-            <p class="">
+            <p>
                 @lang('text.product_catalog')
                 <i class="fa fa-angle-down" :class="{'fa-rotate-180' : showMegaMenu}"></i>
             </p>
@@ -22,7 +22,7 @@
                     <div class="item" v-for="(product, index) in searchResult.products" :key="index">
                         <div class="item_img" v-if="product.img && product.img.find(it => it.main === true)">
                             <a :href="product.category.slug+'/'+product.slug" >
-                                <img :src="product.img.find(it => it.main === true).img">
+                                <img :src="product.img.find(it => it.main === true).img"  loading="lazy">
                             </a>
                         </div>
                         <div class="item_text">
@@ -33,7 +33,7 @@
                                 <span class="active" v-if="product.count">&nbsp; @lang('text.yes-product')</span>
                                 <span class="passive" v-else>&nbsp;  @lang('text.no-product')</span>
                             </p>
-                            <p class="description" v-html="product['text_'+lang]"></p>
+                            <div class="description" v-html="product['text_'+lang]"></div>
                         </div>
                     </div>
                 </template>
@@ -49,10 +49,10 @@
             <div class="mega-menu_second-level">
                 <div class="item" v-for="(category, index) in children_categories" :key="index">
                     <div class="category-header">
-                        <a :href="category.slug">@{{ category['name_'+lang] }}</a>
+                        <a :href="'/'+category.slug">@{{ category['name_'+lang] }}</a>
                     </div>
                     <div class="category-items" v-if="category.children_categories.length">
-                        <a :href="subcategory.slug" v-for="(subcategory, index) in category.children_categories.filter(item => item.visible === true)" :key="index">@{{ subcategory['name_'+lang] }}</a>
+                        <a :href="'/'+subcategory.slug" v-for="(subcategory, index) in category.children_categories.filter(item => item.visible === true)" :key="index">@{{ subcategory['name_'+lang] }}</a>
                     </div>
                 </div>
             </div>

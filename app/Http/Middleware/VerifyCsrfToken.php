@@ -13,5 +13,6 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
 //        'http://adminka.agsat/api/media'
+        '/api/basket-from-frontend'
     ];
 }

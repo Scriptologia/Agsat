@@ -4,6 +4,7 @@ import vLayout from '../pages/v-layout'
 import vHome from '../pages/v-home'
 import vCategories from '../pages/v-categories'
 import vProducts from '../pages/v-products'
+import vPages from '../pages/v-pages'
 import vCurs from '../pages/v-curs'
 import vFilters from '../pages/v-filters'
 import vResizes from '../pages/v-resizes'
@@ -12,6 +13,7 @@ import vCompany from '../pages/v-company'
 import vLogin from '../pages/v-login'
 import vRole from '../pages/v-roles'
 import vPermission from '../pages/v-permissions'
+import vBasket from '../pages/v-baskets'
 import vUsers from '../pages/v-users'
 import v404 from '../pages/v-404'
 import store from '../vuex/store'
@@ -21,29 +23,6 @@ Vue.use(Router);
 const router = new Router({
     mode: 'history',
     routes: [
-        // {
-        //     path: '/adminka/',
-        //     name: 'home',
-        //     component: vHome
-        // },
-        // {
-        //     path: '/adminka/categories',
-        //     name: 'categories',
-        //     component: vCategory,
-        //     props: true
-        // },
-        // {
-        //     path: '/adminka/products',
-        //     name: 'products',
-        //     component: vProduct,
-        //     props: true
-        // },
-        // {
-        //     path: '*',
-        //     name: '404',
-        //     component: v404,
-        //     props: true
-        // },
         {
             path: 'login',
             name: 'login',
@@ -97,11 +76,25 @@ const router = new Router({
                     meta: { title: 'Категория | админка' }
                 },
                 {
+                    path: 'baskets',
+                    name: 'baskets',
+                    component: vBasket,
+                    props: true,
+                    meta: { title: 'Заказы | админка' }
+                },
+                {
                     path: 'products',
                     name: 'products',
                     component: vProducts,
                     props: true,
                     meta: { title: 'Товары | админка' }
+                },
+                {
+                    path: 'pages',
+                    name: 'pages',
+                    component: vPages,
+                    props: true,
+                    meta: { title: 'Страницы | админка' }
                 },
                 {
                     path: 'resizes',

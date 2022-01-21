@@ -129,7 +129,8 @@
                                                 <b-input-group>
                                                     <b-form-input input-id="price" v-model.number="price" type="number"
                                                                   step=".01"
-                                                                  min="0"></b-form-input>
+                                                                  min="0">
+                                                    </b-form-input>
                                                     <template #append>
                                                         <b-form-select v-model="curs_id"
                                                                        :options="curses"
@@ -206,13 +207,42 @@
                                             </b-form-group>
                                         </b-card-text>
                                     </b-tab>
+                                    <b-tab title="Доп.товары">
+                                        <b-card-text>
+                                            <b-form-group
+                                                    label="Категория:"
+                                                    label-for="category_id"
+                                                    label-cols-sm="3"
+                                                    label-align-sm="right"
+                                            >
+                                                <b-form-select v-model="categoryDopProducts">
+                                                    <b-form-select-option :value="{}">Корневая категория
+                                                    </b-form-select-option>
+                                                    <b-form-select-option :value="category"
+                                                                          v-for="(category,index) in categories"
+                                                                          :key="index">{{category.name}}
+                                                    </b-form-select-option>
+                                                </b-form-select>
+                                            </b-form-group>
+                                            <b-form-group
+                                                             label="Доп.товары:"
+                                                             label-for="dop-products"
+                                                             label-cols-sm="3"
+                                                             label-align-sm="right"
+                                                     >
+                                                         <multiselect input-id="dop-products" v-model="dopProducts" multiple
+                                                                      :options="productsOfCategory" label="name_ru" track-by="id">
+                                                         </multiselect>
+                                                     </b-form-group>
+                                        </b-card-text>
+                                    </b-tab>
                                 </b-tabs>
                             </b-tab>
                             <b-tab title="Украинский">
                                 <b-tabs card>
                                     <b-tab title="Общая инф." active>
                                         <b-card-text>
-                                              <b-form-group
+                                            <b-form-group
                                                         label="Название:"
                                                         label-for="name_uk"
                                                         label-cols-sm="3"
@@ -295,11 +325,14 @@
                     // The configuration of the editor.
                 },
                 spinner: false,
+                dopProducts: [],
+                categoryDopProducts: '',
+                productsOfCategory:[],
                 slug: this.product.slug,
                 skidka: this.product.skidka || 0,
                 images: this.product.img || [],
                 category: {},
-                fields: {},//this.product.filters ? this.product.filters.map(it => {return [`${it.filter_iD}` : it.id]}) : [],
+                fields: {},
                 name_ru: this.product.name_ru,
                 description_ru: this.product.description_ru,
                 text_ru: this.product.text_ru,
@@ -328,8 +361,8 @@
                 'SET_MEDIA_SELECTED_FILES_TO_STATE'
             ]),
             makeMain(index, item){
-                this.images.map(it => {
-                    it.img === item.img ? it.main = true : it.main = false;
+                this.images.map((it, i) => {
+                    i === index ? it.main = true : it.main = false;
                     return item;
                 })
             },
@@ -342,6 +375,7 @@
                     return {img: item.img, main: false}
                 })
                 this.images = [...this.images, ...arr]
+                if(!this.images.find(it => it.main === true)) this.images[0].main = true;
                 this.SET_MEDIA_SELECTED_FILES_TO_STATE()
             },
             info(item, index, button) {
@@ -380,7 +414,9 @@
                 if (!this.description_uk) this.description_uk = this.description_ru;
                 if (!this.text_uk) this.text_uk = this.text_ru;
                 if (!this.tags_uk || this.tags_uk === null) this.tags_uk = this.tags_ru;
+                let dop_products = this.dopProducts.length? this.dopProducts.map(item => item.id) : null;
                 let data = {
+                    dop_products: dop_products,
                     name_ru: this.name_ru,
                     description_ru: this.description_ru,
                     text_ru: this.text_ru,
@@ -422,17 +458,25 @@
         computed: {
             filtersOfCategory() {
                 if(Object.keys(this.category).length) {
-                    let obj = this;
-                    return this.$store.state.filters.filter(function(item) {
-                        return obj.category.filters.indexOf( item.id ) !== -1;
-                    })
+                    let objt = this;
+                    let arr = []
+                    function findParent (category_id, arr){
+                        let obj = objt.categories.find(it => it.id === category_id)
+                        if (obj !== undefined){
+                            if (obj.filters !== null) {arr = arr.concat(obj.filters);}
+                            return findParent(obj.category_id, arr)
+                        }
+                        return arr;
+                    }
+                    arr = findParent(this.product.category_id, arr)
+                    return this.$store.state.filters.filter(function(item) {return arr.indexOf(item.id) !== -1});
                 }
                 return [];
             },
             slugMake: function() {
                 this.slug = this.slug || url_slug(this.name_ru)
                 return this.slug ;
-            }
+            },
         },
         watch: {
             skidka: function () {
@@ -443,10 +487,32 @@
             price: function () {
                 let  arr = this.price.toString().split( '.' )
                 this.price = arr.length === 2 && arr[1].length > 2? this.$options.filters.floatNumber(this.price, 2) : this.price
+            },
+            categoryDopProducts: function () {
+                axios.get(
+                    '/api/get-products-of-category/' + this.categoryDopProducts.slug
+                )
+                    .then((res) => {
+                            this.productsOfCategory = res.data.products
+                    })
+                    .catch(function (error) {
+                        console.log('Ошибка получения товаров по категории: ', error);
+                    });
             }
         },
         mounted() {
             this.GET_FILTERS()
+            if(this.product.slug !== undefined){
+                axios.get(
+                    '/api/get-dop-products/' + this.product.slug
+                )
+                    .then((res) => {
+                        this.dopProducts = res.data.dopProducts
+                    })
+                    .catch(function (error) {
+                        console.log('Ошибка получения доп.товаров: ', error);
+                    });}
+
             let obj = this
             if(Object.keys(this.product).length) {
                 let category = this.categories.find(it =>  it.id === obj.product.category_id)

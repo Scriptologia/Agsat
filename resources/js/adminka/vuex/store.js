@@ -8,6 +8,7 @@ Vue.use(Vuex)
 let store = new Vuex.Store({
     state: {
         categories: [],
+        baskets: [],
         curses: [],
         sliders: [],
         products: [],
@@ -18,12 +19,19 @@ let store = new Vuex.Store({
         activeFolder: '',
         company: {},
         users: [],
+        pages: [],
         user: null,
         roles: [],
         permissions: [],
         resizes: []
     },
     mutations : {
+        SET_PAGES_TO_STATE : (state, pages = null) => {
+            state.pages = pages;
+        },
+        SET_BASKETS_TO_STATE : (state, baskets = null) => {
+            state.baskets = baskets;
+        },
         SET_MEDIA_USER_TO_STATE : (state, user = null) => {
             state.user = user;
         },
@@ -136,6 +144,28 @@ let store = new Vuex.Store({
                     return error;
                 })
         },
+        GET_BASKETS({commit}) {
+            return axios.get('/api/baskets' )
+                .then((baskets) => {
+                    commit('SET_BASKETS_TO_STATE', baskets.data.baskets);
+                    return baskets.data.baskets;
+                })
+                .catch((error) => {
+                    console.log(error);
+                    return error;
+                })
+        },
+        GET_PAGES({commit}) {
+            return axios.get('/api/pages' )
+                .then((pages) => {
+                    commit('SET_PAGES_TO_STATE', pages.data.pages);
+                    return pages.data.pages;
+                })
+                .catch((error) => {
+                    console.log(error);
+                    return error;
+                })
+        },
         GET_SLIDERS({commit}) {
             return axios.get('/api/sliders' )
                 .then((sliders) => {
@@ -237,6 +267,8 @@ let store = new Vuex.Store({
         }
     },
     getters : {
+        PAGES(state) { return state.page ; },
+        BASKETS(state) { return state.baskets ; },
         CURSES(state) { return state.curses ; },
         RESIZES(state) { return state.resizes ; },
         USERS(state) { return state.users ; },

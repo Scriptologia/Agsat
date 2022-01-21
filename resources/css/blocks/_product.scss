@@ -1,0 +1,154 @@
+.product {
+  display: flex;
+  flex-direction: row;
+  @include lg {
+    display: block;
+  }
+  .images {
+    width: 350px;
+    padding: 10px;
+    flex: 1 0 auto;
+    @include lg {
+      width:100%;
+    }
+    & >  img {
+      width: 100%;
+    }
+   .slider{
+     position: relative;
+     width:100%;
+     overflow: hidden;
+     &_items {
+       transition: all 0.5s ease 0s;
+       display: flex;
+       flex-wrap: nowrap;
+       width: 100%;
+       &_img {
+         padding: 5px;
+         min-width: calc(100% / 3.2);
+         border: 1px solid $grey-opacity;
+         margin: 3px;
+         box-sizing: border-box;
+         border-radius: 3px;
+         img {
+           cursor: pointer;
+           width: 100%;
+         }
+       }
+     }
+      .arrows {
+        cursor: pointer;
+        width:20px;
+        height:20px;
+        background: $grey-opacity;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        color: $white;
+        &.left {
+          left:0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          i {}
+        }
+        &.right {
+          right:0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          i {}
+        }
+      }
+    }
+  }
+  .main {
+    padding: 20px 10px;
+    h1 {}
+    hr {
+      border: 1px solid $bg-logo;
+    }
+    &_top {
+      display: flex;
+      @include exlg {
+        display: block;
+      }
+      &_left {
+        height: fit-content;
+        border-radius: $border-radius;
+        border: 1px solid $bg-logo;
+        padding: 10px;
+        flex: 1 1 auto;
+        & > span {
+          color: $white;
+          background: $orang;
+          padding: 3px 7px;
+        }
+        .articul {
+
+        }
+        .price {
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+          .active {
+            text-transform: lowercase;
+            font-size: 15px;
+            i {color: $orang;}
+          }
+          .passive {
+            text-transform: lowercase;
+            font-size: 15px;
+            color: $grey-opacity;
+          }
+        }
+        .full-price {
+          text-decoration: line-through;
+          color: $red;
+          margin-top: -10px;
+        }
+        .proshivka  {
+          display: flex;
+          flex-direction: column;
+          color:$green-deep;
+          border-radius:$border-radius;
+          background: $bg-logo;
+          padding: 10px;
+          margin-top: 20px;
+          h3 {line-height: 150%;}
+          .opened {
+            transition: all .5s ease-in-out;
+            height: 40px;
+            overflow: hidden;
+            &.max-height {height:150px !important;;}
+            ul {
+              margin: 10px 0;
+            }
+          }
+          .more {
+            text-transform: lowercase;
+            border-bottom: 1px dashed;
+            margin-left: auto;
+          }
+        }
+        button{
+          margin-top: 10px;
+        }
+      }
+      &_right {
+        height: fit-content;
+        border-radius: $border-radius;
+        padding:.5rem;
+        margin-left: 20px;
+        background: $bg-logo;
+        @include exlg {
+          margin-left: unset;
+          margin-top: 20px;
+        }
+      }
+      &_description {
+        padding: 20px 10px;
+      }
+    }
+  }
+}

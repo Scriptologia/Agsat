@@ -10,6 +10,7 @@ class Product extends Model
     use HasFactory;
     protected $casts = [
         'visible' => 'boolean',
+        'dop_products' => 'array',
         'tags_ru' => 'array',
         'tags_uk' => 'array',
         'count' => 'integer',
@@ -42,6 +43,10 @@ class Product extends Model
     public function setTagsUkAttribute($value)
     {
         $this->attributes['tags_uk'] = $value != []?  json_encode($value) : null;
+    }
+    public function setDopProductsAttribute($value)
+    {
+        $this->attributes['dop_products'] = $value != []?  json_encode($value) : null;
     }
     public function setImgAttribute($value)
     {

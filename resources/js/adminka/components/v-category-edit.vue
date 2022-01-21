@@ -275,22 +275,12 @@
                 if (!this.description_uk) this.description_uk = this.description_ru;
                 if (!this.tags_uk || this.tags_uk === null) this.tags_uk = this.tags_ru;
                 this.filters = this.filtersObj.map(item => item.id);
-                // let items = Object.assign({}, this.$data)
-                // items.visible = items.visible ? 1 : 0;
-                // let formData = new FormData();
-                // for (let k in items) {
-                //     if (items[k] !== undefined && items[k] !== null && k !== 'spinner' && k !== 'prev' && k !== 'slugUrl' && k !== 'filtersObj') {
-                //         if (k === 'filters' || k === 'tags_ru' || k === 'tags_uk') {
-                //             items[k] = JSON.stringify(items[k]);
-                //         }
-                //         formData.append(k, items[k]);
-                //     }
-                // }
                 let data = {
                     slug : this.slug,
                     skidka : this.skidka,
                     filters : this.filters,
                     img : this.img,
+                    category_id : this.category_id,
                     name_ru : this.name_ru,
                     description_ru : this.description_ru,
                     tags_ru : this.tags_ru,

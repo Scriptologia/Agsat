@@ -28,7 +28,7 @@
             </b-col>
             <b-table :busy="spinner"
                     id="table"
-                    :items=this.$store.state.products
+                    :items="$store.state.products"
                     :per-page="perPage"
                     :current-page="currentPage"
                     :fields="fields"
@@ -96,7 +96,7 @@
                 sortBy: 'id',
                 sortDesc: false,
                 fields: [
-                    { key: 'id', sortable: true },
+                    { key: 'id', sortable: true, label:'Артикул' },
                     { key: 'name_ru', sortable: true, label:'Название',
                         formatter: (value, key, item) => {
                             return item.lines? item.lines +  value : value;

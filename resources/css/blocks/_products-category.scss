@@ -1,0 +1,193 @@
+.filter-products {
+  display: flex;
+  position: relative;
+  .filter {
+    width: 300px;;
+    margin: 20px 20px 20px 0;
+    & > i {display: none;}
+    @include md {
+      transform: translateX(110%);
+      max-width: calc(100vw - 15px);
+      position: absolute;
+      z-index: 500;
+      right: -35px;
+      top: -20px;
+      box-shadow: -1px 1px 10px 0px $grey;
+      transition: all 0.5s ease;
+      background: $bg-menu-1;
+      i {
+        display: block;
+        margin: 15px;
+        cursor: pointer;
+      &:hover {color:$red;}}
+      &.show {
+        transform: translateX(0%);
+      }
+    }
+    &_content {
+      background: $bg-menu-1;
+      padding: 20px;
+      .item {
+        &:not(:last-child){margin-bottom:20px;}
+        h5 {
+          display: flex;
+          align-items: center;
+          &:first-letter {
+            text-transform: capitalize;}
+          i {
+            margin-left: auto;
+            transition: all 0.5s ease;
+          }
+        }
+        &_value {
+          overflow: hidden;
+          transition: all 0.5s ease;
+          max-height: 1000px;
+          &_input {
+            margin: 10px 0;
+            text-transform: capitalize;
+          }
+        }
+      }
+    }
+  }
+  .products {
+    width:100%;
+    position: relative;
+    @include md {width:100%;}
+    .filter-icon {
+      display: none;
+      @include  md {
+        display: flex;
+        position: absolute;
+        right:0;
+        top:15px;
+        width: 30px;
+        height: 30px;
+        background: $green;
+        color:$white;
+        border-radius: 3px;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+      div {
+        position: absolute;
+        top: -10px;
+        left: -10px;
+        border-radius: 50%;
+        background: yellow;
+        border: 1px solid green;
+        width: 20px;
+        height: 20px;
+        color: green;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+    h1 {
+      @include  md {margin-right: 50px;}
+    }
+    .item {
+      display: flex;
+      @include md {flex-wrap: wrap;}
+      &:not(:last-child) {
+        padding: 10px 0;
+        border-bottom: 1px solid $bg-logo;
+      }
+      &_img {
+        flex: 0 0 25%;
+        @include md {flex: 0 0 30%;}
+        @include sd {flex: 0 0 100%;}
+        a {
+          img {
+            width: 100%;
+          }
+        }
+      }
+      &_text {
+        flex:0 0 50%;
+        @include md {flex: 0 0 70%;}
+        @include sd {flex: 0 0 100%;}
+        padding:10px;
+        h4 {
+          margin-bottom: 10px;
+          &:hover {color:inherit;}
+        }
+        a {display: flex;align-items: center;}
+        a > span {
+          white-space: nowrap;
+          color: $grey;
+          margin-bottom: 10px;
+          margin-left:auto;
+          &:hover {color:$grey;}
+        }
+        .description {
+          color:$grey;
+          -webkit-line-clamp: 3;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+      }
+      &_price {
+        display: flex;
+        flex-direction: column;
+        @include md {
+          flex: 0 0 70%;
+          flex-direction: unset;
+          justify-content: space-between;
+          align-items: center;
+          flex-wrap: wrap;
+          margin-left: auto;
+        }
+        @include sd {flex: 0 0 100%;}
+        flex: 0 0 25%;
+        background: $bg-yellow;
+        padding: 8px;
+        border-radius: $border-radius;
+        .passive {
+          font-style: italic;
+          color: $grey-opacity;
+          padding-bottom: 10px;
+          @include md {
+            width: 50%;
+            order: 2;
+          }
+        }
+        .active {
+          font-style: italic;
+          color: $green-opacity;
+          padding-bottom: 10px;
+          @include md {
+            width: 50%;
+            order: 2;
+          }
+        }
+        .price {
+          color: $grey-opacity;
+          text-decoration: line-through;
+          @include md {
+            width: 50%;
+            order: 1;
+          }
+        }
+        .skidka {
+          color: $green;
+          @include md {
+            width: 50%;
+            order: 3;
+          }
+        }
+        button {
+          margin-top: auto;
+          @include md {
+            width: 50%;
+            order: 4;
+          }
+        }
+      }
+    }
+  }
+}

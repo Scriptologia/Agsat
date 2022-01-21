@@ -115,10 +115,17 @@ header {
           &:hover {
             color:$red;
           }
+          a {
+            display: flex;
+            align-items: center;
+          }
           &_price {
             margin-left:.5rem;
+            @include md {display: none;}
+          }
+          &_number {
+            display: none;
             @include md {
-              //display: none;
               position: absolute;
               right: -9px;
               top: -7px;

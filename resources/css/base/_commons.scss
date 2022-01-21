@@ -36,14 +36,18 @@ body {
     max-width: 100%;
   }
 }
+a{
+  cursor:pointer;
+  &:not(.button) {
+    color:$green-deep;
+    &:hover {
+      text-decoration: none;
+      color:$red
+    }
 
-a:not(.button) {
-  &:hover {
-    text-decoration: underline;
-  }
+    &:active {
 
-  &:active {
-
+    }
   }
 }
 
@@ -66,63 +70,59 @@ button {
     position: fixed;
   }
 }
-.layout_modal {
-  transition: all .5s ease-in-out;
-  display: none;
-  position: fixed;
-  top:0;
-  left:0;
-  z-index: 100;
-  background: $layout-modal;
-  width:100vw;
-  height:100vh;
-}
-.modal_content {
-  i {
-    position: absolute;
-    right: 5px;
-    top: 5px;
-    cursor: pointer;
-    &:hover {
-      color: $red;
-    }
-  }
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  background: white;
-  padding: 1rem;
-  z-index: 100;
-  min-width:200px;
-  min-height:200px;
-  border-radius: $border-radius $border-radius $border-radius $border-radius;
-  border: 3px solid $white;
-  color:$green-grey;
-  a {
-    color:$green-grey;
-  }
-      .socials {
-        display: flex;
-        align-items: center;
-        li {margin: 5px;
-        a {
-          border-radius: 50%;
-          width: 25px;
-          height: 25px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          img {
-            width: 80%;
-            height: 80%;
-          }
-          &:hover {
-            background: $bg-logo;
-          }
-        }
-        }
-      }
-}
 
 [v-cloak] { display: none !important;}
+h1 {
+  color: $green-deep;
+  font-size: 40px;
+  font-weight: 700;
+}
+h2 {
+  color: $green-deep;
+  font-size: 35px;
+  font-weight: 700;
+}
+h3 {
+  color: $green-deep;
+  font-size: 30px;
+  font-weight: 700;
+}
+h4 {
+  color: $green-deep;
+  font-size: 25px;
+  font-weight: 700;
+}
+h5 {
+  font-size: 20px;
+  color: $green-deep;
+  font-weight: 700;
+}
+button.green {
+  background: $green;
+  color:$white;
+  &:hover {
+    background: $green2;
+  }
+}
+.min-height {
+  max-height: 0 !important;
+}
+
+.height100 {height:100% !important;}
+
+a[type=button] {
+  background: $green-light;
+  border:1px solid $green-light;
+  font-size: 20px;
+  color: white;
+  border-radius: 3px;
+  padding: 10px;
+  margin: 20px auto;
+  display: block;
+  width: fit-content;
+  &:hover {
+    color:$white;
+    background: $green;
+    border:1px solid $green;
+  }
+}

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Filter;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -51,12 +52,14 @@ class ProductController extends Controller
                 'description_uk' => 'string|nullable',
                 'visible' => 'boolean|nullable',
                 'curs_id' => 'integer|nullable',
+                'dop_products' => 'array|nullable',
                 'img' => 'nullable|array'//|image|mimes:jpeg,png,jpg,gif|max:2048',
             ]
         );
         if($validator->fails()) return response()->json(['status' => false, 'message' => $validator->messages()]);
 
         $product = new Product();
+        $product->dop_products = $request->dop_products;
         $product->name_ru = $request->name_ru;
         $product->name_uk = $request->name_uk;
         $product->description_ru = $request->description_ru;
@@ -93,8 +96,6 @@ class ProductController extends Controller
         if (!auth()->user()->role->permissions->where('slug','product:update' )->first()) {
             return response()->json(['status' => false, 'message' => 'У вас нет прав редактировать']);
         }
-//        $cat = Category::where('slug' , $product);
-//        if(!$product) return response()->json(['status' => false, 'message' => 'Такой категории нет!']);
 
         $validator = Validator::make($request->all(),
             [
@@ -113,11 +114,13 @@ class ProductController extends Controller
                 'description_uk' => 'string|nullable',
                 'visible' => 'boolean|nullable',
                 'curs_id' => 'integer|nullable',
+                'dop_products' => 'array|nullable',
                 'img' => 'nullable|array'//|image|mimes:jpeg,png,jpg,gif|max:2048',
             ]
         );
         if($validator->fails()) return response()->json(['status' => false, 'message' => $validator->messages()]);
 
+        $product->dop_products = $request->dop_products;
         $product->name_ru = $request->name_ru;
         $product->name_uk = $request->name_uk;
         $product->description_ru = $request->description_ru;
@@ -157,5 +160,38 @@ class ProductController extends Controller
         $product->filters()->detach();
         if($product->delete())  return response()->json(['status' => true, 'message' => 'Успешно удален!']);
         return response()->json(['status' => true, 'message' => 'Удалить не удалось!']);
+    }
+
+    public function getProductsOfCategory (Category $category){
+        $products = $category->products;
+        if(!$products)  return response()->json(['status' => false, 'message' => 'Ошибка получения товаров из базы']);
+
+        return response()->json(compact('products'));
+    }
+
+    public function  getDopProducts (Request $request, Product $product) {
+        $dopProducts = null;
+        if($product->dop_products) $dopProducts = Product::whereIn('id',$product->dop_products)->get();
+        if($dopProducts) {
+            return response()->json(['status' => true, 'dopProducts' => $dopProducts]);
+        }
+        return response()->json(['status' => false, 'message' => 'Ошибка получения доп.товаров']);
+    }
+
+    public function  getProductsCount (Request $request) {
+        $products = $request->all();
+
+        $products_count = Product::whereIn('id',array_column($products , 'id'))->get();
+        if($products_count) {
+            return response()->json(['status' => true, 'products' => $products_count]);
+        }
+        return response()->json(['status' => false, 'message' => 'Ошибка получения доп.товаров']);
+    }
+    public function  getProduct (Request $request, Product $product) {
+        $prod = $product->with(['curs', 'category'])->get();
+        if($prod) {
+            return response()->json(['status' => true, 'product' => $prod]);
+        }
+        return response()->json(['status' => false, 'message' => 'Ошибка получения доп.товаров']);
     }
 }

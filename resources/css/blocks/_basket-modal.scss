@@ -1,0 +1,42 @@
+.basket-modal {
+  .product-in-basket {
+    display: flex;
+    align-items: center;
+    img {
+      width:50px;
+      height:50px;
+      margin-right: 20px;
+    }
+    &_left {
+      .name {}
+      .price {}
+    }
+    &_buttons {
+      width:100%;
+      display: flex;
+      justify-content: space-between;
+      button {
+        &.cansel {
+          border-radius:3px;
+          border-color: $bg-yellow;
+          background: $bg-yellow;
+          margin: 5px;
+          &:hover {
+            background: $yellow2;
+          }
+        }
+      }
+      .to-basket {
+        border-radius:3px;
+        padding: 5px;
+        border: 1px solid $green;
+        background: $green;
+        color: $white;
+        margin: 5px;
+        &:hover {
+          background: $green-opacity;
+        }
+      }
+    }
+  }
+}

@@ -8,12 +8,13 @@
 
 namespace App\Http\ViewComposers;
 use App\Models\Company;
+use App\Models\Page;
 use Illuminate\View\View;
 
 class FooterComposer
 {
     public function compose(View $view)
     {
-        return $view->with('company' , Company::first());
+        return $view->with(['company' => Company::first(), 'pages' => Page::where('visible', 1)->get()]);
     }
 }

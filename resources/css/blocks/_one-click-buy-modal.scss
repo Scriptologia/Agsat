@@ -1,0 +1,97 @@
+.one-click-product {
+  max-width: 100%;
+  &_product {
+    display: flex;
+    align-items: center;
+    @include sd {
+      display: block;
+    }
+    img {
+      width: 200px;
+    }
+    &_left {
+      margin-left: 20px;
+      display: flex;
+      align-items: center;
+      @include sd {
+        flex-direction: column;
+        align-items: end;
+      }
+    }
+  }
+  .form-item {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+    & > label {
+      color: $green-deep;
+      margin-right: 10px;
+      font-size: 20px;
+      font-weight: 600;
+    }
+    & > input {
+      width: 60px;
+    }
+  }
+  &_form {
+    .form-item {
+      display: flex;
+      align-items: center;
+      margin: 10px 0;
+      @include sd {
+        display: block;
+      }
+      & > label {
+        color: $green-deep;
+        margin-right: 10px;
+        font-size: 20px;
+        font-weight: 600;
+        flex: 0 0 35%;
+        display: flex;
+        justify-content: flex-end;
+        @include sd {
+          flex: unset;
+          justify-content: unset;
+        }
+      }
+      & > input {
+        flex: 1 1 auto;
+        @include sd {
+          width:100%;
+        }
+      }
+    }
+    .errors {
+      display: flex;
+      justify-content: end;
+      color: $red;
+    }
+  }
+  .form-price {
+    display: flex;
+    margin-right: 10px;
+    align-items: baseline;
+    .label {
+      width: 35%;
+      margin-right: 10px;
+      display: flex;
+      justify-content: flex-end;
+      font-size: 20px;
+      font-weight: 600;
+    }
+    .input {
+      width:65%;
+    }
+  }
+  &_button {
+    width: 65%;
+    margin-left: auto;
+    @include sd {
+      display: flex;
+      justify-content: end;
+    }
+  }
+  input.error {
+    border:1px solid $red;
+  }
+}

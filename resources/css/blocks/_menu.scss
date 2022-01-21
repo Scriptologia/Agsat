@@ -70,7 +70,7 @@
         }
       }
       &_second-level {
-        flex: 1 1 auto;
+        flex: 1 1 100%;
         flex-wrap: wrap;
         background: $white;
         display: flex;
@@ -202,9 +202,10 @@
             @include sd {width:100%;}
             h4 {
               display: inline-block;
+              margin-top: 10px;
+              margin-bottom: 10px;
               &:first-letter {text-transform: capitalize;}
               color:$green-grey;
-              font-size: 25px;
               line-height: 150%;
               &:hover { color:$red; }
             }
