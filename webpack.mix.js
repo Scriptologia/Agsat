@@ -14,13 +14,14 @@ const mix = require('laravel-mix');
 mix.js('resources/js/adminka/main.js', 'public/admin/js/app.js')
     .vue( {"globalStyles": "resources/sass/app.scss"})
     .sass('resources/sass/app.scss', 'public/admin/css')
-    .sourceMaps();
-    // .version();
-mix.js('resources/js/public/main.js', 'public/js/app.js');
+    .sourceMaps()
+    .version();
+mix.js('resources/js/public/main.js', 'public/js/app.js')
     // .vue( {"globalStyles": "resources/sass/app.scss"})
     // .sass('resources/sass/app.scss', 'public/admin/css')
-    // .sourceMaps();
-    // .version();
+    .sourceMaps()
+    .version();
 
-// mix.sass('resources/css/style.scss', 'public/css')
-//     .sourceMaps().version();
+// mix.sass('resources/css/style.scss', 'public/css');
+    // .sourceMaps();
+// .version();

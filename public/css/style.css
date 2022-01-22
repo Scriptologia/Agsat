@@ -1545,6 +1545,11 @@ footer .footer_pages ul li {
   color: #fff;
 }
 
+.error-page {
+  padding: 20px;
+  text-align: center;
+}
+
 .slider_wraper {
   position: relative;
   width: 100%;

@@ -67,7 +67,7 @@ class HomeController extends Controller
                 }
             }
             else { //если нет запроса на фильтрацию значит это запрос на товар
-                $product = $category->products()->with('category')->where('slug', $any)->first();
+                $product = $category->products()->with('category')->where('slug', $any)->firstOrFail();
                 $dop = $product->dop_products ? $product->dop_products : [];
                 $dopProducts = Product::whereIn('id',$dop)->get();
                 return view('product', ['product'=> $product, 'dopProducts' => $dopProducts]);

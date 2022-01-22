@@ -12,7 +12,6 @@
     <link rel="shortcut icon" href="{{asset('logo-32.png')}}" />
     <link rel="stylesheet" href="{{asset('css/style.css')}}">
     <link rel="stylesheet" href="{{asset('css/fontawesome-pro-5.12.0/css/all.css')}}">
-    <meta property="og:image" content="/wa-apps/shop/themes/agsat/img/logo.svg" />
     @php
         $arr = explode('/',request()->path());
     if(in_array($arr[0],['ru', 'uk'] )){ array_splice($arr, 0,1);}
@@ -91,7 +90,8 @@
     }
 </script>
 @stack('script')
-<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script src="{{asset('js/vue.min.js')}}"></script>
+{{--<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>--}}
 <script src="{{asset('/js/app.js')}}"></script>
 </body>
 </html>
