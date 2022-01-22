@@ -79,7 +79,6 @@ class HomeController extends Controller
         }
         //отправляем на сервер результат
         if ($request->ajax()) {
-//            return response()->json(['html'=>view("blocks.category-products",['category' => $category, 'products' => $products->paginate(1)])->render()]);
             return response()->json(['status' => true, 'products' => $products->with('curs')->paginate(10)]);
         } else {
             return view('products-category', ['category' => $category, 'products' => $products->paginate(10)]);

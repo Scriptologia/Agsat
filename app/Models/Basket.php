@@ -24,7 +24,8 @@ class Basket extends Model
             $text = "";
             $text = $text."Заказ  <b>".$item->id."</b> \n \n ";
             $text = $text."<i>ФИО :</i><b>".$item->person['name']."</b> \n ";
-            $text = $text."<i>Телефон :</i> <b>".$item->person['phone']."</b> \n ";
+            $phone = '+'.preg_replace('/[^0-9]/', '', $item->person['phone']);
+            $text = $text."<i>Телефон :</i> <a href='tel:".$phone."'>".$phone."</a> \n ";
             $text = $text."<i>Город :</i> <b>".$item->person['city']."</b> \n";
             $text = $text."<i>Улица :</i> <b>".$item->person['street']."</b> \n";
             $text = $text."<i>Новая Почта :</i> <b>".$item->person['post']."</b> \n \n";

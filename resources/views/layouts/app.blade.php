@@ -4,30 +4,35 @@
     <!-- <meta http-equiv="x-ua-compatible" content="IE=edge"> -->
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ env('APP_DOMAIN') }} {{isset($product) ? ' | '. $product->{'name_'.App::getLocale()} :  '' }}{{isset($category) ?' | '. $category->{'name_'.App::getLocale()} :  '' }}</title>
+    <title>{{ env('APP_DOMAIN') }} {{isset($product) ? ' | '. $product->{'name_'.App::getLocale()} :  '' }}{{!isset($categories) && isset($category) ?' | '. $category->{'name_'.App::getLocale()} :  '' }}{{isset($page) ?' | '. $page->{'name_'.App::getLocale()} :  '' }}</title>
     <meta name="Keywords" content="{{isset($product) && !is_null($product->{'tags_'.App::getLocale()}) ?  implode(',',$product->{'tags_'.App::getLocale()}) :  '' }}{{isset($category) && !is_null($category->{'tags_'.App::getLocale()}) ?'   '. implode(',',$category->{'tags_'.App::getLocale()}) :  '' }}" />
     <meta name="Description" content="{{isset($product) ? $product->{'description_'.App::getLocale()} :  '' }}{{isset($category) ?'  '. $category->{'description_'.App::getLocale()} :  '' }}" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
     <meta name="format-detection" content="telephone=no" />
-    <link rel="canonical" href="{{env('APP_URL')}}" />
-    <link rel="shortcut icon" href="{{asset('/favicon.ico')}}" />
+    <link rel="shortcut icon" href="{{asset('logo-32.png')}}" />
     <link rel="stylesheet" href="{{asset('css/style.css')}}">
     <link rel="stylesheet" href="{{asset('css/fontawesome-pro-5.12.0/css/all.css')}}">
     <meta property="og:image" content="/wa-apps/shop/themes/agsat/img/logo.svg" />
+    @php
+        $arr = explode('/',request()->path());
+    if(in_array($arr[0],['ru', 'uk'] )){ array_splice($arr, 0,1);}
+    $get = implode('/',$arr);
+    @endphp
+    <link rel="canonical" href="{{env('APP_URL')}}/{{$get}}" />
     <link
             rel="alternate"
             hreflang="uk"
-            href="{{env('APP_URL')}}/ua/"
+            href="{{env('APP_URL')}}/uk/{{$get}}"
     />
     <link
             rel="alternate"
             hreflang="x-default"
-            href="{{env('APP_URL')}}/"
+            href="{{env('APP_URL')}}/{{$get}}"
     />
     <link
             rel="alternate"
             hreflang="ru"
-            href="{{env('APP_URL')}}"
+            href="{{env('APP_URL')}}/{{$get}}"
     />
 </head>
 <body>

@@ -198,7 +198,14 @@ const app = new Vue({
             this.currentPage = paginator
             let obj = this
             history.pushState(null, null, '/'+this.category+'/'+this.query+paginator)
-            axios( '/'+this.category+'/'+this.query+paginator)
+            axios({
+                url: '/'+this.category+'/'+this.query+paginator,
+                data,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+                method:  'get'})
                 .then(res => {
                     obj.filteredProducts = res.data.products
                 }).catch(err => {console.log(err)})
