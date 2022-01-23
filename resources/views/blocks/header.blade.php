@@ -1,9 +1,14 @@
 <header class="">
+    @if($company->time->start !== $company->time->end)
     <div class="header_banner">
         <div class="header_banner_item" style="color:green">
-            <i class="fal fa-clock"></i> {{$company->time->start}} -{{$company->time->end}} &nbsp;&nbsp; <i class="fal fa-utensils"></i> {{$company->time->from}} -{{$company->time->to}}
+            <i class="fal fa-clock"></i> {{$company->time->start}} -{{$company->time->end}} &nbsp;&nbsp;
+            @if($company->time->from !== $company->time->to)
+            <i class="fal fa-utensils"></i> {{$company->time->from}} -{{$company->time->to}}
+                @endif
         </div>
     </div>
+    @endif
    <nav>
        <div class="container nav">
        <i class="fal fa-bars fa-lg nav_burger" @click="toggleNavMenu"></i>
