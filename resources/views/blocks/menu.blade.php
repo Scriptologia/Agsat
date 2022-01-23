@@ -21,12 +21,12 @@
                 <template v-if="searchResult.products && searchResult.products.length">
                     <div class="item" v-for="(product, index) in searchResult.products" :key="index">
                         <div class="item_img" v-if="product.img && product.img.find(it => it.main === true)">
-                            <a :href="product.category.slug+'/'+product.slug" >
+                            <a :href="'/'+product.category.slug+'/'+product.slug" >
                                 <img :src="product.img.find(it => it.main === true).img"  loading="lazy">
                             </a>
                         </div>
                         <div class="item_text">
-                            <a :href="product.category.slug+'/'+product.slug">
+                            <a :href="'/'+product.category.slug+'/'+product.slug">
                                 <h4>@{{product['name_'+lang]}}</h4>
                             </a>
                             <p class="price">@{{parseFloat((product.price * product.curs.curs).toFixed(2))}} грн.

@@ -34,7 +34,8 @@
                     :fields="fields"
                     :sort-by.sync="sortBy"
                     :sort-desc.sync="sortDesc"
-                    responsive="sm"
+                     responsive
+                     stacked="sm"
                     small
                     striped hover
                     @filtered="onFiltered"

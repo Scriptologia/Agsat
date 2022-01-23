@@ -34,7 +34,8 @@
                     :current-page="currentPage"
                     :fields="fields"
                     :sort-desc.sync="sortDesc"
-                    responsive="sm"
+                     responsive
+                     stacked="sm"
                     small
                     striped hover
                     @filtered="onFiltered"

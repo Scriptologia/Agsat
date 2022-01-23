@@ -1,7 +1,7 @@
 <header class="">
     <div class="header_banner">
-        <div class="header_banner_item">
-            тут расписание работы и т.п...
+        <div class="header_banner_item" style="color:green">
+            <i class="fal fa-clock"></i> {{$company->time->start}} -{{$company->time->end}} &nbsp;&nbsp; <i class="fal fa-utensils"></i> {{$company->time->from}} -{{$company->time->to}}
         </div>
     </div>
    <nav>
