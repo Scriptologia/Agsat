@@ -97,7 +97,7 @@
                     { key: 'id', sortable: true },
                     { key: 'category_id', sortable: true , label:'Родительская категория',
                         formatter: (value, key, item) => {
-                            let its = this.categories.find(it => it.id  === item.category_id)
+                            let its = this.categories.find(it => it.id  == item.category_id)
                             return its? its.name_ru : 'корень';
                         },
                         sortByFormatted: true,

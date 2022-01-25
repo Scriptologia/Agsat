@@ -329,7 +329,7 @@
             }
         },
         mounted() {
-            if(Object.keys(this.category).length) this.filtersObj = this.filterOptions.filter(item => this.category.filters.includes(item.id));
+            if(Object.keys(this.category).length && this.category.filters) this.filtersObj = this.filterOptions.filter(item => this.category.filters.includes(item.id));
         }
     }
 </script>

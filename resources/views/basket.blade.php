@@ -31,28 +31,43 @@
             <div class="basket-form" v-cloak v-if="basketPage.products.length">
                 <div class="one-click-product_form">
                     <div class="form-item">
-                        <label for="name">@lang('text.fio'): </label>
+                        <label for="name">@lang('text.name'): </label>
                         <input type="text"  id="name" autocomplete="off" v-model.trim="basketPage.person.name" ref="name">
+                    </div>
+                    <div class="form-item">
+                        <label for="surname">@lang('text.surname'): </label>
+                        <input type="text"  id="surname" autocomplete="off" v-model.trim="basketPage.person.surname" ref="surname">
+                    </div>
+                    <div class="form-item">
+                        <label for="patronymico">@lang('text.patronymico'): </label>
+                        <input type="text"  id="patronymico" autocomplete="off" v-model.trim="basketPage.person.patronymico" ref="patronymico">
                     </div>
                     <div class="form-item">
                         <label for="phone">@lang('text.phone'): </label>
                         <input type="tel"  id="phone" autocomplete="off" v-model.trim="basketPage.person.phone" ref="phone" placeholder="+3 8(0XX) XXX-XX-XX">
                     </div>
                     <div class="form-item">
-                        <label for="city">@lang('text.city'): </label>
-                        <input type="text"  id="city" autocomplete="off" v-model.trim="basketPage.person.city" ref="city">
+                        <label for="region">@lang('text.region'): </label>
+                        <select name="region" id="region" v-model="basketPage.person.region" ref="region">
+                            <option selected disabled v-if="!regions.length" value="" >@lang('text.no-result')</option>
+                            <option selected disabled v-if="regions.length" value="" >@lang('text.searched'): @{{ regions.length }}</option>
+                            <option :value="post" v-for="(post, index) in regions" :key="index">@{{ post['Description'+(lang == '' || lang == 'ru' ? 'Ru' : '')] }}</option>
+                        </select>
                     </div>
                     <div class="form-item">
-                        <label for="street">@lang('text.street'): </label>
-                        <input type="text"  id="street" autocomplete="off" v-model.trim="basketPage.person.street" ref="street">
+                        <label for="city">@lang('text.city'): </label>
+                        <select name="city" id="city" v-model="basketPage.person.city" ref="city">
+                            <option selected disabled v-if="!cities.length" value="" >@lang('text.no-result')</option>
+                            <option selected disabled v-if="cities.length" value="" >@lang('text.searched'): @{{ cities.length }}</option>
+                            <option :value="post" v-for="(post, index) in cities" :key="index">@{{ post['Description'+(lang == '' || lang == 'ru' ? 'Ru' : '')] }}</option>
+                        </select>
                     </div>
                     <div class="form-item">
                         <label for="post">@lang('text.new-post'): </label>
-                        {{--<input type="text"  id="post" autocomplete="off" v-model.trim="basketPage.person.post" ref="post">--}}
                         <select name="post" id="post" v-model="basketPage.person.post" ref="post">
-                            <option selected disabled v-if="!basketPage.postArr.length" value="" >@lang('text.no-result')</option>
-                            <option selected disabled v-if="basketPage.postArr.length" value="" >@lang('text.searched'): @{{ basketPage.postArr.length }}</option>
-                            <option :value="post.DescriptionRu" v-for="(post, index) in basketPage.postArr" :key="index">@{{ post.DescriptionRu }}</option>
+                            <option selected disabled v-if="!posts.length" value="" >@lang('text.no-result')</option>
+                            <option selected disabled v-if="posts.length" value="" >@lang('text.searched'): @{{ posts.length }}</option>
+                            <option :value="post" v-for="(post, index) in posts" :key="index">@{{ post['Description'+(lang == '' || lang == 'ru' ? 'Ru' : '')] }}</option>
                         </select>
                     </div>
                     <div class="errors" v-if="basketPage.errors.length">
@@ -63,7 +78,7 @@
                 </div>
                 <br>
                 <div class="basket-form_button">
-                    <button class="button-green" @click="sendBasketToServer">@lang('text.buy')</button>
+                    <button class="button-green" @click="sendBasketToServer">@lang('text.place-order')</button>
                 </div></div>
             <div class="basket-empty" v-else v-cloak>
                 <h4>@lang('text.basket-empty')</h4>

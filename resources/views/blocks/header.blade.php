@@ -50,8 +50,9 @@
                 </a>
             </div>
             <div class="right">
-                <div class="contacts">
-                    <i class="fas fa-phone fa-rotate-90" @click="showModal('contacts')"  v-cloak></i>&nbsp;<span>{{$company->phones[0]}}</span>
+                <div class="contacts" @click="showModal('contacts')"  v-cloak>
+                    <i class="fas fa-phone fa-rotate-90"></i>&nbsp;<span>{{$company->phones[0]}} </span>
+                    <i class="fa fa-angle-down" style="background: none;"></i>
                 </div>
                 <div class="language"><i class="fal fa-globe"></i>
                     <a href="{{ route('setlocale', ['locale' => 'ru']) }}" @if(request()->segment('1') === 'ru') class="active" @endif><span>RU</span></a>&nbsp; |

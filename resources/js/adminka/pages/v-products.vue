@@ -34,7 +34,7 @@
                     :fields="fields"
                     :sort-by.sync="sortBy"
                     :sort-desc.sync="sortDesc"
-                     responsive
+                     responsive="sm"
                      stacked="sm"
                     striped hover
                     @filtered="onFiltered"
@@ -104,7 +104,7 @@
                     },
                     { key: 'category_id', sortable: true , label:'Категория',
                         formatter: (value, key, item) => {
-                            let its = this.categories.find(it => it.id  === item.category_id)
+                            let its = this.categories.find(it => it.id  == item.category_id)
                             return its? its.name_ru : 'корень';
                         },
                         sortByFormatted: true,
@@ -113,7 +113,7 @@
                     { key: 'slug', sortable: true, label:'Slug' },
                     { key: 'price', sortable: true, label:'Цена',
                         formatter: (value, key, item) => {
-                            let its = this.$store.state.curses.find(it => it.id  === item.curs_id)
+                            let its = this.$store.state.curses.find(it => it.id  == item.curs_id)
                             return its? value + ' ' + its.name : value;
                         },
                         sortByFormatted: true,
@@ -122,7 +122,7 @@
                     { key: 'skidka', sortable: true, label:'Скидка' },
                     { key: 'img', sortable: false, label:'Изображение',
                         formatter: (value, key, item) => {
-                            let its = value !== null && value.length? value.find(it => it.main === true) : false
+                            let its = value !== null && value.length? value.find(it => it.main == true) : false
                             return its? 'есть главная' : 'нет главной';
                         },
                         sortByFormatted: true,

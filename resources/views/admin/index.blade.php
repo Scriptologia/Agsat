@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="ru">
-{{--<html lang="{{ str_replace('_', '-', main()->getLocale()) }}">--}}
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">

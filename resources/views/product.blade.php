@@ -83,6 +83,6 @@
                 img: @json($product->img),
                 currentSlide : 0
             }
-            data.product = {...@json($product), inBasket:1, postArr:[], person: {name:'', phone:'', city:'', street:'', post:''}, errors:[] }
+            data.product = {...@json($product), inBasket:1, person: {name:'',surname:'',patronymico:'', phone:'', city:{}, region:{}, post:{}}, errors:[] }
     </script>
 @endpush

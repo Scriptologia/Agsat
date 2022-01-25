@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <!-- <meta http-equiv="x-ua-compatible" content="IE=edge"> -->
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ env('APP_DOMAIN') }} {{isset($product) ? ' | '. $product->{'name_'.App::getLocale()} :  '' }}{{!isset($categories) && isset($category) ?' | '. $category->{'name_'.App::getLocale()} :  '' }}{{isset($page) ?' | '. $page->{'name_'.App::getLocale()} :  '' }}</title>
@@ -50,14 +49,6 @@
             text: ["@lang('text.more')", "@lang('text.more_hide')"]
         },
         query:"",
-        // oneClick:{
-        //     number: 1,
-        //     name: '',
-        //     phone: '',
-        //     city: '',
-        //     street: '',
-        //     price: 0,
-        // },
         apiKeyNovaPochta :'480580809b2620f3e6c49c024b0d3354',
         currentPage:"",
         megaMenu:false,
@@ -69,16 +60,17 @@
             products:[],
             price:0,
             errors:[],
-            postArr:[],
-            person: {name:'', phone:'', city:'', street:'', post:''}
+            person: {name:'',patronymico:'',surname:'', phone:'', city:{}, region:{}, post:{}}
         },
+        regions:[],
+        cities:[],
+        posts:[],
         category:'',
         children_categories: [],
         showMegaMenu: false,
         search: '',
         searchResult: [],
         sliders: {},
-        // currentSlide: 0,
         sliderInterval:3000,
         lang:'{{App::getLocale()}}',
         arrLang:['','ru','uk'],
@@ -90,8 +82,8 @@
     }
 </script>
 @stack('script')
-{{--<script src="{{asset('js/vue.min.js')}}"></script>--}}
-<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script src="{{asset('js/vue.min.js')}}"></script>
+{{--<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>--}}
 <script src="{{asset('/js/app.js')}}"></script>
 </body>
 </html>

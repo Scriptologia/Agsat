@@ -17,11 +17,13 @@
                                 </b-form-group>
                                 <h5>Персональные данные:</h5>
                                 <ul class="person">
-                                    <li>{{person.name}}</li>
-                                    <li>{{person.phone}}</li>
-                                    <li>{{person.city}}</li>
-                                    <li>{{person.street}}</li>
-                                    <li>{{person.post}}</li>
+                                    <li>Имя : <b>{{person.name}}</b></li>
+                                    <li>Фамилия : <b>{{person.surname}}</b></li>
+                                    <li>Отчество : <b>{{person.patronymico}}</b></li>
+                                    <li>Телефон : <b>{{person.phone}}</b></li>
+                                    <li>Область : <b>{{person.region}}</b></li>
+                                    <li>Город : <b>{{person.city}}</b></li>
+                                    <li>Отделение Новой почты : <b>{{person.post}}</b></li>
                                 </ul>
                                 <h5>Товары:</h5>
                                 <b-table :busy="spinner"

@@ -21,7 +21,7 @@
                 <h1>{{$category->{'name_'.App::getLocale()} }}</h1>
                 <div class="filter-icon" @click="showFilter">
                     <i class="fas fa-filter"></i>
-                    <div v-cloak>@{{ numFilterSelected }}</div>
+                    <div v-cloak v-if="numFilterSelected">@{{ numFilterSelected }}</div>
                 </div>
                 <div v-if="filteredProducts" v-cloak>
                         <div class="item" v-if="filteredProducts.data.length"
@@ -44,7 +44,7 @@
                                     <p v-if="product.skidka" class="price">@{{parseFloat((product.price * product.curs.curs).toFixed(0))}} грн</p>
                                     <h4 class="skidka">@{{parseFloat((product.price * product.curs.curs * (100-product.skidka) / 100).toFixed(0))}}
                                         грн</h4>
-                                    <button class="green" @click="addToBasket(product)" v-cloak v-if="product.count">@lang('text.buy')</button>
+                                    <button class="green button-green" @click="addToBasket(product)" v-cloak v-if="product.count">@lang('text.buy')</button>
                                 </div>
                             </div>
                         <h5  v-if="!filteredProducts.data.length">@lang('text.no-result')</h5>

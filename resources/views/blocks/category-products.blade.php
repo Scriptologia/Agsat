@@ -26,7 +26,7 @@
                 @endif
                 <h4 class="skidka">{{round($product->price * $product->curs->curs * (100-$product->skidka) / 100, 0)}} грн</h4>
                     @if($product->count)
-                        <button class="green" @click="addToBasket({{$product}})" v-cloak>@lang('text.buy')</button>
+                        <button class="green button-green" @click="addToBasket({{$product}})" v-cloak>@lang('text.buy')</button>
                     @endif
             </div>
         </div>

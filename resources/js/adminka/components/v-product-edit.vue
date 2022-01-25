@@ -341,7 +341,7 @@
                 description_uk: this.product.description_uk,
                 text_uk: this.product.text_uk,
                 tags_uk: this.product.tags_uk,
-                curs_id: this.product.curs_id,
+                curs_id: this.product.curs_id || this.curses.find(it => it.base).id,
                 price: this.product.price || 0,
                 count: this.product.count || 0,
                 visible: Object.keys(this.product).length ? this.product.visible : true,
@@ -362,7 +362,7 @@
             ]),
             makeMain(index, item){
                 this.images.map((it, i) => {
-                    i === index ? it.main = true : it.main = false;
+                    i == index ? it.main = true : it.main = false;
                     return item;
                 })
             },
@@ -375,7 +375,7 @@
                     return {img: item.img, main: false}
                 })
                 this.images = [...this.images, ...arr]
-                if(!this.images.find(it => it.main === true)) this.images[0].main = true;
+                if(!this.images.find(it => it.main == true)) this.images[0].main = true;
                 this.SET_MEDIA_SELECTED_FILES_TO_STATE()
             },
             info(item, index, button) {
@@ -388,7 +388,7 @@
             },
             toastMessage(message) {
                 let str = '';
-                if (typeof message === 'object') {
+                if (typeof message == 'object') {
                     for (const [p, val] of Object.entries(message)) {
                         str += `${p}:${val.join(' \n ')}\n`;
                     }
@@ -413,8 +413,8 @@
                 if (!this.name_uk) this.name_uk = this.name_ru;
                 if (!this.description_uk) this.description_uk = this.description_ru;
                 if (!this.text_uk) this.text_uk = this.text_ru;
-                if (!this.tags_uk || this.tags_uk === null) this.tags_uk = this.tags_ru;
-                let dop_products = this.dopProducts.length? this.dopProducts.map(item => item.id) : null;
+                if (!this.tags_uk || this.tags_uk == null) this.tags_uk = this.tags_ru;
+                let dop_products = this.dopProducts && this.dopProducts.length? this.dopProducts.map(item => item.id) : null;
                 let data = {
                     dop_products: dop_products,
                     name_ru: this.name_ru,
@@ -461,7 +461,7 @@
                     let objt = this;
                     let arr = []
                     function findParent (category_id, arr){
-                        let obj = objt.categories.find(it => it.id === category_id)
+                        let obj = objt.categories.find(it => it.id == category_id)
                         if (obj !== undefined){
                             if (obj.filters !== null) {arr = arr.concat(obj.filters);}
                             return findParent(obj.category_id, arr)
@@ -482,11 +482,11 @@
             skidka: function () {
                 this.skidka = this.skidka > 100 ? 100 : this.skidka
                 let  arr = this.skidka.toString().split( '.' )
-                this.skidka = arr.length === 2 && arr[1].length > 2? this.$options.filters.floatNumber(this.skidka, 2) : this.skidka
+                this.skidka = arr.length == 2 && arr[1].length > 2? this.$options.filters.floatNumber(this.skidka, 2) : this.skidka
             },
             price: function () {
                 let  arr = this.price.toString().split( '.' )
-                this.price = arr.length === 2 && arr[1].length > 2? this.$options.filters.floatNumber(this.price, 2) : this.price
+                this.price = arr.length == 2 && arr[1].length > 2? this.$options.filters.floatNumber(this.price, 2) : this.price
             },
             categoryDopProducts: function () {
                 axios.get(
@@ -515,7 +515,7 @@
 
             let obj = this
             if(Object.keys(this.product).length) {
-                let category = this.categories.find(it =>  it.id === obj.product.category_id)
+                let category = this.categories.find(it =>  it.id == obj.product.category_id)
                 this.category = typeof  category !== 'undefined'? category : {}
             }
 

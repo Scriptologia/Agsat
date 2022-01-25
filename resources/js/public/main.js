@@ -17,15 +17,19 @@ const app = new Vue({
         },
         sendBasketToServer(){
             this.basketPage.errors = []
-            if(this.basketPage.person.name.length <= 4) { this.$refs['name'].classList.add('error'); this.basketPage.errors.push("поле ФИО должно быть заполнено")}
+            if(this.basketPage.person.name.length <= 2) { this.$refs['name'].classList.add('error'); this.basketPage.errors.push("поле Имя должно быть заполнено")}
             else {this.$refs['name'].classList.remove('error'); }
+            if(this.basketPage.person.surname.length <= 2) { this.$refs['surname'].classList.add('error'); this.basketPage.errors.push("поле Фамилия должно быть заполнено")}
+            else {this.$refs['surname'].classList.remove('error'); }
+            if(this.basketPage.person.patronymico.length <= 2) { this.$refs['patronymico'].classList.add('error'); this.basketPage.errors.push("поле Отчество должно быть заполнено")}
+            else {this.$refs['patronymico'].classList.remove('error'); }
             if(this.basketPage.person.phone.length < 11) { this.$refs['phone'].classList.add('error'); this.basketPage.errors.push("поле Телефон должно быть заполнено")}
             else {this.$refs['phone'].classList.remove('error'); }
-            if(this.basketPage.person.city.length < 3) { this.$refs['city'].classList.add('error'); this.basketPage.errors.push("поле Город должно быть заполнено")}
+            if(this.basketPage.person.city.Description.length < 2) { this.$refs['city'].classList.add('error'); this.basketPage.errors.push("поле Город должно быть заполнено")}
             else { this.$refs['city'].classList.remove('error');}
-            if(this.basketPage.person.street.length < 3) { this.$refs['street'].classList.add('error'); this.basketPage.errors.push("поле Улица должно быть заполнено")}
-            else {this.$refs['street'].classList.remove('error'); }
-            if(this.basketPage.person.post.length < 3) { this.$refs['post'].classList.add('error'); this.basketPage.errors.push("поле Новая Почта быть заполнено")}
+            if(this.basketPage.person.region.Description.length < 2) { this.$refs['region'].classList.add('error'); this.basketPage.errors.push("поле Область должно быть заполнено")}
+            else {this.$refs['region'].classList.remove('error'); }
+            if(this.basketPage.person.post.Description.length < 3) { this.$refs['post'].classList.add('error'); this.basketPage.errors.push("поле Новая Почта быть заполнено")}
             else { this.$refs['post'].classList.remove('error');}
 
             if(!this.basketPage.errors.length) {
@@ -46,7 +50,16 @@ const app = new Vue({
                         img: it.img_main
                     }
                 })
-                let data = {products, person:this.basketPage.person, price:this.basketPage.price}
+                let person = {
+                   name:this.basketPage.person.name,
+                   surname:this.basketPage.person.surname,
+                   patronymico:this.basketPage.person.patronymico,
+                   phone:this.basketPage.person.phone,
+                   region:this.basketPage.person.region.Description,
+                   city:this.basketPage.person.city.Description,
+                   post:this.basketPage.person.post.Description
+                }
+                let data = {products, person, price:this.basketPage.price}
                 axios({
                     url: 'api/basket-from-frontend',
                     data,
@@ -62,7 +75,7 @@ const app = new Vue({
                             this.basketPage= {
                                 products:[],
                                 price:0,
-                                person: {city:'', street:'',post:'',phone:'', name:''}
+                                person: {city:'', region:'',post:'',phone:'', name:'', surname:'', patronymico:''}
                             }
                             this.showModal('basket-server-modal')
                         } else {
@@ -76,15 +89,19 @@ const app = new Vue({
         },
         sendOneClickToServer() {
             this.product.errors = []
-                if(this.product.person.name.length <= 4) { this.$refs['name'].classList.add('error'); this.product.errors.push("поле ФИО должно быть заполнено")}
+                if(this.product.person.name.length <= 2) { this.$refs['name'].classList.add('error'); this.product.errors.push("поле Имя должно быть заполнено")}
                 else {this.$refs['name'].classList.remove('error'); }
+                if(this.product.person.surname.length <= 2) { this.$refs['surname'].classList.add('error'); this.product.errors.push("поле Фамилия должно быть заполнено")}
+                else {this.$refs['surname'].classList.remove('error'); }
+                if(this.product.person.patronymico.length <= 2) { this.$refs['patronymico'].classList.add('error'); this.product.errors.push("поле Отчество должно быть заполнено")}
+                else {this.$refs['patronymico'].classList.remove('error'); }
                 if(this.product.person.phone.length < 11) { this.$refs['phone'].classList.add('error'); this.product.errors.push("поле Телефон должно быть заполнено")}
                 else {this.$refs['phone'].classList.remove('error'); }
-                if(this.product.person.city.length < 3) { this.$refs['city'].classList.add('error'); this.product.errors.push("поле Город должно быть заполнено")}
+                if(this.product.person.city.length < 2) { this.$refs['city'].classList.add('error'); this.product.errors.push("поле Город должно быть заполнено")}
                 else { this.$refs['city'].classList.remove('error');}
-                if(this.product.person.street.length < 3) { this.$refs['street'].classList.add('error'); this.product.errors.push("поле Улица должно быть заполнено")}
-                else {this.$refs['street'].classList.remove('error'); }
-                if(this.product.person.post.length < 3) { this.$refs['post'].classList.add('error'); this.product.errors.push("поле Новая Почта быть заполнено")}
+                if(this.product.person.region.length < 2) { this.$refs['region'].classList.add('error'); this.product.errors.push("поле Область должно быть заполнено")}
+                else {this.$refs['region'].classList.remove('error'); }
+                if(this.product.person.post.length < 2) { this.$refs['post'].classList.add('error'); this.product.errors.push("поле Новая Почта быть заполнено")}
                 else { this.$refs['post'].classList.remove('error');}
             let it = this.product
                 let prod =  {
@@ -103,7 +120,16 @@ const app = new Vue({
                         img: it.img.find(it => it.main).img
                     }
             let price = prod.price_all
-                let data = {products : [prod], person:this.product.person, price}
+            let person = {
+                name:this.product.person.name,
+                surname:this.product.person.surname,
+                patronymico:this.product.person.patronymico,
+                phone:this.product.person.phone,
+                region:this.product.person.region.Description,
+                city:this.product.person.city.Description,
+                post:this.product.person.post.Description
+            }
+                let data = {products : [prod], person, price}
                 if(!this.product.errors.length) {
                     axios({
                         url: '/api/basket-from-frontend',
@@ -157,20 +183,11 @@ const app = new Vue({
                 }, {totalNumber:0, totalPrice:0})
             } else { this.basket = {}}
         },
-        axiosNovaPochta (model){
-            clearTimeout(this.interval)
-            this.interval = ''
-            data= {
-                "modelName": "Address",
-                "calledMethod": "getWarehouses",
-                "methodProperties": {
-                    "CityName": this[model].person.city,
-                    "FindByString": this[model].person.street
-                },
-                "apiKey": ""
-            }
+        axiosNovaPochta (model, data, method){
+            this[model] =[]
+            this.posts= []
             axios({
-                url: 'https://api.novaposhta.ua/v2.0/json/AddressGeneral/getWarehouses?apiKey='+this.apiKeyNovaPochta,
+                url: 'https://api.novaposhta.ua/v2.0/json/'+method+'?apiKey='+this.apiKeyNovaPochta,
                 data,
                 headers: {
                     'Content-Type': 'application/json'
@@ -179,7 +196,7 @@ const app = new Vue({
             })
                 .then((res) => {
                     if (res.data.success) {
-                        this[model].postArr = res.data.data
+                        this[model] = res.data.data
                     }
                 })
                 .catch(function (error) {
@@ -337,27 +354,20 @@ const app = new Vue({
             localStorage.setItem('seeProdutcs', JSON.stringify(seeProducts) )
         }
 
+        this.axiosNovaPochta('regions',
+            {
+                "apiKey": "",
+                "modelName": "Address",
+                "calledMethod": "getAreas",
+                "methodProperties": {}
+            }, 'AddressGeneral/getAreas',
+            )
+
         // this.oneClick.price = this.product ? parseFloat((this.product.price * this.product.curs.curs*(100 - this.product.skidka)/100).toFixed(0)) :0
 
         this.makeBasket()
     },
     watch: {
-        // oneClick: {
-        //     handler(newQuestion, oldQuestion) {
-        //         this.oneClick.price = newQuestion.number * parseFloat((this.product.price * this.product.curs.curs*(100 - this.product.skidka)/100).toFixed(0))
-        //         if (newQuestion.city.length && newQuestion.city.length >= 4) {
-        //             if(!newQuestion.street.length || (newQuestion.street.length && newQuestion.street.length >= 4)) {
-        //                 if (this.interval) {
-        //                     return null;
-        //                 }
-        //                 this.interval = setTimeout(() => {
-        //                     this.axiosNovaPochta()
-        //                 }, 1000)
-        //             }
-        //         }
-        //     },
-        //     deep: true
-        // },
         "product.person.phone": {
             handler(newQuestion, oldQuestion) {
                 let self = this
@@ -398,41 +408,63 @@ const app = new Vue({
             },
             deep: true
         },
-        'product.person': {
+        'product.person.region': {
             handler(newQuestion, oldQuestion) {
-                if(!newQuestion.city.length || !newQuestion.street.length) {
-                    this.product.person.post = ''
-                    this.product.postArr = []
-                }
-                if (newQuestion.city.length && newQuestion.city.length >= 4) {
-                    if(newQuestion.street.length && newQuestion.street.length >= 4) {
-                        if (this.interval) {
-                            return null;
-                        }
-                        this.interval = setTimeout(() => {
-                            this.axiosNovaPochta('product')
-                        }, 1000)
-                    }
-                }
+                this.axiosNovaPochta('cities',
+                    {
+                        "modelName": "Address",
+                        "calledMethod": "getCities",
+                        "methodProperties": {
+                            "AreaRef": newQuestion.Ref,
+                            "Warehouse": "1",
+                        },
+                    }, 'Address/newQuestion'
+                )
             },
             deep: true
         },
-        'basketPage.person': {
+        'product.person.city': {
             handler(newQuestion, oldQuestion) {
-                if(!newQuestion.city.length || !newQuestion.street.length) {
-                    this.basketPage.person.post = ''
-                    this.basketPage.postArr = []
-                }
-                if (newQuestion.city.length && newQuestion.city.length >= 4) {
-                    if(newQuestion.street.length && newQuestion.street.length >= 4) {
-                        if (this.interval) {
-                            return null;
-                        }
-                        this.interval = setTimeout(() => {
-                            this.axiosNovaPochta('basketPage')
-                        }, 1000)
-                    }
-                }
+                this.axiosNovaPochta('posts',
+                    {
+                        "modelName": "Address",
+                        "calledMethod": "getWarehouses",
+                        "methodProperties": {
+                            "CityName": newQuestion.DescriptionRu,
+                            "Warehouse": "1",
+                        },
+                    }, 'Address/getWarehouses'
+                )
+            },
+            deep: true
+        },
+        'basketPage.person.region': {
+            handler(newQuestion, oldQuestion) {
+                this.axiosNovaPochta('cities',
+                    {
+                        "modelName": "Address",
+                        "calledMethod": "getCities",
+                        "methodProperties": {
+                            "AreaRef": newQuestion.Ref,
+                            "Warehouse": "1",
+                        },
+                    }, 'Address/newQuestion'
+                )
+            },
+            deep: true
+        },
+        'basketPage.person.city': {
+            handler(newQuestion, oldQuestion) {
+                this.axiosNovaPochta('posts',
+                    {
+                        "modelName": "Address",
+                        "calledMethod": "getWarehouses",
+                        "methodProperties": {
+                            "CityName": newQuestion.DescriptionRu,
+                            "Warehouse": "1",
+                        },
+                    }, 'Address/getWarehouses'
+                )
             },
             deep: true
         },

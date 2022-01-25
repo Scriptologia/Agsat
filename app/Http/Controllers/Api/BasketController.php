@@ -124,9 +124,11 @@ class BasketController extends Controller
                     'products' => 'array|required',
                     'person' => 'array|required',
                     'person.name' => 'string|required',
+                    'person.surname' => 'string|required',
+                    'person.patronymico' => 'string|required',
                     'person.phone' => 'string|required',
                     'person.city' => 'string|required',
-                    'person.street' => 'string|required',
+                    'person.region' => 'string|required',
                     'person.post' => 'string|required',
                     'is_closed' => 'boolean|nullable',
                 ]
