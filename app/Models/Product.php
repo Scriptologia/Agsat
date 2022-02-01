@@ -36,6 +36,10 @@ class Product extends Model
     {
         $this->attributes['curs_id'] = $value ? $value  : null;
     }
+    public function setServiceIdAttribute($value)
+    {
+        $this->attributes['service_id'] = $value ? $value  : null;
+    }
     public function setTagsRuAttribute($value)
     {
         $this->attributes['tags_ru'] = $value != [] ? json_encode($value) : null;
@@ -67,5 +71,9 @@ class Product extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+    public function service()
+    {
+        return $this->belongsTo(Service::class);
     }
 }

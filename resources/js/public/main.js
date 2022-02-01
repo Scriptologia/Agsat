@@ -17,6 +17,7 @@ const app = new Vue({
         },
         sendBasketToServer(){
             this.basketPage.errors = []
+            if(!this.cities.length) { this.basketPage.person.city = {};  this.basketPage.person.post = {};  }
             if(this.basketPage.person.name.length <= 2) { this.$refs['name'].classList.add('error'); this.basketPage.errors.push("поле Имя должно быть заполнено")}
             else {this.$refs['name'].classList.remove('error'); }
             if(this.basketPage.person.surname.length <= 2) { this.$refs['surname'].classList.add('error'); this.basketPage.errors.push("поле Фамилия должно быть заполнено")}
@@ -25,21 +26,22 @@ const app = new Vue({
             else {this.$refs['patronymico'].classList.remove('error'); }
             if(this.basketPage.person.phone.length < 11) { this.$refs['phone'].classList.add('error'); this.basketPage.errors.push("поле Телефон должно быть заполнено")}
             else {this.$refs['phone'].classList.remove('error'); }
-            if(this.basketPage.person.city.Description.length < 2) { this.$refs['city'].classList.add('error'); this.basketPage.errors.push("поле Город должно быть заполнено")}
-            else { this.$refs['city'].classList.remove('error');}
-            if(this.basketPage.person.region.Description.length < 2) { this.$refs['region'].classList.add('error'); this.basketPage.errors.push("поле Область должно быть заполнено")}
+            if(!Object.keys(this.basketPage.person.region).length) { this.$refs['region'].classList.add('error'); this.basketPage.errors.push("поле Область должно быть заполнено")}
             else {this.$refs['region'].classList.remove('error'); }
-            if(this.basketPage.person.post.Description.length < 3) { this.$refs['post'].classList.add('error'); this.basketPage.errors.push("поле Новая Почта быть заполнено")}
+            if(!Object.keys(this.basketPage.person.city).length) { this.$refs['city'].classList.add('error'); this.basketPage.errors.push("поле Город должно быть заполнено")}
+            else { this.$refs['city'].classList.remove('error');}
+            if(!Object.keys(this.basketPage.person.post).length) { this.$refs['post'].classList.add('error'); this.basketPage.errors.push("поле Новая Почта быть заполнено")}
             else { this.$refs['post'].classList.remove('error');}
 
             if(!this.basketPage.errors.length) {
                 let products = this.basketPage.products.map(it => {
-                    return {
+                    let prod = {
                         id: it.id,
                         slug: it.slug,
                         name: it.name_ru,
                         category_id: it.category_id,
                         category_slug: it.category.slug,
+                        isService: it.isService,
                         price: it.price,
                         skidka: it.skidka,
                         price_all: it.price_all,
@@ -49,6 +51,11 @@ const app = new Vue({
                         curs_name: it.curs.name,
                         img: it.img_main
                     }
+                    if(it.service && it.isService){
+                        prod.service = {id:it.service.id, name:it.service.name_ru, price:it.service.price, curs:it.service.curs.curs}
+                        prod.price_all = prod.price_all + it.inBasket * parseFloat((it.isService * it.service.price * it.service.curs.curs).toFixed(0))
+                    }
+                    return prod;
                 })
                 let person = {
                    name:this.basketPage.person.name,
@@ -89,6 +96,7 @@ const app = new Vue({
         },
         sendOneClickToServer() {
             this.product.errors = []
+            if(!this.cities.length) { this.product.person.city = {};  this.product.person.post = {};  }
                 if(this.product.person.name.length <= 2) { this.$refs['name'].classList.add('error'); this.product.errors.push("поле Имя должно быть заполнено")}
                 else {this.$refs['name'].classList.remove('error'); }
                 if(this.product.person.surname.length <= 2) { this.$refs['surname'].classList.add('error'); this.product.errors.push("поле Фамилия должно быть заполнено")}
@@ -97,11 +105,11 @@ const app = new Vue({
                 else {this.$refs['patronymico'].classList.remove('error'); }
                 if(this.product.person.phone.length < 11) { this.$refs['phone'].classList.add('error'); this.product.errors.push("поле Телефон должно быть заполнено")}
                 else {this.$refs['phone'].classList.remove('error'); }
-                if(this.product.person.city.length < 2) { this.$refs['city'].classList.add('error'); this.product.errors.push("поле Город должно быть заполнено")}
+                if(!Object.keys(this.product.person.city).length) { this.$refs['city'].classList.add('error'); this.product.errors.push("поле Город должно быть заполнено")}
                 else { this.$refs['city'].classList.remove('error');}
-                if(this.product.person.region.length < 2) { this.$refs['region'].classList.add('error'); this.product.errors.push("поле Область должно быть заполнено")}
+                if(!Object.keys(this.product.person.region).length) { this.$refs['region'].classList.add('error'); this.product.errors.push("поле Область должно быть заполнено")}
                 else {this.$refs['region'].classList.remove('error'); }
-                if(this.product.person.post.length < 2) { this.$refs['post'].classList.add('error'); this.product.errors.push("поле Новая Почта быть заполнено")}
+                if(!Object.keys(this.product.person.post).length) { this.$refs['post'].classList.add('error'); this.product.errors.push("поле Новая Почта быть заполнено")}
                 else { this.$refs['post'].classList.remove('error');}
             let it = this.product
                 let prod =  {
@@ -110,6 +118,7 @@ const app = new Vue({
                         name: it.name_ru,
                         category_id: it.category_id,
                         category_slug: it.category.slug,
+                        isService: it.isService,
                         price: it.price,
                         skidka: it.skidka,
                         price_all: it.inBasket * parseFloat((it.price * it.curs.curs * (100-it.skidka) / 100).toFixed(0)),
@@ -118,6 +127,10 @@ const app = new Vue({
                         curs:  it.curs.curs,
                         curs_name: it.curs.name,
                         img: it.img.find(it => it.main).img
+                    }
+                    if(it.service && it.isService){
+                        prod.service = {id:it.service.id, name:it.service.name_ru, price:it.service.price, curs:it.service.curs.curs}
+                        prod.price_all = prod.price_all + it.inBasket * parseFloat((it.isService * it.service.price * it.service.curs.curs).toFixed(0))
                     }
             let price = prod.price_all
             let person = {
@@ -179,7 +192,8 @@ const app = new Vue({
             if(localStorage.getItem('produtcs')) {
                 let  products  = JSON.parse(localStorage.getItem('produtcs'))
                 this.basket = products.reduce(function (basket, item) {
-                    return {totalNumber: basket.totalNumber + item.inBasket, totalPrice: basket.totalPrice + item.inBasket*parseFloat((item.price * item.curs.curs * (100-item.skidka) / 100).toFixed(0)) }
+                    let serv = item.isService ? item.service.price * item.service.curs.curs : 0;
+                    return {totalNumber: basket.totalNumber + item.inBasket, totalPrice: basket.totalPrice + item.inBasket*parseFloat((item.price * item.curs.curs * (100-item.skidka) / 100 + serv).toFixed(0)) }
                 }, {totalNumber:0, totalPrice:0})
             } else { this.basket = {}}
         },
@@ -232,9 +246,11 @@ const app = new Vue({
         },
         hideModal(ref){
             this.$refs[ref].style.display = 'none'
+            document.getElementById('app').style.position = 'relative'
         },
         showModal(ref){
             this.$refs[ref].style.display = 'block'
+            document.getElementById('app').style.position = 'fixed'
         },
         showSubCategories(category){
             this.children_categories = category.children_categories.filter(item => item.visible === true)
@@ -363,8 +379,6 @@ const app = new Vue({
             }, 'AddressGeneral/getAreas',
             )
 
-        // this.oneClick.price = this.product ? parseFloat((this.product.price * this.product.curs.curs*(100 - this.product.skidka)/100).toFixed(0)) :0
-
         this.makeBasket()
     },
     watch: {
@@ -396,10 +410,15 @@ const app = new Vue({
             handler(newQuestion, oldQuestion) {
                 if(newQuestion) {
                     this.basketPage.price = newQuestion.reduce(function (price, it) {
-                        return price + it.inBasket * it.price_curs;
+                        let serv = it.isService ? it.service.price * it.service.curs.curs : 0;
+                        return price + it.inBasket * (it.price_curs + serv);
                     },0)
                     this.basketPage.products.map(it => {
-                        it.price_all = it.inBasket * parseFloat((it.price * it.curs.curs * (100-it.skidka) / 100).toFixed(0))
+                        let serv = 0
+                        if(it.service && it.isService){
+                            serv = it.service.price * it.service.curs.curs;
+                        }
+                        it.price_all = it.inBasket * parseFloat((it.price * it.curs.curs * (100-it.skidka) / 100 + serv).toFixed(0))
                         return it;
                     })
                     localStorage.setItem('produtcs', JSON.stringify(this.basketPage.products) )

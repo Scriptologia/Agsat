@@ -36,7 +36,7 @@
                                         <h4>@{{ product['name_'+lang] }}</h4>
                                         <span>Артикул: @{{product.id}}</span>
                                     </a>
-                                    <div class="description" v-html="product['text_'+lang]"></div>
+                                    <div class="description" v-html="product['description_'+lang]"></div>
                                 </div>
                                 <div class="item_price">
                                     <span class="active" v-if="product.count">@lang('text.yes-product')</span>

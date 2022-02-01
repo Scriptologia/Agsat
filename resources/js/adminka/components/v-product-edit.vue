@@ -160,7 +160,7 @@
                                     </b-tab>
                                     <b-tab title="Описание">
                                         <b-card-text>
-                                            <ckeditor :editor="editor" v-model="text_ru" :config="editorConfig"></ckeditor>
+                                            <ckeditor :editor="editor" @ready="onReady" v-model="text_ru" :config="editorConfig"></ckeditor>
                                         </b-card-text>
                                     </b-tab>
                                     <b-tab title="Изображения">
@@ -236,6 +236,25 @@
                                                      </b-form-group>
                                         </b-card-text>
                                     </b-tab>
+                                    <b-tab title="Доп.услуги">
+                                        <b-card-text>
+                                            <b-form-group
+                                                    label="Услуги:"
+                                                    label-for="service_id"
+                                                    label-cols-sm="3"
+                                                    label-align-sm="right"
+                                            >
+                                                <b-form-select v-model="service_id">
+                                                    <b-form-select-option :value="null">Без доп.услуги
+                                                    </b-form-select-option>
+                                                    <b-form-select-option :value="service.id"
+                                                                          v-for="(service,index) in $store.state.services"
+                                                                          :key="index">{{service.name_ru}}
+                                                    </b-form-select-option>
+                                                </b-form-select>
+                                            </b-form-group>
+                                        </b-card-text>
+                                    </b-tab>
                                 </b-tabs>
                             </b-tab>
                             <b-tab title="Украинский">
@@ -275,7 +294,7 @@
                                     </b-tab>
                                     <b-tab title="Описание">
                                         <b-card-text>
-                                            <ckeditor :editor="editor" v-model="text_uk" :config="editorConfig"></ckeditor>                                            <!--<Vueditor  v-model="text_ru"></Vueditor>-->
+                                            <ckeditor :editor="editor" @ready="onReady" v-model="text_uk" :config="editorConfig"></ckeditor>
                                         </b-card-text>
                                     </b-tab>
                                 </b-tabs>
@@ -306,10 +325,9 @@
 </template>
 
 <script>
-    // import axios from 'axios'
     import {mapActions, mapMutations} from 'vuex'
     import { url_slug } from 'cyrillic-slug'
-    import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+    import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
     import vMediaManager from '../components/media-manager/v-media-manager'
 
     export default {
@@ -320,10 +338,26 @@
         },
         data() {
             return {
-                editor: ClassicEditor,
+                editor: DecoupledEditor,
                 editorConfig: {
-                    // The configuration of the editor.
-                },
+                    toolbar: {
+                        items: [
+                            'heading', '|',
+                            'alignment', '|',
+                            'bold', 'italic', 'strikethrough', 'underline', 'subscript', 'superscript', '|',
+                            'link', '|',
+                            'bulletedList', 'numberedList', 'todoList',
+                            'fontfamily', 'fontsize', 'fontColor', 'fontBackgroundColor', '|',
+                            'code', 'codeBlock', '|',
+                            'insertTable', '|',
+                            'outdent', 'indent', '|',
+                            'blockQuote', '|',
+                            'undo', 'redo'
+                        ],
+                        shouldNotGroupWhenFull: true
+                     },
+                        removePlugins: ['CKFinderUploadAdapter', 'CKFinder', 'EasyImage', 'Image', 'ImageCaption', 'ImageStyle', 'ImageToolbar', 'ImageUpload', 'MediaEmbed'],
+                           },
                 spinner: false,
                 dopProducts: [],
                 categoryDopProducts: '',
@@ -332,6 +366,7 @@
                 skidka: this.product.skidka || 0,
                 images: this.product.img || [],
                 category: {},
+                service_id: this.product.service_id || null,
                 fields: {},
                 name_ru: this.product.name_ru,
                 description_ru: this.product.description_ru,
@@ -354,8 +389,15 @@
             }
         },
         methods: {
+            onReady( editor )  {
+                // Insert the toolbar before the editable area.
+                editor.ui.getEditableElement().parentElement.insertBefore(
+                    editor.ui.view.toolbar.element,
+                    editor.ui.getEditableElement()
+                );
+            },
             ...mapActions([
-                'GET_PRODUCTS', 'GET_FILTERS'
+                'GET_PRODUCTS', 'GET_FILTERS', 'GET_SERVICES'
             ]),
             ...mapMutations([
                 'SET_MEDIA_SELECTED_FILES_TO_STATE'
@@ -436,7 +478,8 @@
                     img: this.images,
                     slug: this.slug
                 }
-                axios({
+                if(this.service_id) data.service_id = this.service_id;
+                    axios({
                     url: '/api/product' + this.slugUrl,
                     data,
                     method: this.slugUrl ? 'put' : 'post',
@@ -588,4 +631,9 @@
         --ck-z-modal: calc( var(--ck-z-default) + 999 );
     }
     .product-edit {user-focus: false}
+    .ck {
+        &-content {
+            background: white;
+        }
+    }
 </style>

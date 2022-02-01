@@ -6,21 +6,27 @@
         <div class="one-click-product_product">
             <img :src="product.img.find(it => it.main).img">
             <div class="one-click-product_product_left">
-                <div class="form-item">
+                <div class="block-inputs">
+                    <div class="form-item">
                     <label for="name">@lang('text.number'): </label>
                     <input type="number" id="name" min="1" step="1" :max="product.count" autocomplete="off" v-model.number="product.inBasket">
                 </div>
-                <h3 class="price">@{{ product.inBasket * parseFloat((product.price * product.curs.curs * (100-product.skidka) / 100).toFixed(0)) }} грн.</h3>
+                    <div class="form-item" v-if="product.service">
+                        <input type="checkbox" id="service" v-model="product.isService">
+                        <label for="service">@{{ product.service['name_'+lang] }} + @{{parseFloat((product.service.curs.curs * product.service.price).toFixed(0))}} грн.</label>
+                    </div>
+                </div>
+                <h3 class="price">@{{ product.inBasket * parseFloat((product.price * product.curs.curs * (100-product.skidka) / 100).toFixed(0)) + parseFloat((product.isService * (product.service ? product.service.curs.curs * product.service.price : 0)).toFixed(0)) }} грн.</h3>
             </div>
         </div>
         <div class="one-click-product_form">
             <div class="form-item">
-                <label for="name">@lang('text.name'): </label>
-                <input type="text"  id="name" autocomplete="off" v-model.trim="product.person.name" ref="name">
-            </div>
-            <div class="form-item">
                 <label for="surname">@lang('text.surname'): </label>
                 <input type="text"  id="surname" autocomplete="off" v-model.trim="product.person.surname" ref="surname">
+            </div>
+            <div class="form-item">
+                <label for="name">@lang('text.name'): </label>
+                <input type="text"  id="name" autocomplete="off" v-model.trim="product.person.name" ref="name">
             </div>
             <div class="form-item">
                 <label for="patronymico">@lang('text.patronymico'): </label>

@@ -13,10 +13,16 @@
       margin-left: 20px;
       display: flex;
       align-items: center;
+      justify-content: space-between;
+      flex: 1 1 auto;
       @include sd {
         flex-direction: column;
         align-items: end;
       }
+    }
+    .block-inputs{
+      display: flex;
+      flex-direction: column;
     }
   }
   .form-item {
@@ -54,7 +60,7 @@
           justify-content: unset;
         }
       }
-      & > input {
+      & > input, & > select {
         flex: 1 1 auto;
         @include sd {
           width:100%;
@@ -91,7 +97,7 @@
       justify-content: end;
     }
   }
-  input.error {
+  input.error, select.error {
     border:1px solid $red;
   }
 }

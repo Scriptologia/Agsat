@@ -29,7 +29,8 @@
                 <div class="main_top">
                     <div class="main_top_left">
                         <span class="articul">@lang('text.articul') {{$product->id}}</span>
-                        <h1 class="price">{{round($product->price * $product->curs->curs * (100-$product->skidka) / 100, 0)}} грн.
+                        <h1 class="price" v-cloak>@{{ parseFloat((product.price * product.curs.curs * (100-product.skidka) / 100).toFixed(0)) + parseFloat((product.isService * (product.service ? product.service.curs.curs * product.service.price : 0)).toFixed(0)) }} грн.
+{{--                        <h1 class="price">{{round($product->price * $product->curs->curs * (100-$product->skidka) / 100, 0)}} грн.--}}
                             @if($product->count)
                                 <span class="active"><i class="fal fa-check-square"></i> @lang('text.yes-product')</span>
                             @else
@@ -39,31 +40,16 @@
                         @if($product->skidka > 0)
                             <h3 class="full-price">{{round($product->price * $product->curs->curs, 0)}} грн.</h3>
                         @endif
-                        <div class="proshivka" v-cloak>
-                            <h5>Прошивка (обновление ПО) + 100 грн</h5>
-                            <div class="opened" ref="more"  :class="{'max-height': moreShow.more }">
-                                <p>Обновление программного обеспечения на {{$product->{'name_'.App::getLocale()} }} до последней актуальной версии,  загрузка списка каналов на 4 популярных спутника: </p>
-                                <ul>
-                                    <li>Eutelsat Hot Bird 13 B/C/E (13°E); </li>
-                                    <li>SES 5/Astra 4A (4.9°E);</li>
-                                    <li>Amos 2/3/7;</li>
-                                    <li>ABC 75°W;</li>
-                                </ul>
-                                <p>Подготовка списков каналов под другие фаворитные группы с украинскими каналами обговаривается дополнительно.</p>
-                            </div>
-                            <a href="#" class="more" @click.prevent="more('more')">@lang('text.more')</a>
-                        </div>
+                        @include('blocks.service')
                         @if($product->count)
-                            <button class="button-green" v-cloak @click="addToBasket({{$product}})">@lang('text.buy')</button>
+                            <button class="button-green" v-cloak @click="addToBasket(product)">@lang('text.buy')</button>
                             <button class="button-green_light" v-cloak @click="showModal('oneclickbuymodal')">@lang('text.buy_one_click')</button>
                         @endif
                     </div>
-                    <div class="main_top_right">
-                        <div style="width:300px;height:100px;"></div>
-                    </div>
+                    {{--@include('blocks.product-info')--}}
                 </div>
                 <div class="main_top_description">
-                    {{$product->{'description_'.App::getLocale()} }}
+                    {!! $product->{'text_'.App::getLocale()} !!}
                 </div>
             </div>
         </div>
@@ -83,6 +69,6 @@
                 img: @json($product->img),
                 currentSlide : 0
             }
-            data.product = {...@json($product), inBasket:1, person: {name:'',surname:'',patronymico:'', phone:'', city:{}, region:{}, post:{}}, errors:[] }
+            data.product = {...@json($product), isService:0, inBasket:1, person: {name:'',surname:'',patronymico:'', phone:'', city:{}, region:{}, post:{}}, errors:[] }
     </script>
 @endpush

@@ -20,9 +20,9 @@
             <div class="search_result"  v-cloak v-if="search">
                 <template v-if="searchResult.products && searchResult.products.length">
                     <div class="item" v-for="(product, index) in searchResult.products" :key="index">
-                        <div class="item_img" v-if="product.img && product.img.find(it => it.main === true)">
+                        <div class="item_img" v-if="product.img && product.img.find(it => it.main == true)">
                             <a :href="'/'+product.category.slug+'/'+product.slug" >
-                                <img :src="product.img.find(it => it.main === true).img"  loading="lazy">
+                                <img :src="product.img.find(it => it.main == true).img"  loading="lazy">
                             </a>
                         </div>
                         <div class="item_text">
@@ -33,7 +33,7 @@
                                 <span class="active" v-if="product.count">&nbsp; @lang('text.yes-product')</span>
                                 <span class="passive" v-else>&nbsp;  @lang('text.no-product')</span>
                             </p>
-                            <div class="description" v-html="product['text_'+lang]"></div>
+                            <div class="description" v-html="product['description_'+lang]"></div>
                         </div>
                     </div>
                 </template>
@@ -52,7 +52,7 @@
                         <a :href="'/'+category.slug">@{{ category['name_'+lang] }}</a>
                     </div>
                     <div class="category-items" v-if="category.children_categories.length">
-                        <a :href="'/'+subcategory.slug" v-for="(subcategory, index) in category.children_categories.filter(item => item.visible === true)" :key="index">@{{ subcategory['name_'+lang] }}</a>
+                        <a :href="'/'+subcategory.slug" v-for="(subcategory, index) in category.children_categories.filter(item => item.visible == true)" :key="index">@{{ subcategory['name_'+lang] }}</a>
                     </div>
                 </div>
             </div>

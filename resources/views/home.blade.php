@@ -8,8 +8,10 @@
         @foreach($categories as $mainCategory)
         @foreach($mainCategory->categories as $category)
             <div class="category_item">
-                <a href="{{$category->slug}}">
+                <a href="{{$category->slug}}" class="category_item_img">
                     <img src="{{$category->img}}" alt="" loading="lazy">
+                </a>
+                <a href="{{$category->slug}}">
                     <h5>{{$category->{'name_'.App::getLocale()} }}</h5>
                 </a>
                 <p>{{$category->{'description_'.App::getLocale()} }}</p>

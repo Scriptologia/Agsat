@@ -11,7 +11,13 @@
                             <img :src="product.img_main">
                         </a>
                     </div>
-                    <a  :href="'/'+product.category.slug+'/'+product.slug" class="item_name">@{{ product['name_'+lang]}}</a>
+                    <div class="item_name">
+                    <a  :href="'/'+product.category.slug+'/'+product.slug" >@{{ product['name_'+lang]}}</a>
+                    <div class="form-item" v-if="product.service">
+                        <input type="checkbox" id="service" v-model="product.isService">
+                        <label for="service">@{{ product.service['name_'+lang] }} + @{{parseFloat((product.service.curs.curs * product.service.price).toFixed(0))}} грн.</label>
+                    </div>
+                    </div>
                     <div class="item_count">
                         <div class="item_count_form">
                             <input type="number" id="name" min="1" :max="product.count" step="1" autocomplete="off" v-model.number="product.inBasket">
@@ -31,12 +37,12 @@
             <div class="basket-form" v-cloak v-if="basketPage.products.length">
                 <div class="one-click-product_form">
                     <div class="form-item">
-                        <label for="name">@lang('text.name'): </label>
-                        <input type="text"  id="name" autocomplete="off" v-model.trim="basketPage.person.name" ref="name">
-                    </div>
-                    <div class="form-item">
                         <label for="surname">@lang('text.surname'): </label>
                         <input type="text"  id="surname" autocomplete="off" v-model.trim="basketPage.person.surname" ref="surname">
+                    </div>
+                    <div class="form-item">
+                        <label for="name">@lang('text.name'): </label>
+                        <input type="text"  id="name" autocomplete="off" v-model.trim="basketPage.person.name" ref="name">
                     </div>
                     <div class="form-item">
                         <label for="patronymico">@lang('text.patronymico'): </label>
@@ -59,7 +65,7 @@
                         <select name="city" id="city" v-model="basketPage.person.city" ref="city">
                             <option selected disabled v-if="!cities.length" value="" >@lang('text.no-result')</option>
                             <option selected disabled v-if="cities.length" value="" >@lang('text.searched'): @{{ cities.length }}</option>
-                            <option :value="post" v-for="(post, index) in cities" :key="index">@{{ post['Description'+(lang == '' || lang == 'ru' ? 'Ru' : '')] }}</option>
+                            <option :value="post"  v-for="(post, index) in cities" :key="index">@{{ post['Description'+(lang == '' || lang == 'ru' ? 'Ru' : '')] }}</option>
                         </select>
                     </div>
                     <div class="form-item">

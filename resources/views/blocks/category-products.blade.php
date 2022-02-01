@@ -13,7 +13,7 @@
                     <h4>{{$product->{'name_'.App::getLocale()} }}</h4>
                     <span>@lang('text.articul'): {{$product->id}}</span>
                 </a>
-                <div class="description">{!! $product->{'text_'.App::getLocale()} !!}</div>
+                <div class="description">{!! $product->{'description_'.App::getLocale()} !!}</div>
             </div>
             <div class="item_price">
                 @if($product->count)

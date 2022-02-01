@@ -4,6 +4,7 @@ import vLayout from '../pages/v-layout'
 import vHome from '../pages/v-home'
 import vCategories from '../pages/v-categories'
 import vProducts from '../pages/v-products'
+import vServices from '../pages/v-services'
 import vPages from '../pages/v-pages'
 import vCurs from '../pages/v-curs'
 import vFilters from '../pages/v-filters'
@@ -88,6 +89,13 @@ const router = new Router({
                     component: vProducts,
                     props: true,
                     meta: { title: 'Товары | админка' }
+                },
+                {
+                    path: 'services',
+                    name: 'services',
+                    component: vServices,
+                    props: true,
+                    meta: { title: 'Доп.услуги | админка' }
                 },
                 {
                     path: 'pages',

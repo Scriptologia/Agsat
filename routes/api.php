@@ -36,6 +36,9 @@ Route::group(['middleware' => 'auth:sanctum', 'as' => 'api.', 'namespace' => 'Ap
 //    });
     Route::get('user/autor', 'UserController@user');
 
+    Route::apiResource('service', ServiceController::class)->missing(function (Request $request) {
+        return response()->json(['status' => false, 'message' => 'Такой услуги нет!']);
+    })->except(['edit', 'show', 'create']);
     Route::apiResource('user', UserController::class)->missing(function (Request $request) {
         return response()->json(['status' => false, 'message' => 'Такого пользователя нет!']);
     })->except(['edit', 'show', 'create']);

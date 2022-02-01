@@ -169,7 +169,7 @@
                                     </b-tab>
                                     <b-tab title="Описание">
                                         <b-card-text>
-                                            <ckeditor :editor="editor" v-model="company.text_ru" :config="editorConfig"></ckeditor>
+                                            <ckeditor :editor="editor" @ready="onReady" v-model="company.text_ru" :config="editorConfig"></ckeditor>
                                         </b-card-text>
                                     </b-tab>
                                     <b-tab title="Лого">
@@ -197,7 +197,7 @@
                                 <b-tabs card>
                                     <b-tab title="Описание">
                                         <b-card-text>
-                                            <ckeditor :editor="editor" v-model="company.text_uk" :config="editorConfig"></ckeditor>                                            <!--<Vueditor  v-model="text_ru"></Vueditor>-->
+                                            <ckeditor :editor="editor" @ready="onReady" v-model="company.text_uk" :config="editorConfig"></ckeditor>                                            <!--<Vueditor  v-model="text_ru"></Vueditor>-->
                                         </b-card-text>
                                     </b-tab>
                                 </b-tabs>
@@ -230,7 +230,7 @@
 <script>
     // import axios from 'axios'
     import {mapActions, mapMutations} from 'vuex'
-    import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+    import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
     import vMediaManager from '../components/media-manager/v-media-manager'
 
     export default {
@@ -238,9 +238,24 @@
         components: {vMediaManager},
         data() {
             return {
-                editor: ClassicEditor,
-                editorConfig: {
-                    // The configuration of the editor.
+                editor: DecoupledEditor,
+                editorConfig: { toolbar: {
+                        items: [
+                            'heading', '|',
+                            'alignment', '|',
+                            'bold', 'italic', 'strikethrough', 'underline', 'subscript', 'superscript', '|',
+                            'link', '|',
+                            'bulletedList', 'numberedList', 'todoList',
+                            'fontfamily', 'fontsize', 'fontColor', 'fontBackgroundColor', '|',
+                            'code', 'codeBlock', '|',
+                            'insertTable', '|',
+                            'outdent', 'indent', '|',
+                            'blockQuote', '|',
+                            'undo', 'redo'
+                        ],
+                        shouldNotGroupWhenFull: true
+                    },
+                    removePlugins: ['CKFinderUploadAdapter', 'CKFinder', 'EasyImage', 'Image', 'ImageCaption', 'ImageStyle', 'ImageToolbar', 'ImageUpload', 'MediaEmbed'],
                 },
                 spinner: false,
                 company: {
@@ -265,6 +280,13 @@
             }
         },
         methods: {
+            onReady( editor )  {
+                // Insert the toolbar before the editable area.
+                editor.ui.getEditableElement().parentElement.insertBefore(
+                    editor.ui.view.toolbar.element,
+                    editor.ui.getEditableElement()
+                );
+            },
             ...mapActions([
                 'GET_COMPANY', 'GET_MEDIA_FOLDERS'
             ]),
@@ -404,4 +426,9 @@
         --ck-z-modal: calc( var(--ck-z-default) + 999 );
     }
     .product-edit {user-focus: false}
+    .ck {
+        &-content {
+            background: white;
+        }
+    }
 </style>

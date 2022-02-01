@@ -28,7 +28,7 @@
         "vue-template-compiler": "^2.6.12"
     },
     "dependencies": {
-        "@ckeditor/ckeditor5-build-classic": "^31.1.0",
+        "@ckeditor/ckeditor5-build-decoupled-document": "^32.0.0",
         "@ckeditor/ckeditor5-vue2": "^1.0.5",
         "cyrillic-slug": "^1.0.1",
         "v-mask": "^2.3.0",

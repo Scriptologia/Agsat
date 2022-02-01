@@ -120,6 +120,7 @@
                     { key: 'count', sortable: true, label:'На складе, шт.'},
                     { key: 'in_basket', sortable: true, label:'Количество'},
                     { key: 'price_curs', sortable: true, label:'Цена, грн.'},
+                    { key: 'service.name', sortable: true, label:'Услуга'},
                     { key: 'price_all', sortable: true, label:'Всего, грн.'},
                     { key: 'skidka', sortable: true, label:'Скидка, %.'},
                     { key: 'curs_name', sortable: true, label:'Валюта'},
@@ -210,7 +211,8 @@
                 handler(newProducts, oldProducts) {
                     let prod = newProducts.map(function (item) {
                         // item.count < item.in_basket ? item.in_basket-- : item.price_all = item.in_basket * item.price_curs;
-                        item.price_all = item.in_basket * item.price_curs;
+                        let serv = item.isService ? parseFloat((item.service.price * item.service.curs).toFixed(0)) : 0;
+                        item.price_all = item.in_basket * ( item.price_curs + serv);
                         return item;
                     })
                     this.price = prod.reduce(function (price, item) {

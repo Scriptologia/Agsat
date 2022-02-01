@@ -78,7 +78,7 @@
                                                 >
                                                     <b-form-checkbox v-model="visible" name="check-button" switch>Отображать страницу</b-form-checkbox>
                                                 </b-form-group>
-                                            <ckeditor :editor="editor" v-model="text_ru" :config="editorConfig"></ckeditor>
+                                            <ckeditor :editor="editor" @ready="onReady" v-model="text_ru" :config="editorConfig"></ckeditor>
                                         </b-card-text>
                             </b-tab>
                             <b-tab title="Украинский">
@@ -112,7 +112,7 @@
                                             >
                                                 <b-form-tags input-id="tags_uk" v-model="tags_uk"></b-form-tags>
                                             </b-form-group>
-                                            <ckeditor :editor="editor" v-model="text_uk" :config="editorConfig"></ckeditor>                                            <!--<Vueditor  v-model="text_ru"></Vueditor>-->
+                                            <ckeditor :editor="editor" @ready="onReady" v-model="text_uk" :config="editorConfig"></ckeditor>                                            <!--<Vueditor  v-model="text_ru"></Vueditor>-->
                                         </b-card-text>
                             </b-tab>
                         </b-tabs>
@@ -143,7 +143,7 @@
 <script>
     import {mapActions, mapMutations} from 'vuex'
     import { url_slug } from 'cyrillic-slug'
-    import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
+    import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
     import vMediaManager from '../components/media-manager/v-media-manager'
 
     export default {
@@ -154,9 +154,26 @@
         },
         data() {
             return {
-                editor: ClassicEditor,
+                editor: DecoupledEditor,
                 editorConfig: {
-                    // The configuration of the editor.
+                    toolbar: {
+                        items: [
+                            'heading', '|',
+                            'alignment', '|',
+                            'bold', 'italic', 'strikethrough', 'underline', 'subscript', 'superscript', '|',
+                            'link', '|',
+                            'bulletedList', 'numberedList', 'todoList',
+                            'fontfamily', 'fontsize', 'fontColor', 'fontBackgroundColor', '|',
+                            'code', 'codeBlock', '|',
+                            'insertTable', '|',
+                            'outdent', 'indent', '|',
+                            'blockQuote', '|',
+                            'undo', 'redo'
+                        ],
+                        shouldNotGroupWhenFull: true
+                    },
+                    removePlugins: ['CKFinderUploadAdapter', 'CKFinder', 'EasyImage', 'Image', 'ImageCaption', 'ImageStyle', 'ImageToolbar', 'ImageUpload', 'MediaEmbed'],
+
                 },
                 spinner: false,
                 slug: this.page.slug,
@@ -179,6 +196,13 @@
             }
         },
         methods: {
+            onReady( editor )  {
+                // Insert the toolbar before the editable area.
+                editor.ui.getEditableElement().parentElement.insertBefore(
+                    editor.ui.view.toolbar.element,
+                    editor.ui.getEditableElement()
+                );
+            },
             ...mapActions([
                 'GET_PAGES'
             ]),
@@ -338,5 +362,10 @@
     :root {
         --ck-z-default: 100;
         --ck-z-modal: calc( var(--ck-z-default) + 999 );
+    }
+    .ck {
+        &-content {
+            background: white;
+        }
     }
 </style>

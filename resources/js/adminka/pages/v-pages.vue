@@ -160,7 +160,7 @@
                 this.infoModal.title = ''
                 this.infoModal.content = {}
             },
-            deleteCategory(item) {
+            deletePage(item) {
                 this.$bvModal.msgBoxConfirm('Вы действительно хотите удалить?', {
                     title: 'Внимание !',
                     buttonSize: 'xlg',

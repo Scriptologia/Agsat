@@ -12,6 +12,7 @@ let store = new Vuex.Store({
         curses: [],
         sliders: [],
         products: [],
+        services: [],
         filters: [],
         mediaFolders: [],
         mediaFiles: [],
@@ -26,6 +27,9 @@ let store = new Vuex.Store({
         resizes: []
     },
     mutations : {
+        SET_SERVICES_TO_STATE : (state, services = null) => {
+            state.services = services;
+        },
         SET_PAGES_TO_STATE : (state, pages = null) => {
             state.pages = pages;
         },
@@ -79,6 +83,17 @@ let store = new Vuex.Store({
         }
     },
     actions : {
+        GET_SERVICES({commit}) {
+            return axios.get('/api/service' )
+                .then((services) => {
+                    commit('SET_SERVICES_TO_STATE', services.data.services);
+                    return services.data.services;
+                })
+                .catch((error) => {
+                    console.log(error);
+                    return error;
+                })
+        },
         GET_CATEGORIES({commit}) {
             return axios.get('/api/category' )
                 .then((categories) => {
@@ -267,6 +282,7 @@ let store = new Vuex.Store({
         }
     },
     getters : {
+        SERVICES(state) { return state.services ; },
         PAGES(state) { return state.page ; },
         BASKETS(state) { return state.baskets ; },
         CURSES(state) { return state.curses ; },

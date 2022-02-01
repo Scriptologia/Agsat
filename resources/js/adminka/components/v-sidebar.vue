@@ -11,6 +11,7 @@
                                 <b-nav-item :to="{name: 'baskets'}" @click="hide" exact-active-class="active"><b-icon-cart3 class="mr-3"></b-icon-cart3>Заказы</b-nav-item>
                                 <b-nav-item :to="{name: 'company'}" @click="hide" exact-active-class="active"><b-icon-house-door class="mr-3"></b-icon-house-door>О компания</b-nav-item>
                                 <b-nav-item :to="{name: 'products'}" @click="hide" exact-active-class="active"><b-icon-cart3 class="mr-3"></b-icon-cart3>Товары</b-nav-item>
+                                <b-nav-item :to="{name: 'services'}" @click="hide" exact-active-class="active"><b-icon-tools class="mr-3"></b-icon-tools>Доп. услуги</b-nav-item>
                                 <b-nav-item  :to="{name: 'categories'}" @click="hide" exact-active-class="active"><b-icon-diagram3 class="mr-3"></b-icon-diagram3>Категории</b-nav-item>
                                 <b-nav-item  :to="{name: 'filters'}" @click="hide" exact-active-class="active"><b-icon-funnel class="mr-3"></b-icon-funnel>Фильтры</b-nav-item>
                                 <b-nav-item  :to="{name: 'sliders'}" @click="hide" exact-active-class="active"><b-icon-film rotate="90" class="mr-3"></b-icon-film>Слайдер</b-nav-item>

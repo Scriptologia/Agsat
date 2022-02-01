@@ -1,11 +1,7 @@
 main {
-  //margin-top:15px;
   margin-bottom:15px;
   flex: 1 0 auto;
   @include scroll (10px, 200px, brown, $green-deep, 8px, $green2, $green-deep);
-  //@include md {
-  //  margin-top: $header;
-  //}
   h1 {
     color:$green-deep;
     margin: 1rem 0;
@@ -16,33 +12,40 @@ main {
     flex-wrap: wrap;
     &_item {
       color:$green-deep;
-      a {
+      &_img {
+        text-align: center;
+        display: block;
+        img {
+          height: 100px;
+        }
+      }
+  a {
+    text-decoration: none;
+    h5 {
+      margin-top: 10px;
+      margin-bottom: 10px;
+      &:hover {
+        color:$red;
         text-decoration: none;
-        h5 {
-          margin-top: 10px;
-          margin-bottom: 10px;
-          &:hover {
-            color:$red;
-            text-decoration: none;
-          }
-        }
-        &:hover {
-          color:$red;
-          text-decoration: none;
-        }
       }
-      p {
-        -webkit-line-clamp: 3;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        @include sd {display: none }
-      }
-      padding:10px;
-      width:25%;
-      @include md {width:33.3% }
-      @include sd {width:50%; text-align: center; }
+    }
+    &:hover {
+      color:$red;
+      text-decoration: none;
     }
   }
+  p {
+    -webkit-line-clamp: 3;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    @include sd {display: none }
+  }
+  padding:10px;
+  width:25%;
+  @include md {width:33.3% }
+  @include sd {width:50%; text-align: center; }
+}
+}
 }
 

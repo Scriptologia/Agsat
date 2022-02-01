@@ -19,7 +19,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with('filters')->where('type','product')->get();
+        $products = Product::with(['filters', 'service'])->where('type','product')->get();
         if(!$products)  return response()->json(['status' => false, 'message' => 'Ошибка получения товаров из базы']);
 
         return response()->json(compact('products'));
@@ -44,6 +44,7 @@ class ProductController extends Controller
                 'scidka' => 'numeric|nullable',
                 'price' => 'numeric|nullable',
                 'category_id' => 'integer|nullable',
+                'service_id' => 'integer|nullable',
                 'tags_ru' => 'array|nullable',
                 'tags_uk' => 'array|nullable',
                 'text_ru' => 'string|nullable',
@@ -77,6 +78,7 @@ class ProductController extends Controller
         $product->price = $request->price;
         $product->type = $request->type;
         $product->category_id = $request->category_id;
+        $product->service_id = $request->service_id;
 
         $prod = $product->save();
         $product->filters()->attach($request->fields);
@@ -106,6 +108,7 @@ class ProductController extends Controller
                 'scidka' => 'numeric|nullable',
                 'price' => 'numeric|nullable',
                 'category_id' => 'integer|nullable',
+                'service_id' => 'nullable',
                 'tags_ru' => 'array|nullable',
                 'tags_uk' => 'array|nullable',
                 'text_ru' => 'string|nullable',
@@ -138,6 +141,7 @@ class ProductController extends Controller
         $product->price = $request->price;
         $product->type = $request->type;
         $product->category_id = $request->category_id;
+        $product->service_id = $request->service_id;
 
         $prod = $product->save();
         $product->filters()->sync($request->fields);
@@ -187,8 +191,9 @@ class ProductController extends Controller
         }
         return response()->json(['status' => false, 'message' => 'Ошибка получения доп.товаров']);
     }
+
     public function  getProduct (Request $request, Product $product) {
-        $prod = $product->with(['curs', 'category'])->get();
+        $prod = $product->with(['curs', 'category', 'service'])->get();
         if($prod) {
             return response()->json(['status' => true, 'product' => $prod]);
         }

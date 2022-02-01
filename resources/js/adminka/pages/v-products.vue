@@ -79,8 +79,6 @@
 </template>
 
 <script>
-    // import vTable from '../components/v-table'
-    // import axios from 'axios'
     import vProductEdit from '../components/v-product-edit'
     import {mapActions} from 'vuex'
     export default {
@@ -120,10 +118,10 @@
                         filterByFormatted: true
                     },
                     { key: 'skidka', sortable: true, label:'Скидка' },
-                    { key: 'img', sortable: false, label:'Изображение',
+                    { key: 'service_id', sortable: false, label:'Доп.услуга',
                         formatter: (value, key, item) => {
-                            let its = value !== null && value.length? value.find(it => it.main == true) : false
-                            return its? 'есть главная' : 'нет главной';
+                            let its = this.$store.state.services.find(it => it.id == item.service_id)
+                            return its? its.name_ru : 'нет услуги';
                         },
                         sortByFormatted: true,
                         filterByFormatted: true
@@ -157,7 +155,7 @@
         },
         methods: {
             ...mapActions([
-                'GET_CATEGORIES', 'GET_PRODUCTS', 'GET_CURSES'
+                'GET_CATEGORIES', 'GET_PRODUCTS', 'GET_CURSES', 'GET_SERVICES'
             ]),
             makeToast(append = false, message, status) {
             this.$bvToast.toast(`${message}`, {
@@ -292,6 +290,7 @@
                 obj.categories = obj.categoriesToArray(item)
             }).catch((err) => {console.log('Ошибка получения категории!', err)})
             this.GET_CURSES()
+            this.GET_SERVICES()
         },
         computed: {
             rows() {
