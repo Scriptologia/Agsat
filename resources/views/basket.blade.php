@@ -14,8 +14,8 @@
                     <div class="item_name">
                     <a  :href="'/'+product.category.slug+'/'+product.slug" >@{{ product['name_'+lang]}}</a>
                     <div class="form-item" v-if="product.service">
-                        <input type="checkbox" id="service" v-model="product.isService">
-                        <label for="service">@{{ product.service['name_'+lang] }} + @{{parseFloat((product.service.curs.curs * product.service.price).toFixed(0))}} грн.</label>
+                        <input type="checkbox" :id="product.id"  :name="product.id" v-model="product.isService" >
+                        <label :for="product.id">@{{ product.service['name_'+lang] }} + @{{parseFloat((product.service.curs.curs * product.service.price).toFixed(0))}} грн.</label>
                     </div>
                     </div>
                     <div class="item_count">

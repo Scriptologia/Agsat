@@ -72,7 +72,6 @@
 </template>
 
 <script>
-    // import axios from 'axios'
     import {mapActions, mapMutations} from 'vuex'
     import mediaManagerFolders from './media-manager-folders'
     import mediaManagerFiles from './media-manager-files'
@@ -97,7 +96,8 @@
                     maxFilesize: 5,
                     withCredentials: true,
                     headers: {
-                        "X-CSRF-TOKEN": document.head.querySelector('meta[name="csrf-token"]').content
+                        // "X-CSRF-TOKEN": localStorage.getItem('x_xsrf_token'),
+                        "X-CSRF-TOKEN": document.head.querySelector('meta[name="csrf-token"]').content,
                     }
                 },
                 name:'',

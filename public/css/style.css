@@ -1583,11 +1583,11 @@ footer .footer_pages ul li {
   min-width: 100%;
   position: relative;
 }
-.slider_wraper .slider_item > img {
+.slider_wraper .slider_item a > img {
   width: 100%;
   height: 100%;
 }
-.slider_wraper .slider_item a {
+.slider_wraper .slider_item .link {
   position: absolute;
   color: white;
   top: 50%;
