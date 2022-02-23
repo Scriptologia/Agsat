@@ -17,6 +17,7 @@ class CreateCategoriesTable extends Migration
             $table->id();
             $table->foreignId('category_id')->nullable() ->constrained('categories')->onDelete('set null');
             $table->string('slug')->nullable();
+            $table->integer('position')->default(0);
             $table->string('name_ru')->nullable();
             $table->string('description_ru')->nullable();
             $table->json('tags_ru')->nullable();

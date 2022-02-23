@@ -15,6 +15,7 @@ main {
       &_img {
         text-align: center;
         display: block;
+        height: 100px;
         img {
           height: 100px;
         }
@@ -24,6 +25,14 @@ main {
     h5 {
       margin-top: 10px;
       margin-bottom: 10px;
+      word-break: break-word;
+      text-align: center;
+      @include md {
+        font-size: 16px;
+      }
+      @include ud {
+        word-break: break-word;
+      }
       &:hover {
         color:$red;
         text-decoration: none;

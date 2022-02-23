@@ -53,6 +53,11 @@
                 <template #emptyfiltered="scope">
                     <h4>{{ empty.emptyFilteredText }}</h4>
                 </template>
+                <template #cell(position)="row">
+                    <b-form-select v-model="row.item.position" v-if="row.item.category_id === null" @change="changePosition(row.item)">
+                        <b-form-select-option :value="i" v-for="i in categoriesRoot" :key="i">{{i}}</b-form-select-option>
+                    </b-form-select>
+                </template>
                 <template #cell(edit)="row">
                     <b-icon-pencil @click="info(row.item, row.index, $event.target)" variant="primary" type="button"></b-icon-pencil>
                 </template>
@@ -95,6 +100,7 @@
                 sortDesc: false,
                 fields: [
                     { key: 'id', sortable: true },
+                    { key: 'position', label:'Позиция'},
                     { key: 'category_id', sortable: true , label:'Родительская категория',
                         formatter: (value, key, item) => {
                             let its = this.categories.find(it => it.id  == item.category_id)
@@ -134,44 +140,50 @@
                 'GET_CATEGORIES', 'GET_FILTERS'
             ]),
             makeToast(append = false, message, status) {
-            this.$bvToast.toast(`${message}`, {
-                title: status? 'Успешно' : 'Ошибка',
-                autoHideDelay: 5000,
-                appendToast: append,
-                variant: status? 'success' : 'danger'
-            })
-        },
+                this.$bvToast.toast(`${message}`, {
+                    title: status ? 'Успешно' : 'Ошибка',
+                    autoHideDelay: 5000,
+                    appendToast: append,
+                    variant: status ? 'success' : 'danger'
+                })
+            },
             onFiltered(filteredItems) {
                 // Trigger pagination to update the number of buttons/pages due to filtering
                 this.totalRows = filteredItems.length
                 this.currentPage = 1
             },
             info(item, index, button) {
-                if(item.slug)  {this.infoModal.title = `Редактирование категории: ${item.name_ru}`;}
-                else {this.infoModal.title = 'Создание категории'}
-                this.infoModal.content =  item
+                if (item.slug) {
+                    this.infoModal.title = `Редактирование категории: ${item.name_ru}`;
+                }
+                else {
+                    this.infoModal.title = 'Создание категории'
+                }
+                this.infoModal.content = item
 
                 let newArr = [];
                 this.$store.state.categories.forEach(function (it) {
                     it.lines = ''
-                    if(it.id !== item.id) {
+                    if (it.id !== item.id) {
                         it.name = it.lines + it.name_ru
                         newArr.push(it)
+
                         function toChildren(children, lines) {
                             children.forEach(function (it) {
                                 it.lines = ''
-                                it.lines = '-'+lines
-                                if(it.id !== item.id) {
+                                it.lines = '-' + lines
+                                if (it.id !== item.id) {
                                     it.name = it.lines + it.name_ru
                                     newArr.push(it)
-                                    if(it.children_categories) {
-                                        if(it.id !== item.id) toChildren(it.children_categories, it.lines);
+                                    if (it.children_categories) {
+                                        if (it.id !== item.id) toChildren(it.children_categories, it.lines);
                                     }
                                 }
                             })
                         }
-                        if(it.children_categories) {
-                            if(it.id !== item.id) toChildren(it.children_categories, it.lines, it);
+
+                        if (it.children_categories) {
+                            if (it.id !== item.id) toChildren(it.children_categories, it.lines, it);
                         }
                     }
                 })
@@ -193,15 +205,17 @@
                     footerClass: 'p-2',
                     hideHeaderClose: false,
                     centered: true,
-                    bodyBgVariant:'warning'
+                    bodyBgVariant: 'warning'
                 })
                     .then(value => {
-                        if(value) {
-                            axios.delete('/api/category/' + item.slug )
+                        if (value) {
+                            axios.delete('/api/category/' + item.slug)
                                 .then((res) => {
                                     this.makeToast(true, res.data.message, res.data.status);
-                                    if(res.data.status)  {
-                                        setTimeout(() => {this.GET_CATEGORIES()}, 1000);
+                                    if (res.data.status) {
+                                        setTimeout(() => {
+                                            this.GET_CATEGORIES()
+                                        }, 1000);
                                     }
                                 })
                                 .catch((error) => {
@@ -213,7 +227,23 @@
                     .catch(err => {
                         console.log(err)
                     })
-            }
+            },
+            changePosition(item) {
+            console.log(item)
+                let data = {
+                    slug : item.slug,
+                    id : item.id,
+                    position : item.position,
+                }
+                axios.post('/api/category-position', data)
+                    .then((res) => {
+                        this.makeToast(true, res.data.message, res.data.status);
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                        return error;
+                    });
+             }
         },
         mounted(){
             this.spinner = true
@@ -224,7 +254,7 @@
         },
         computed: {
             rows() {
-                return this.$store.state.categories.length
+                return this.treeCategories.length
             },
             treeCategories(){
                 let newArr = [];
@@ -248,10 +278,12 @@
                 return newArr;
                 // this.$store.state.categories.filter(it =>  item.id !== it.parent)
             },
+            categoriesRoot(){
+                return this.$store.state.categories.filter(it => it.category_id === null).length;
+            }
         }
     }
 </script>
 
 <style>
-
 </style>

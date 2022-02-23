@@ -16,7 +16,7 @@
                         <label for="service">@{{ product.service['name_'+lang] }} + @{{parseFloat((product.service.curs.curs * product.service.price).toFixed(0))}} грн.</label>
                     </div>
                 </div>
-                <h3 class="price">@{{ product.inBasket * parseFloat((product.price * product.curs.curs * (100-product.skidka) / 100).toFixed(0)) + parseFloat((product.isService * (product.service ? product.service.curs.curs * product.service.price : 0)).toFixed(0)) }} грн.</h3>
+                <h3 class="price">@{{ product.inBasket * (parseFloat((product.price * product.curs.curs * (100-product.skidka) / 100).toFixed(0)) + parseFloat((product.isService * (product.service ? product.service.curs.curs * product.service.price : 0)).toFixed(0)) )}} грн.</h3>
             </div>
         </div>
         <div class="one-click-product_form">

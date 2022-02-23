@@ -30,6 +30,10 @@ class Category extends Model
     {
         $this->attributes['category_id'] = $value ? $value  : null;
     }
+    public function setPositionAttribute($value)
+    {
+        $this->attributes['position'] = $value ? $value  : 1;
+    }
     public function setTagsRuAttribute($value)
     {
         $this->attributes['tags_ru'] = $value != [] ? json_encode($value) : null;
@@ -69,7 +73,7 @@ class Category extends Model
 
     public function products ()
     {
-        return $this->hasMany(Product::class);
+        return $this->belongsToMany(Product::class);
     }
 
 }

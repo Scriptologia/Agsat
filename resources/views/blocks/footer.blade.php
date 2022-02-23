@@ -16,6 +16,7 @@
         <div class="footer_pages">
             <h5>Разделы сайта:</h5>
             <ul>
+                <li><a href="{{route('contacts')}}">@lang('text.contacts')</a></li>
                 @foreach($pages as $page)
                     <li><a href="{{route('page',$page)}}">{{$page->{'name_'.App::getLocale() } }}</a></li>
                 @endforeach

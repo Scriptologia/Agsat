@@ -126,20 +126,29 @@
           .h5 {
             font-size: 20px;
             font-weight: 600;
+            @include sd {
+              font-size: 16px;
+            }
           }
           .opened {
             transition: all .5s ease-in-out;
-            height: 40px;
+            max-height: 0;
             overflow: hidden;
-            &.max-height {height:150px !important;;}
+            &.max-height {max-height:1000px;}
             ul {
               margin: 10px 0;
+            }
+            @include sd {
+              font-size: 13px;
             }
           }
           .more {
             text-transform: lowercase;
             border-bottom: 1px dashed;
             margin-left: auto;
+          }
+          .service {
+
           }
         }
         button{

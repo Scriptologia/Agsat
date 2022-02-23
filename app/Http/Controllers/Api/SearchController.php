@@ -11,7 +11,7 @@ class SearchController extends Controller
 {
     public function search (Request $request){
         $q = $request->q;
-        $products = Product::with(['curs', 'category'])->whereNotNull('category_id')
+        $products = Product::with(['curs', 'categories'])
             ->where(function ($query)  use($q) {
                 $query->where('name_ru', 'LIKE', "%{$q}%");
                 $query->orWhere('name_uk', 'LIKE', "%{$q}%");

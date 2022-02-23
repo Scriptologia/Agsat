@@ -72,6 +72,7 @@ Route::group(['middleware' => 'auth:sanctum', 'as' => 'api.', 'namespace' => 'Ap
     Route::apiResource('category', CategoryController::class)->missing(function (Request $request) {
         return response()->json(['status' => false, 'message' => 'Такой категории нет!']);
     })->except(['edit', 'show', 'create']);
+    Route::post('category-position', 'CategoryController@position');
     Route::apiResource('baskets', BasketController::class)->missing(function (Request $request) {
         return response()->json(['status' => false, 'message' => 'Такого заказа нет!']);
     })->except(['edit', 'show', 'create']);

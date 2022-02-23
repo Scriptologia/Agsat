@@ -6,12 +6,12 @@
             @foreach($dopProducts as $product)
                 <div class="item">
                 <div class="item_img">
-                    <a href="{{'/'.$product->category->slug.'/'.$product->slug}}">
+                    <a href="{{'/'.$product->categories[0]->slug.'/'.$product->slug}}">
                         <img src="{{$product->img[0]['img']}}" alt="{{$product->{'name_'.App::getLocale()} }}">
                     </a>
                 </div>
                 <div class="item_name">
-                    <a href="{{'/'.$product->category->slug.'/'.$product->slug}}">{{$product->{'name_'.App::getLocale()} }}</a>
+                    <a href="{{'/'.$product->categories[0]->slug.'/'.$product->slug}}">{{$product->{'name_'.App::getLocale()} }}</a>
                 </div>
                 <div class="item_botton">
                     <div class="price"><h4>{{round($product->price * $product->curs->curs, 0)}} </h4><span>грн.</span></div>

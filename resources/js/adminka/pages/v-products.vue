@@ -100,10 +100,9 @@
                             return item.lines? item.lines +  value : value;
                         },
                     },
-                    { key: 'category_id', sortable: true , label:'Категория',
+                    { key: 'categories', sortable: true , label:'Категория',
                         formatter: (value, key, item) => {
-                            let its = this.categories.find(it => it.id  == item.category_id)
-                            return its? its.name_ru : 'корень';
+                            return item.categories.map(it => it.name_ru).join(', ')
                         },
                         sortByFormatted: true,
                         filterByFormatted: true

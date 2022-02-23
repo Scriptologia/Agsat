@@ -59,7 +59,9 @@ class HomeController extends Controller
                     return redirect($category->slug . '/' . $newUrl);
                 }
                 //поиск товаров по фильтрам
-                $query = $category->products()->with(['category','filters']);
+                $query = $category->products()->with(['service' => function ($query) {
+                    $query->with('curs')->where('visible' , '!=', 0);
+                }, 'categories', 'curs']);
                 foreach ($arr as $subArr) {
                     $query = $query->whereHas('filters', function ($q) use ($subArr) {
                         $q->whereIn('slug', $subArr);
@@ -69,15 +71,19 @@ class HomeController extends Controller
             else { //если нет запроса на фильтрацию значит это запрос на товар
                 $product = $category->products()->with(['service' => function ($query) {
                     $query->with('curs')->where('visible' , '!=', 0);
-                }, 'category', 'curs'])->where('slug', $any)->firstOrFail();
+                }, 'categories', 'curs'])->where('slug', $any)->firstOrFail();
                 $dop = $product->dop_products ? $product->dop_products : [];
-                $dopProducts = Product::whereIn('id',$dop)->get();
+                $dopProducts = Product::whereIn('id',$dop)->with(['service' => function ($query) {
+                    $query->with('curs')->where('visible' , '!=', 0);
+                }, 'categories', 'curs'])->get();
                 return view('product', ['product'=> $product, 'dopProducts' => $dopProducts]);
             }
             $products = $query;
         }
         else {
-            $products = $category->products()->with('category');
+            $products = $category->products()->with(['service' => function ($query) {
+                $query->with('curs')->where('visible' , '!=', 0);
+            }, 'categories', 'curs']);
         }
         //отправляем на сервер результат
         if ($request->ajax()) {

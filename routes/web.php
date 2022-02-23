@@ -67,6 +67,9 @@ Route::group(['domain' => 'adminka.'.env('APP_DOMAIN'), 'as' => 'admin.', 'names
 
 
 Route::group([ 'prefix' => SetLocale::getLocale(), 'middleware' => 'setlocale'], function () {
+    Route::get('/contacts', function() {
+       return view('contacts', ['company' =>  \App\Models\Company::first()]);
+    })->name('contacts');
     Route::get('/page/{page}', 'HomeController@page')->name('page' );
     Route::get('/basket', 'HomeController@basket')->name('basket');
     Route::get('/{category}/{any?}', 'HomeController@productsOfCategory')->where('any', '.*' );

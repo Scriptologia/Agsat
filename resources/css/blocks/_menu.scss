@@ -48,6 +48,10 @@
       z-index:50;
       color:$green-deep;
       border-radius: 0 0 $border-radius $border-radius;
+      @include  sd {
+        margin:unset;
+        width:100%;
+      }
       &_first-level {
         width: 200px;
         background: $bg-menu-1;
@@ -57,6 +61,7 @@
             display: flex;
             justify-content: space-between;
             padding: 10px;
+            @include sd {font-size: 14px;}
             p:first-letter {text-transform: capitalize;}
             line-height: 90%;
             align-items: baseline;
@@ -67,6 +72,10 @@
               cursor:pointer;
             }
           }
+        }
+        @include  sd {
+          word-break: break-word;
+          min-width: 50%;
         }
       }
       &_second-level {
@@ -79,11 +88,11 @@
         @include  sd {padding: .5rem;}
         .item {
           width:auto;
+          padding:5px 10px;
           @include exlg {width:25%;}
           @include lg {width:33.3%;}
           @include md {width:50%;}
-          @include sd {width:100%;}
-          padding:5px 10px;
+          @include sd {width:100%; padding:unset;word-break: break-word;}
           .category-header {
             padding-bottom: 10px;
             display: flex;
@@ -91,6 +100,7 @@
               font-size: 20px;
               font-weight: 700;
               line-height: 80%;
+              @include sd {font-size: 16px;}
               &:first-letter {
                 text-transform: capitalize;
               }
@@ -104,6 +114,7 @@
             a {
               line-height: 80%;
               margin: 5px 0;
+              @include sd {font-size: 14px;}
               &:first-letter {text-transform: capitalize;}
             }
           }

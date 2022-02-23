@@ -195,7 +195,6 @@
 </template>
 
 <script>
-    // import axios from 'axios'
     import { url_slug } from 'cyrillic-slug'
     import vMediaManager from '../components/media-manager/v-media-manager'
     import {mapActions, mapMutations} from 'vuex'

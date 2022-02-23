@@ -33,21 +33,27 @@
                                                     </b-form-invalid-feedback>
                                                 </b-form-group>
                                             </validation-provider>
+                                            <validation-provider
+                                                    name="Категория"
+                                                    rules="required"
+                                                    v-slot="validationContext"
+                                            >
                                             <b-form-group
                                                     label="Категория:"
-                                                    label-for="category_id"
+                                                    label-for="category"
                                                     label-cols-sm="3"
                                                     label-align-sm="right"
                                             >
-                                                <b-form-select v-model="category">
-                                                    <b-form-select-option :value="{}">Корневая категория
-                                                    </b-form-select-option>
-                                                    <b-form-select-option :value="category"
-                                                                          v-for="(category,index) in categories"
-                                                                          :key="index">{{category.name}}
-                                                    </b-form-select-option>
-                                                </b-form-select>
+                                                <multiselect input-id="category" v-model="category" multiple
+                                                             :options="categories" label="name_ru" track-by="id" :hide-selected="true" :allow-empty="false"
+                                                             :state="getValidationState(validationContext)"
+                                                             aria-describedby="category-feedback">
+                                                </multiselect>
+                                                <b-form-invalid-feedback id="category-feedback">{{
+                                                    validationContext.errors[0] }}
+                                                </b-form-invalid-feedback>
                                             </b-form-group>
+                                            </validation-provider>
                                             <validation-provider
                                                     name="Slug"
                                                     :rules="{ required: true, min: 3 }"
@@ -195,7 +201,7 @@
                                     <b-tab title="Фильтры" :disabled="!filtersOfCategory.length">
                                         <b-card-text>
                                             <b-form-group :label="filter.name_ru" v-slot="{ ariaDescribedby }"
-                                                          v-for="(filter, index) in filtersOfCategory" :key="index">
+                                                          v-for="(filter,index) in filtersOfCategory" :key="index">
                                                  <b-form-radio-group v-model="fields['field'+filter.id]">
                                                 <b-form-radio
                                                 v-for="(field , key) in filter.fields"
@@ -344,11 +350,10 @@
                         items: [
                             'heading', '|',
                             'alignment', '|',
-                            'bold', 'italic', 'strikethrough', 'underline', 'subscript', 'superscript', '|',
+                            'bold', 'italic', 'strikethrough', 'underline', '|',
                             'link', '|',
-                            'bulletedList', 'numberedList', 'todoList',
+                            'bulletedList', 'numberedList',
                             'fontfamily', 'fontsize', 'fontColor', 'fontBackgroundColor', '|',
-                            'code', 'codeBlock', '|',
                             'insertTable', '|',
                             'outdent', 'indent', '|',
                             'blockQuote', '|',
@@ -365,7 +370,7 @@
                 slug: this.product.slug,
                 skidka: this.product.skidka || 0,
                 images: this.product.img || [],
-                category: {},
+                category: this.product.categories ? this.product.categories : this.categories[0],
                 service_id: this.product.service_id || null,
                 fields: {},
                 name_ru: this.product.name_ru,
@@ -451,6 +456,10 @@
                 return dirty || validated ? valid : null;
             },
             onSubmit() {
+                let filters = this.filtersOfCategory.map(it => 'field'+it.id)
+                for (let k in this.fields) {
+                    if(filters.indexOf(k) === -1) {delete this.fields[k]}
+                }
                 let fields = Object.values(this.fields)
                 if (!this.name_uk) this.name_uk = this.name_ru;
                 if (!this.description_uk) this.description_uk = this.description_ru;
@@ -467,7 +476,7 @@
                     description_uk: this.description_uk,
                     text_uk: this.text_uk,
                     tags_uk: this.tags_uk,
-                    category_id: this.category.id,
+                    category_id: this.category.map(it => it.id),
                     skidka: this.skidka,
                     price: this.price,
                     count: this.count,
@@ -500,7 +509,8 @@
         },
         computed: {
             filtersOfCategory() {
-                if(Object.keys(this.category).length) {
+                if(this.category.length) {
+                // if(Object.keys(this.category).length) {
                     let objt = this;
                     let arr = []
                     function findParent (category_id, arr){
@@ -511,7 +521,9 @@
                         }
                         return arr;
                     }
-                    arr = findParent(this.product.category_id, arr)
+                    if(this.category){
+                        arr = this.category.map(it => findParent(it.id, arr)).flat()
+                    }
                     return this.$store.state.filters.filter(function(item) {return arr.indexOf(item.id) !== -1});
                 }
                 return [];
@@ -556,11 +568,12 @@
                         console.log('Ошибка получения доп.товаров: ', error);
                     });}
 
-            let obj = this
-            if(Object.keys(this.product).length) {
-                let category = this.categories.find(it =>  it.id == obj.product.category_id)
-                this.category = typeof  category !== 'undefined'? category : {}
-            }
+            // let obj = this
+            // if(this.product.length) {
+            // // if(Object.keys(this.product).length) {
+            //     let category = this.categories.find(it =>  it.id == obj.product.category_id)
+            //     this.category = typeof  category !== 'undefined'? category : {}
+            // }
 
             if(this.product && this.product.filters){
                 let arr = {}

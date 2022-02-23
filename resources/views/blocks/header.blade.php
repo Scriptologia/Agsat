@@ -18,6 +18,7 @@
                    @foreach($pages as $page)
                    <li><a href="{{route('page',$page)}}">{{$page->{'name_'.App::getLocale() } }}</a></li>
                    @endforeach
+                    <li><a href="{{route('contacts')}}">@lang('text.contacts')</a></li>
                </ul>
                <div class="language"><i class="fal fa-globe"></i>
                    &nbsp;<a href="{{ route('setlocale', ['locale' => 'ru']) }}" @if(request()->segment('1') === 'ru') class="active" @endif><span>RU</span></a>&nbsp; |

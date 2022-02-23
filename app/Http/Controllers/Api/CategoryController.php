@@ -18,7 +18,7 @@ class CategoryController extends Controller
     public function index(Request $request)
     {
         $categories = Category::whereNull('category_id')
-            ->with('childrenCategories')
+            ->with('childrenCategories')->orderBy('position')
             ->get();
         if(!$categories)  return response()->json(['status' => false, 'message' => 'Ошибка получения категорий из базы']);
 
@@ -44,6 +44,7 @@ class CategoryController extends Controller
                 'category_id' => 'integer|nullable',
                 'filters' => 'array|nullable',
                 'scidka' => 'float|nullable',
+                'position' => 'integer|nullable',
                 'tags_ru' => 'array|nullable',
                 'tags_uk' => 'array|nullable',
                 'img' => 'nullable|string'//|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -62,6 +63,7 @@ class CategoryController extends Controller
         $cat->visible = $request->visible;
         $cat->skidka = $request->skidka;
         $cat->slug = $request->slug;
+        $cat->position = $request->position;
         $cat->filters = $request->filters;
         $cat->category_id = $request->category_id;
 
@@ -88,6 +90,7 @@ class CategoryController extends Controller
 //                'slug' => 'required|min:3|unique:categories,id,' . $request->id,
                 'category_id' => 'nullable',
                 'scidka' => 'float|nullable',
+                'position' => 'integer|nullable',
                 'filters' => 'array|nullable',
                 'tags_ru' => 'array|nullable',
                 'tags_uk' => 'array|nullable',
@@ -105,6 +108,7 @@ class CategoryController extends Controller
         $category->visible = $request->visible;
         $category->skidka = $request->skidka;
         $category->slug = $request->slug;
+        $category->position = $request->position;
         $category->filters = $request->filters;
         $category->category_id = $request->category_id;
 
@@ -124,5 +128,18 @@ class CategoryController extends Controller
         }
         if($category->delete())  return response()->json(['status' => true, 'message' => 'Успешно удалена!']);
         return response()->json(['status' => true, 'message' => 'Удалить не удалось!']);
+    }
+
+    public function position (Request $request) {
+        $category = Category::find($request->id);
+        if(!$category) return response()->json(['status' => false, 'message' => 'Такой категории нет']);
+        $validator = Validator::make($request->all(),
+            [
+                'position' => 'integer',
+            ]
+        );
+        if($validator->fails()) return response()->json(['status' => false, 'message' => $validator->messages()]);
+        if($category->update($request->all())) {return response()->json(['status' => true, 'message' => 'Успешно обновлена!']);}
+        else {return response()->json(['status' => false, 'message' => 'Категория не обнавлена.']);}
     }
 }

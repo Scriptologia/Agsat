@@ -7,12 +7,12 @@
             <div class="basket-products_items" v-cloak v-if="basketPage.products.length">
                 <div class="item" v-for="(product, index) in basketPage.products" :key="index">
                     <div class="item_img">
-                        <a :href="'/'+product.category.slug+'/'+product.slug">
+                        <a :href="'/'+product.categories[0].slug+'/'+product.slug">
                             <img :src="product.img_main">
                         </a>
                     </div>
                     <div class="item_name">
-                    <a  :href="'/'+product.category.slug+'/'+product.slug" >@{{ product['name_'+lang]}}</a>
+                    <a  :href="'/'+product.categories[0].slug+'/'+product.slug" >@{{ product['name_'+lang]}}</a>
                     <div class="form-item" v-if="product.service">
                         <input type="checkbox" :id="product.id"  :name="product.id" v-model="product.isService" >
                         <label :for="product.id">@{{ product.service['name_'+lang] }} + @{{parseFloat((product.service.curs.curs * product.service.price).toFixed(0))}} грн.</label>

@@ -1,0 +1,48 @@
+.map {
+}
+.contacts {
+  margin: 1rem 0;
+  display:flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  ul > li {
+    line-height: 150%;
+  }
+  h4 {
+    line-height: 150%;
+  }
+  &_adress {
+    width: 30%;
+    margin-bottom:1rem;
+    @include md {
+      flex: 0 0 50%;
+    }
+    @include ud {
+      flex: 0 0 100%;
+    }
+  }
+  &_contacts {
+    width: 30%;
+    margin-bottom:1rem;
+    @include md {
+      flex: 0 0 50%;
+    }
+    @include ud {
+      flex: 0 0 100%;
+    }
+  }
+  &_grafik {
+    width: 30%;
+    margin-bottom:1rem;
+    ul > li {
+      display: flex;
+      justify-content: space-between;
+    }
+    @include md {
+      flex: 0 0 50%;
+    }
+    @include ud {
+      flex: 0 0 100%;
+    }
+  }
+}

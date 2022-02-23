@@ -19,7 +19,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with(['filters', 'service'])->where('type','product')->get();
+        $products = Product::with(['filters', 'service', 'categories'])->where('type','product')->get();
         if(!$products)  return response()->json(['status' => false, 'message' => 'Ошибка получения товаров из базы']);
 
         return response()->json(compact('products'));
@@ -43,7 +43,7 @@ class ProductController extends Controller
                 'filters' => 'array|nullable',
                 'scidka' => 'numeric|nullable',
                 'price' => 'numeric|nullable',
-                'category_id' => 'integer|nullable',
+                'category_id' => 'array|nullable',
                 'service_id' => 'integer|nullable',
                 'tags_ru' => 'array|nullable',
                 'tags_uk' => 'array|nullable',
@@ -77,11 +77,12 @@ class ProductController extends Controller
         $product->count = $request->count;
         $product->price = $request->price;
         $product->type = $request->type;
-        $product->category_id = $request->category_id;
+//        $product->category_id = $request->category_id;
         $product->service_id = $request->service_id;
 
         $prod = $product->save();
         $product->filters()->attach($request->fields);
+        $product->categories()->attach($request->category_id);
 
         if($prod) {return response()->json(['status' => true, 'message' => 'Успешно создан!']);}
         else {return response()->json(['status' => false, 'message' => 'Товар не создан.']);}
@@ -107,7 +108,7 @@ class ProductController extends Controller
                 'filters' => 'string|nullable',
                 'scidka' => 'numeric|nullable',
                 'price' => 'numeric|nullable',
-                'category_id' => 'integer|nullable',
+                'category_id' => 'array|nullable',
                 'service_id' => 'nullable',
                 'tags_ru' => 'array|nullable',
                 'tags_uk' => 'array|nullable',
@@ -140,11 +141,12 @@ class ProductController extends Controller
         $product->count = $request->count;
         $product->price = $request->price;
         $product->type = $request->type;
-        $product->category_id = $request->category_id;
+//        $product->category_id = $request->category_id;
         $product->service_id = $request->service_id;
 
         $prod = $product->save();
         $product->filters()->sync($request->fields);
+        $product->categories()->sync($request->category_id);
 
         if($prod) {return response()->json(['status' => true, 'message' => 'Успешно обновлен!']);}
         else {return response()->json(['status' => false, 'message' => 'Товар не обнавлен.']);}
@@ -162,6 +164,7 @@ class ProductController extends Controller
             return response()->json(['status' => false, 'message' => 'У вас нет прав удалять']);
         }
         $product->filters()->detach();
+        $product->categories()->detach();
         if($product->delete())  return response()->json(['status' => true, 'message' => 'Успешно удален!']);
         return response()->json(['status' => true, 'message' => 'Удалить не удалось!']);
     }
