@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Filter;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -20,7 +21,10 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with(['filters', 'service', 'categories'])->where('type','product')->get();
+
+        $products = Cache::remember('products', 60*60*24, function() {
+            return Product::with(['filters', 'service', 'categories'])->where('type','product')->get();
+        });
         if(!$products)  return response()->json(['status' => false, 'message' => 'Ошибка получения товаров из базы']);
 
         return response()->json(compact('products'));

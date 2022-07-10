@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 //use App\Http\Controllers\Api\UserController;
+use App\Models\Product;
 use App\Models\User;
+use App\Observers\ProductObserver;
 use App\Policies\UserPolicy;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -38,6 +40,6 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Product::observe(ProductObserver::class);
     }
 }
