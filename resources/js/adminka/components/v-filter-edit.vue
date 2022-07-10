@@ -202,7 +202,7 @@
         props: {
             filter: Object,
         },
-        data() {
+        data: function () {
             return {
                 spinner: true,
                 id: this.filter.id || null,

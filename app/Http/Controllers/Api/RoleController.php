@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\RoleRequest;
 use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -32,24 +33,12 @@ class RoleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(RoleRequest $request)
     {
-        if (!auth()->user()->role->permissions->where('slug','role:create' )->first()) {
-            return response()->json(['status' => false, 'message' => 'У вас нет прав создавать']);
-        }
-        $validator = Validator::make($request->all(),
-            [
-                'name' => 'required|min:5|unique:roles',
-                'slug' => 'required|min:5|unique:roles',
-                'permissions' => 'array',
-                'description' => 'string|nullable',
-            ]
-        );
-        if($validator->fails()) return response()->json(['status' => false, 'message' => $validator->messages()]);
+        $validated = $request->validated();
 
-        $role = Role::create($request->except(['permissions']));
-//        $role = new Role();
-        $role->permissions()->attach($request->permissions);
+        $role = Role::create($request->safe()->except(['permissions', 'id']));
+        $role->permissions()->attach($validated['permissions']);
         if($role) {
             return response()->json(['status' => true, 'message' => 'Успешно создана!']);
         }
@@ -62,22 +51,10 @@ class RoleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Role $role)
+    public function update(RoleRequest $request, Role $role)
     {
-        if (!auth()->user()->role->permissions->where('slug','role:update' )->first()) {
-            return response()->json(['status' => false, 'message' => 'У вас нет прав редактировать']);
-        }
-        $validator = Validator::make($request->all(),
-            [
-                'name' => ['required', 'min:5',Rule::unique('roles')->ignore($role)],
-                'slug' => ['required', 'min:5',Rule::unique('roles')->ignore($role)],
-                'permissions' => 'array',
-                'description' => 'string|nullable',
-            ]
-        );
-        if($validator->fails()) return response()->json(['status' => false, 'message' => $validator->messages()]);
-
-        $role->update($request->except(['permissions']));
+        $validated = $request->validated();
+        $role->update($request->safe()->except(['permissions']));
         $role->permissions()->sync($request->permissions);
         if($role) {
             return response()->json(['status' => true, 'message' => 'Успешно обновлена!']);
@@ -93,9 +70,6 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
-        if (!auth()->user()->role->permissions->where('slug','role:delete' )->first()) {
-            return response()->json(['status' => false, 'message' => 'У вас нет прав удалять']);
-        }
         $role->permissions()->detach();
         if($role->delete())  return response()->json(['status' => true, 'message' => 'Успешно удалена!']);
         return response()->json(['status' => true, 'message' => 'Удалить не удалось!']);

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class SetLocale
 {
-    public static $mainLanguage = 'ru'; //основной язык, который не должен отображаться в URl
+    public static $mainLanguage = 'uk'; //основной язык, который не должен отображаться в URl
 
     public static $languages = ['uk', 'ru']; // Указываем, какие языки будем использовать в приложении.
     /*
@@ -19,8 +19,8 @@ class SetLocale
         $locale = Request()->segment(1);
         //Проверяем метку языка  - есть ли она среди доступных языков
         if (!empty($locale) && in_array($locale, self::$languages)) {
+//            if ($locale !== self::$mainLanguage) return null;
             return $locale;
-//            if ($locale != self::$mainLanguage) return $locale;
         }
         return null;
     }
@@ -29,9 +29,10 @@ class SetLocale
         $url = parse_url($url)['path'];
         $loc = explode('/',$url);
         if (!empty($loc[1]) && in_array($loc[1], self::$languages)) {
-//            $urlpostfix = isset($loc['2']) ? $loc[2] : '';
-            $loc[1] = $locale; $url = implode("/", $loc);
-            return $url;
+            $loc[1] = $locale;
+//            if($locale === self::$mainLanguage)  unset($loc[1]);
+            $url = implode("/", $loc);
+            return $url ;
         }
         if ( in_array($locale, self::$languages)) {
             return $url = $locale.$url ;

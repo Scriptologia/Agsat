@@ -4,12 +4,12 @@
         <div class="items" :style="{'margin-left': '-' + (200 * sliders.seeProducts.currentSlide) +'px' }">
                 <div class="item" v-for="(product, index) in seeProducts" :key="index">
                     <div class="item_img">
-                        <a :href="'/'+product.categories[0].slug+'/'+product.slug">
+                        <a :href="'/'+lang+'/'+product.categories[0].slug+'/'+product.slug">
                             <img :src="product.img.find(it => it.main).img" :alt="product['name_'+lang]">
                         </a>
                     </div>
                     <div class="item_name">
-                        <a :href="'/'+product.categories[0].slug+'/'+product.slug">@{{product['name_'+lang] }}</a>
+                        <a :href="'/'+lang+'/'+product.categories[0].slug+'/'+product.slug">@{{product['name_'+lang] }}</a>
                     </div>
                     <div class="item_botton">
                         <div class="price"><h4>@{{parseFloat((product.price * product.curs.curs).toFixed(0)) }} </h4>

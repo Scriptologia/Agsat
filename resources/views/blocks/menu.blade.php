@@ -21,12 +21,12 @@
                 <template v-if="searchResult.products && searchResult.products.length">
                     <div class="item" v-for="(product, index) in searchResult.products" :key="index">
                         <div class="item_img" v-if="product.img && product.img.find(it => it.main == true)">
-                            <a :href="'/'+product.categories[0].slug+'/'+product.slug" >
+                            <a :href="'/'+lang+'/'+product.categories[0].slug+'/'+product.slug" >
                                 <img :src="product.img.find(it => it.main == true).img"  loading="lazy">
                             </a>
                         </div>
                         <div class="item_text">
-                            <a :href="'/'+product.categories[0].slug+'/'+product.slug">
+                            <a :href="'/'+lang+'/'+product.categories[0].slug+'/'+product.slug">
                                 <h4>@{{product['name_'+lang]}}</h4>
                             </a>
                             <p class="price">@{{parseFloat((product.price * product.curs.curs).toFixed(2))}} грн.
@@ -49,10 +49,10 @@
             <div class="mega-menu_second-level">
                 <div class="item" v-for="(category, index) in children_categories" :key="index">
                     <div class="category-header">
-                        <a :href="'/'+category.slug">@{{ category['name_'+lang] }}</a>
+                        <a :href="'/'+lang+'/'+category.slug">@{{ category['name_'+lang] }}</a>
                     </div>
                     <div class="category-items" v-if="category.children_categories.length">
-                        <a :href="'/'+subcategory.slug" v-for="(subcategory, index) in category.children_categories.filter(item => item.visible == true)" :key="index">@{{ subcategory['name_'+lang] }}</a>
+                        <a :href="'/'+lang+'/'+subcategory.slug" v-for="(subcategory, index) in category.children_categories.filter(item => item.visible == true)" :key="index">@{{ subcategory['name_'+lang] }}</a>
                     </div>
                 </div>
             </div>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CursRequest;
 use App\Models\Curs;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -28,28 +29,10 @@ class CursController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CursRequest $request)
     {
-        if (!auth()->user()->role->permissions->where('slug','curs:create' )->first()) {
-            return response()->json(['status' => false, 'message' => 'У вас нет прав создавать']);
-        }
-        $validator = Validator::make($request->all(),
-            [
-                'name' => 'required|min:2',
-                'slug' => 'required|min:2|unique:curs',
-                'curs' => 'numeric',
-//                'img' => 'required|image',
-            ]
-        );
-        if($validator->fails()) return response()->json(['status' => false, 'message' => $validator->messages()]);
-
-        $curs = new Curs();
-        $curs->name = $request->name;
-        $curs->slug = $request->slug;
-        $curs->img = $request->img;
-        $curs->curs = $request->curs;
-        $curs->base = $request->base;
-        if($curs->save()) {
+        $validated = $request->validated();
+        if(Curs::create($validated)) {
             return response()->json(['status' => true, 'message' => 'Успешно создан!']);
         }
         else {return response()->json(['status' => false, 'message' => 'Валюта не создана.']);}
@@ -61,28 +44,10 @@ class CursController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Curs $cur)
+    public function update(CursRequest $request, Curs $cur)
     {
-        if (!auth()->user()->role->permissions->where('slug','curs:update' )->first()) {
-            return response()->json(['status' => false, 'message' => 'У вас нет прав редактировать']);
-        }
-        $validator = Validator::make($request->all(),
-            [
-                'name' => 'required|min:2',
-                'slug' => ['required', 'min:2',Rule::unique('curs')->ignore($cur)],
-                'curs' => 'numeric',
-//                'img' => 'required|image',
-            ]
-        );
-        if($validator->fails()) return response()->json(['status' => false, 'message' => $validator->messages()]);
-
-//        $curs = new Curs();
-        $cur->name = $request->name;
-        $cur->slug = $request->slug;
-        $cur->img = $request->img;
-        $cur->curs = $request->curs;
-        $cur->base = $request->base;
-        if($cur->save()) {
+        $validated = $request->validated();
+        if($cur->update($validated)) {
             return response()->json(['status' => true, 'message' => 'Успешно обновлен!']);
         }
         else {return response()->json(['status' => false, 'message' => 'Валюта не обновлена.']);}
@@ -96,9 +61,6 @@ class CursController extends Controller
      */
     public function destroy(Curs $cur)
     {
-        if (!auth()->user()->role->permissions->where('slug','curs:delete' )->first()) {
-            return response()->json(['status' => false, 'message' => 'У вас нет прав удалять']);
-        }
         if($cur->delete())  return response()->json(['status' => true, 'message' => 'Успешно удален!']);
         return response()->json(['status' => false, 'message' => 'Удалить не удалось!']);
     }

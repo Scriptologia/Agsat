@@ -26,7 +26,7 @@
                </div>
            </div>
            <div class="logo">
-               <a href="/">
+               <a href="{{route('home')}}">
                    <img src="{{$company->logo}}" alt="logo">
                </a>
            </div>
@@ -46,7 +46,7 @@
     <div class="logo_panel">
         <div class="container nav">
             <div class="logo">
-                <a href="/">
+                <a href="{{route('home')}}">
                     <img src="{{$company->logo}}" alt="logo">
                 </a>
             </div>

@@ -3,13 +3,13 @@
         <div class="item">
             @if($product->img)
                 <div class="item_img">
-                    <a href="/{{$category->slug}}/{{$product->slug}}">
+                    <a :href="'/'+lang+'/{{$category->slug}}/{{$product->slug}}'">
                         <img src="{{$product->img[0]['img']}}" loading="lazy">
                     </a>
                 </div>
             @endif
             <div class="item_text">
-                <a href="/{{$category->slug}}/{{$product->slug}}">
+                <a :href="'/'+lang+'/{{$category->slug}}/{{$product->slug}}'">
                     <h4>{{$product->{'name_'.App::getLocale()} }}</h4>
                     <span>@lang('text.articul'): {{$product->id}}</span>
                 </a>

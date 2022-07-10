@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Http\Middleware\SetLocale;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Blade;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,6 +27,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
 //        Paginator::useBootstrap();
-        Paginator::defaultView('blocks.paginator');
+        Paginator::defaultView('blocks.paginator');//
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\FilterRequest;
 use App\Models\Category;
 use App\Models\Filter;
 use Illuminate\Http\Request;
@@ -23,47 +24,16 @@ class FilterController extends Controller
 
         return response()->json(compact('filters'));
     }
-    public function store(Request $request)
+    public function store(FilterRequest $request)
     {
-        if (!auth()->user()->role->permissions->where('slug','filter:create' )->first()) {
-            return response()->json(['status' => false, 'message' => 'У вас нет прав создавать']);
-        }
-        $validator = Validator::make($request->all(),
-            [
-                'name_ru' => 'required|min:3',
-                'name_uk' => 'required|min:3',
-                'slug' => 'required|min:3|unique:filters',
-                'filter_id' => 'string|nullable',
-                'fields' => 'array'
-            ]
-        );
-        if($validator->fails()) return response()->json(['status' => false, 'message' => $validator->messages()]);
-
-        $filter = new Filter();
-        $filter->name_ru = $request->name_ru;
-        $filter->name_uk = $request->name_uk;
-        $filter->visible = $request->visible;
-        $filter->slug = $request->slug;
-        if($filter->save()) {
-            $fields= $request->fields;
+        $validated = $request->validated();
+        if(Filter::create($request->safe()->except(['filter_id', 'fields']))) {
+            $fields= $validated['fields'];
             if($fields) {
-                $validator = Validator::make($fields,
-                    [
-                        'fields.*.slug' => 'required|min:3|unique:filters',
-                        'fields.*.value_ru' => 'required|min:3|unique:filters',
-                        'fields.*.value_uk' => 'required|min:3|unique:filters',
-                    ]
-                );
-                if($validator->fails()) return response()->json(['status' => false, 'message' => $validator->messages()]);
-
-                $filter_id= Filter::where('slug' , $request->slug)->first()->id;
+                $filter_id= Filter::where('slug' , $validated['slug'])->first()->id;
                 foreach($fields as $field) {
-                    $filter = new Filter();
-                    $filter->filter_id = $filter_id;
-                    $filter->slug = $field['slug'];
-                    $filter->value_ru = $field['value_ru'];
-                    $filter->value_uk = $field['value_uk'];
-                    if(!$filter->save()) return response()->json(['status' => false, 'message' => 'Поле фильтра '.$field->value_ru.' не создано.']);
+                    $field['filter_id'] = $filter_id;
+                    if(!Filter::create($field)) return response()->json(['status' => false, 'message' => 'Поле фильтра '.$field->value_ru.' не создано.']);
                 }
             }
             return response()->json(['status' => true, 'message' => 'Успешно создан!']);
@@ -77,46 +47,15 @@ class FilterController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Filter $filter)
+    public function update(FilterRequest $request, Filter $filter)
     {
-        if (!auth()->user()->role->permissions->where('slug','filter:update' )->first()) {
-            return response()->json(['status' => false, 'message' => 'У вас нет прав редактировать']);
-        }
-//        $filter = Filter::where('slug' , $filter)->first();
-//        if(!$filter) return response()->json(['status' => false, 'message' => 'Такого фильтра нет!']);
-
-        $validator = Validator::make($request->all(),
-            [
-                'name_ru' => 'required|min:3',
-                'slug' => ['required', 'min:3',Rule::unique('filters')->ignore($filter)],
-                'filter_id' => 'nullable',
-                'fields' => 'array'
-            ]
-        );
-        if($validator->fails()) return response()->json(['status' => false, 'message' => $validator->messages()]);
-
-        $filter->name_ru = $request->name_ru;
-        $filter->name_uk = $request->name_uk;
-        $filter->visible = $request->visible;
-        $filter->slug = $request->slug;
-
-        if($filter->save()) {
+        if($filter->update($request->safe()->except(['filter_id', 'fields']))) {
             $fields= $request->fields;
             if($fields) {
-                $validator = Validator::make($fields,
-                    [
-                        'fields.*.slug' => 'required|min:3',
-                        'fields.*.value_ru' => 'required|min:3',
-                        'fields.*.value_uk' => 'required|min:3',
-                    ]
-                );
-                if($validator->fails()) return response()->json(['status' => false, 'message' => $validator->messages()]);
-
                 $filter_id= $filter->id;
                 foreach($fields as $field) {
-                    $add = $field['id'];
                     $filter = Filter::where('slug', $field['slug'])->first();
-                    if($filter && $filter->id !== $add) return response()->json(['status' => false, 'message' => 'Slug '.$filter->slug.' занят']);
+                    if($filter && $filter->id !== $field['id']) return response()->json(['status' => false, 'message' => 'Slug '.$filter->slug.' занят']);
                     if($filter) {
                         $filter->slug = $field['slug'];
                         $filter->value_ru = $field['value_ru'];
@@ -145,14 +84,11 @@ class FilterController extends Controller
      */
     public function destroy(Filter $filter)
     {
-        if (!auth()->user()->role->permissions->where('slug','filter:delete' )->first()) {
-            return response()->json(['status' => false, 'message' => 'У вас нет прав удалять']);
-        }
         if($filter->delete())  return response()->json(['status' => true, 'message' => 'Успешно удален!']);
         return response()->json(['status' => true, 'message' => 'Удалить не удалось!']);
     }
 
-    public function getFilters (Request $request, Category $category){
+    public function getFilters (FilterRequest $request, Category $category){
         $filt = $this->getFilterParents($category);
         $ids = collect($filt)->flatten()->unique();
         $filters = Filter::with('fields')->whereIn('id', $ids)->get();

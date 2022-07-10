@@ -53,7 +53,7 @@ Route::group(['prefix' => 'adminka', 'as' => 'admin.'], function () {
     });
 });
 
-Route::get('setlocale/{locale}', function ($locale) {
+Route::get('setlocale/{locale}', function (\Illuminate\Http\Request  $request, $locale) {
     if (! in_array($locale, ['uk', 'ru'])) {abort(400); }
     App::setLocale($locale);
     $url = url()->previous();
@@ -66,15 +66,18 @@ Route::group(['domain' => 'adminka.'.env('APP_DOMAIN'), 'as' => 'admin.', 'names
 });
 
 
-Route::group([ 'prefix' => SetLocale::getLocale(), 'middleware' => 'setlocale'], function () {
+Route::group([ 'prefix' => SetLocale::getLocale()], function () {
+
+//    dd(App::getLocale());
     Route::get('/contacts', function() {
        return view('contacts', ['company' =>  \App\Models\Company::first()]);
     })->name('contacts');
     Route::get('/page/{page}', 'HomeController@page')->name('page' );
     Route::get('/basket', 'HomeController@basket')->name('basket');
-    Route::get('/{category}/{any?}', 'HomeController@productsOfCategory')->where('any', '.*' );
-    Route::get('/', 'HomeController@index');
+    Route::get('/{category}/{any?}', 'HomeController@productsOfCategory')->where('any', '.*' )->name('category');
+    Route::get('/', 'HomeController@index')->name('home');
 });
+
 //Route::group([ 'namespace' => 'Api'], function () {
 //    Route::post('/api/basket-from-frontend', 'BasketController@createFromFrontend');
 //});
@@ -83,5 +86,3 @@ Route::group([ 'prefix' => SetLocale::getLocale(), 'middleware' => 'setlocale'],
 //    Route::post('/basket-from-frontend', 'BasketController@createFromFrontend');
 //});
 Auth::routes();
-
-

@@ -369,6 +369,7 @@
                 productsOfCategory:[],
                 slug: this.product.slug,
                 skidka: this.product.skidka || 0,
+                id: this.product.id || null,
                 images: this.product.img || [],
                 category: this.product.categories ? this.product.categories : this.categories[0],
                 service_id: this.product.service_id || null,
@@ -467,6 +468,7 @@
                 if (!this.tags_uk || this.tags_uk == null) this.tags_uk = this.tags_ru;
                 let dop_products = this.dopProducts && this.dopProducts.length? this.dopProducts.map(item => item.id) : null;
                 let data = {
+                    id: this.id,
                     dop_products: dop_products,
                     name_ru: this.name_ru,
                     description_ru: this.description_ru,
@@ -502,8 +504,9 @@
                             }, 1000)
                         }
                     })
-                    .catch(function (error) {
-                        console.log('Ошибка загрузки или обновлениея товара : ', error);
+                    .catch( (error)  => {
+                        this.makeToast(true, this.toastMessage(error.response.data.errors), false);
+                        console.log('Ошибка загрузки или обновлениея товара : ', error.response.data);
                     });
             }
         },

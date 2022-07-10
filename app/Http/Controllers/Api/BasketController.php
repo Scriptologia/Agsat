@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\BasketRequest;
 use App\Models\Basket;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -28,36 +29,12 @@ class BasketController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(BasketRequest $request)
     {
-        if (!auth()->user()->role->permissions->where('slug','basket:create' )->first()) {
-            return response()->json(['status' => false, 'message' => 'У вас нет прав создавать']);
-        }
-        $validator = Validator::make($request->all(),
-            [
-                'products' => 'array|required',
-                'person' => 'array|required',
-                'person.name' => 'string|required',
-                'person.surname' => 'string|required',
-                'person.patronymico' => 'string|required',
-                'person.phone' => 'string|required',
-                'person.city' => 'string|required',
-                'person.region' => 'string|required',
-                'person.post' => 'string|required',
-                'is_closed' => 'boolean|nullable',
-            ]
-        );
-        if($validator->fails()) return response()->json(['status' => false, 'message' => $validator->messages()]);
+        $validated = $request->validated();
+        $basket = Basket::create($validated);
 
-        $basket = new Basket();
-        $basket->products = $request->products;
-        $basket->person = $request->person;
-        $basket->price = $request->price;
-        $basket->is_closed = $request->is_closed;
-
-        $prod = $basket->save();
-
-        if($prod) {return response()->json(['status' => true, 'message' => 'Успешно создан!']);}
+        if($basket) {return response()->json(['status' => true, 'message' => 'Успешно создан!']);}
         else {return response()->json(['status' => false, 'message' => 'Заказ не создан.']);}
     }
     /**
@@ -67,40 +44,18 @@ class BasketController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Basket $basket)
+    public function update(BasketRequest $request, Basket $basket)
     {
-        if (!auth()->user()->role->permissions->where('slug','basket:update' )->first()) {
-            return response()->json(['status' => false, 'message' => 'У вас нет прав редактировать']);
-        }
-        $validator = Validator::make($request->all(),
-            [
-                'products' => 'array|required',
-                'person' => 'array|required',
-                'person.name' => 'string|required',
-                'person.surname' => 'string|required',
-                'person.patronymico' => 'string|required',
-                'person.phone' => 'string|required',
-                'person.city' => 'string|required',
-                'person.region' => 'string|required',
-                'person.post' => 'string|required',
-                'is_closed' => 'boolean|nullable',
-            ]
-        );
-        if($validator->fails()) return response()->json(['status' => false, 'message' => $validator->messages()]);
-
-        $basket->products = $request->products;
-        $basket->person = $request->person;
-        $basket->price = $request->price;
-        $basket->is_closed = $request->is_closed;
+        $validated = $request->validated();
         if($request->is_closed) {
             foreach($request->products as $product) {
                 Product::where('id', $product['id'])->update(['count'=> $product['count'] - $product['in_basket']]);
             }
         }
 
-        $prod = $basket->save();
+        $basket = $basket->update($validated);
 
-        if($prod) {return response()->json(['status' => true, 'message' => 'Успешно обновлен!']);}
+        if($basket) {return response()->json(['status' => true, 'message' => 'Успешно обновлен!']);}
         else {return response()->json(['status' => false, 'message' => 'Заказ не обнавлен.']);}
     }
 
@@ -112,42 +67,17 @@ class BasketController extends Controller
      */
     public function destroy(Basket $basket)
     {
-        if (!auth()->user()->role->permissions->where('slug','basket:delete' )->first()) {
-            return response()->json(['status' => false, 'message' => 'У вас нет прав удалять']);
-        }
-
         if($basket->delete())  return response()->json(['status' => true, 'message' => 'Успешно удален!']);
         return response()->json(['status' => true, 'message' => 'Удалить не удалось!']);
     }
 
-    public function createFromFrontend (Request $request)
+    public function createFromFrontend (BasketRequest $request)
     {
         if($request->ajax()){
-            $validator = Validator::make($request->all(),
-                [
-                    'products' => 'array|required',
-                    'person' => 'array|required',
-                    'person.name' => 'string|required',
-                    'person.surname' => 'string|required',
-                    'person.patronymico' => 'string|required',
-                    'person.phone' => 'string|required',
-                    'person.city' => 'string|required',
-                    'person.region' => 'string|required',
-                    'person.post' => 'string|required',
-                    'is_closed' => 'boolean|nullable',
-                ]
-            );
-            if($validator->fails()) return response()->json(['status' => false, 'message' => $validator->messages()]);
+            $validated = $request->validated();
+            $basket = Basket::create($validated);
 
-            $basket = new Basket();
-            $basket->products = $request->products;
-            $basket->person = $request->person;
-            $basket->price = $request->price;
-            $basket->is_closed = $request->is_closed;
-
-            $prod = $basket->save();
-
-            if($prod) {return response()->json(['status' => true, 'message' => 'Успешно создан!']);}
+            if($basket) {return response()->json(['status' => true, 'message' => 'Успешно создан!']);}
             else {return response()->json(['status' => false, 'message' => 'Заказ не создан.']);}
         }
     }

@@ -29,20 +29,9 @@ class ResizeController extends Controller
      */
     public function store(Request $request)
     {
-        if (!auth()->user()->role->permissions->where('slug','resize:create' )->first()) {
-            return response()->json(['status' => false, 'message' => 'У вас нет прав создавать']);
-        }
-        $validator = Validator::make($request->all(),
-            [
-                'name' => 'required|min:3',
-                'width' => 'integer|min: 2',
-                'height' => 'integer|min: 2',
-                'resizeMimeType' => 'string|nullable'
-            ]
-        );
-        if($validator->fails()) return response()->json(['status' => false, 'message' => $validator->messages()]);
+        $validated = $request->validated();
 
-        if(Resize::create($request->all())) {
+        if(Resize::create($validated)) {
             return response()->json(['status' => true, 'message' => 'Успешно создан!']);
         }
         else {return response()->json(['status' => false, 'message' => 'Размер не создан.']);}
@@ -56,20 +45,9 @@ class ResizeController extends Controller
      */
     public function update(Request $request, Resize $resize)
     {
-        if (!auth()->user()->role->permissions->where('slug','resize:update' )->first()) {
-            return response()->json(['status' => false, 'message' => 'У вас нет прав редактировать']);
-        }
-        $validator = Validator::make($request->all(),
-            [
-                'name' => 'required|min:3',
-                'width' => 'integer|min: 2',
-                'height' => 'integer|min: 2',
-                'resizeMimeType' => 'string|nullable'
-            ]
-        );
-        if($validator->fails()) return response()->json(['status' => false, 'message' => $validator->messages()]);
+        $validated = $request->validated();
 
-        if($resize->update($request->all())) {
+        if($resize->update($validated)) {
             return response()->json(['status' => true, 'message' => 'Успешно обновлен!']);
         }
         else {return response()->json(['status' => false, 'message' => 'Размер не обновлен.']);}
@@ -82,9 +60,6 @@ class ResizeController extends Controller
      */
     public function destroy(Resize $resize)
     {
-        if (!auth()->user()->role->permissions->where('slug','resize:delete' )->first()) {
-            return response()->json(['status' => false, 'message' => 'У вас нет прав удалять']);
-        }
         if($resize->delete())  return response()->json(['status' => true, 'message' => 'Успешно удален!']);
         return response()->json(['status' => false, 'message' => 'Удалить не удалось!']);
     }

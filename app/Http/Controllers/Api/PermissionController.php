@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\PermissionRequest;
 use App\Models\Permission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -20,7 +21,8 @@ class PermissionController extends Controller
         if (auth()->user()->role->slug !== 'superadmin') {
             $permissions = Permission::whereNotIn('slug', array('permission:create', 'permission:update', 'permission:delete'))->get();}
         else {
-            $permissions = Permission::get();}
+            $permissions = Permission::get();
+        }
         if(!$permissions)  return response()->json(['status' => false, 'message' => 'Ошибка получения прав из базы']);
 
         return response()->json(compact('permissions'));
@@ -31,19 +33,8 @@ class PermissionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PermissionRequest $request)
     {
-        if (!auth()->user()->role->permissions->where('slug','permission:create' )->first()) {
-            return response()->json(['status' => false, 'message' => 'У вас нет прав создавать']);
-        }
-        $validator = Validator::make($request->all(),
-        [
-            'slug' => 'required|min:5|unique:permissions',
-            'description' => 'string|nullable',
-        ]
-    );
-        if($validator->fails()) return response()->json(['status' => false, 'message' => $validator->messages()]);
-
         if(Permission::create($request->all())) {
             return response()->json(['status' => true, 'message' => 'Успешно создано!']);
         }
@@ -56,19 +47,10 @@ class PermissionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Permission $permission)
+    public function update(PermissionRequest $request, Permission $permission)
     {
-        if (!auth()->user()->role->permissions->where('slug','permission:update' )->first()) {
-            return response()->json(['status' => false, 'message' => 'У вас нет прав редактировать']);
-        }
-        $validator = Validator::make($request->all(),
-            [
-                'slug' => ['required', 'min:5',Rule::unique('permissions')->ignore($permission)],
-                'description' => 'string|nullable',
-            ]
-        );
-        if($validator->fails()) return response()->json(['status' => false, 'message' => $validator->messages()]);
-        if($permission->update($request->all())) {
+        $validated = $request->validated();
+        if($permission->update($validated)) {
             return response()->json(['status' => true, 'message' => 'Успешно обновлено!']);
         }
         else {return response()->json(['status' => false, 'message' => 'Право не обновлено.']);}
@@ -81,9 +63,6 @@ class PermissionController extends Controller
      */
     public function destroy(Permission $permission)
     {
-        if (!auth()->user()->role->permissions->where('slug','permission:delete' )->first()) {
-            return response()->json(['status' => false, 'message' => 'У вас нет прав удалять']);
-        }
         if($permission->delete())  return response()->json(['status' => true, 'message' => 'Успешно удалено!']);
         return response()->json(['status' => false, 'message' => 'Удалить не удалось!']);
     }

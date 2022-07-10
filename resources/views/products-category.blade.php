@@ -27,12 +27,12 @@
                         <div class="item" v-if="filteredProducts.data.length"
                              v-for="(product, index) in filteredProducts.data" :key="index">
                                     <div class="item_img" v-if="product.img">
-                                        <a :href="'/'+category+'/'+product.slug">
+                                        <a :href="'/'+lang+'/'+category+'/'+product.slug">
                                             <img :src="product.img.find(it => it.main).img" loading="lazy">
                                         </a>
                                     </div>
                                 <div class="item_text">
-                                    <a :href="'/'+category+'/'+product.slug">
+                                    <a :href="'/'+lang+'/'+category+'/'+product.slug">
                                         <h4>@{{ product['name_'+lang] }}</h4>
                                         <span>Артикул: @{{product.id}}</span>
                                     </a>
