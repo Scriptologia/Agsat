@@ -38,8 +38,8 @@ const app = new Vue({
                         id: it.id,
                         slug: it.slug,
                         name: it.name_ru,
-                        category_id: it.category_id,
-                        category_slug: it.category.slug,
+                        category_id: it.categories[0].id,
+                        category_slug: it.categories[0].slug,
                         isService: it.isService,
                         price: it.price,
                         skidka: it.skidka,
@@ -67,7 +67,7 @@ const app = new Vue({
                 }
                 let data = {products, person, price:this.basketPage.price}
                 axios({
-                    url: 'api/basket-from-frontend',
+                    url: this.domain+'/api/basket-from-frontend',
                     data,
                     headers: {
                         'Content-Type': 'application/json',
@@ -144,7 +144,7 @@ const app = new Vue({
                 let data = {products : [prod], person, price}
                 if(!this.product.errors.length) {
                     axios({
-                        url: '/api/basket-from-frontend',
+                        url: this.domain+'/api/basket-from-frontend',
                         data,
                         headers: {
                             'Content-Type': 'application/json',
@@ -217,7 +217,7 @@ const app = new Vue({
                 });
         },
         axiosSearch(){
-                axios('/api/search?q=' + this.search)
+                axios(this.domain+'/api/search?q=' + this.search)
                     .then(res => {
                         this.searchResult = res.data.message
                     })
@@ -311,12 +311,13 @@ const app = new Vue({
         }
     },
     mounted(){
+        this.damain = window.location.origin
         this.currentPage = window.location.search
         let arr = window.location.pathname.split('/')
         arrN = arr.filter(it => !this.arrLang.includes(it))
         this.category = arrN[0]
         if(arrN[0] && !this.noLinks.includes(arrN[0])) {
-            axios(`/api/get-filters/${arrN[0]}`)
+            axios(this.domain+`api/get-filters/${arrN[0]}`)
                 .then(res => {
                   filters = res.data.message;
                     if(filters.length) {
@@ -344,10 +345,10 @@ const app = new Vue({
             )
         }
 
-        axios('/api/get-categories')
+        axios(this.domain+'/api/get-categories')
             .then(res => this.categories = res.data.categories.filter(item => item.visible === true))
             .catch(err => console.log(err))
-        axios('/api/get-sliders')
+        axios(this.domain+'/api/get-sliders')
             .then(res => { this.sliders.main = {img: res.data.sliders, currentSlide: 0} ;  })
             .catch(err => console.log(err))
         if(this.sliderInterval > 0 && this.autoplaySlider) {

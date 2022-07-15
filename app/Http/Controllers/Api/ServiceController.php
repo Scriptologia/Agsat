@@ -10,6 +10,16 @@ use Illuminate\Support\Facades\Validator;
 
 class ServiceController extends Controller
 {
+    /**
+     * Create the controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->authorizeResource(Service::class, 'service');
+    }
+
     public function index()
     {
         $services = Service::get();

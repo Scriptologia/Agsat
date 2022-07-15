@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\SetLocale;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group(['middleware' => 'auth:sanctum', 'as' => 'api.', 'namespace' => 'Api'], function () {
-    Route::get('get-categories', 'CategoryController@index')->withoutMiddleware(['auth:sanctum']);
+    Route::get('get-categories', 'CategoryController@index')->withoutMiddleware(['auth:sanctum', 'can']);
     Route::get('get-filters/{category}', 'FilterController@getFilters')->withoutMiddleware(['auth:sanctum']);
     Route::get('get-products-of-category/{category}', 'ProductController@getProductsOfCategory');
     Route::get('get-dop-products/{product}', 'ProductController@getDopProducts');
@@ -78,3 +79,7 @@ Route::group(['middleware' => 'auth:sanctum', 'as' => 'api.', 'namespace' => 'Ap
     })->except(['edit', 'show', 'create']);
 
 });
+
+
+Route::get('/chat', 'ChatController@getMessage');
+Route::post('/chat', 'ChatController@sendMessage');

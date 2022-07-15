@@ -25,6 +25,7 @@ class BasketRequest extends FormRequest
     {
         return [
             'products' => 'array|required',
+            'price' => 'numeric|required',
             'person' => 'array|required',
             'person.name' => 'string|required',
             'person.surname' => 'string|required',

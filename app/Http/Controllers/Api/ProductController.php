@@ -15,6 +15,15 @@ use Illuminate\Validation\Rule;
 class ProductController extends Controller
 {
     /**
+     * Create the controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->authorizeResource(Product::class, 'product');
+    }
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -84,7 +93,7 @@ class ProductController extends Controller
         return response()->json(compact('products'));
     }
 
-    public function  getDopProducts (ProductRequest $request, Product $product) {
+    public function  getDopProducts (Request $request, Product $product) {
         $dopProducts = null;
         if($product->dop_products) $dopProducts = Product::whereIn('id',$product->dop_products)->get();
         if($dopProducts) {
@@ -93,7 +102,7 @@ class ProductController extends Controller
         return response()->json(['status' => false, 'message' => 'Ошибка получения доп.товаров']);
     }
 
-    public function  getProductsCount (ProductRequest $request) {
+    public function  getProductsCount (Request $request) {
         $products = $request->all();
 
         $products_count = Product::whereIn('id',array_column($products , 'id'))->get();

@@ -19,6 +19,7 @@
                    <li><a href="{{route('page',$page)}}">{{$page->{'name_'.App::getLocale() } }}</a></li>
                    @endforeach
                     <li><a href="{{route('contacts')}}">@lang('text.contacts')</a></li>
+                    <li><a href="{{route('chat')}}">@lang('text.chat')</a></li>
                </ul>
                <div class="language"><i class="fal fa-globe"></i>
                    &nbsp;<a href="{{ route('setlocale', ['locale' => 'ru']) }}" @if(request()->segment('1') === 'ru') class="active" @endif><span>RU</span></a>&nbsp; |
@@ -31,7 +32,8 @@
                </a>
            </div>
            <div class="right">
-               <div class="contacts"><i class="fas fa-phone fa-rotate-90" @click="showModal('contacts')"></i>
+               <div class="contacts">
+                   <i class="fas fa-phone fa-rotate-90" @click="showModal('contacts')"></i>
                </div>
                <div class="basket"  v-cloak>
                    <a href="{{route('basket')}}">

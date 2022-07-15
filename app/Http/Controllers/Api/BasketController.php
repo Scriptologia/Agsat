@@ -6,11 +6,22 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\BasketRequest;
 use App\Models\Basket;
 use App\Models\Product;
+use App\Notifications\SendZakazToTelegramNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Validator;
 
 class BasketController extends Controller
 {
+    /**
+     * Create the controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->authorizeResource(Basket::class, 'basket');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -29,12 +40,14 @@ class BasketController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(BasketRequest $request)
+    public function store(Request $request)
     {
-        $validated = $request->validated();
-        $basket = Basket::create($validated);
+//        $validated = $request->validated();
+        $basket = Basket::create($request->all());
 
-        if($basket) {return response()->json(['status' => true, 'message' => 'Успешно создан!']);}
+        if($basket) {
+            return response()->json(['status' => true, 'message' => 'Успешно создан!']);
+        }
         else {return response()->json(['status' => false, 'message' => 'Заказ не создан.']);}
     }
     /**
@@ -44,16 +57,16 @@ class BasketController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(BasketRequest $request, Basket $basket)
+    public function update(Request $request, Basket $basket)
     {
-        $validated = $request->validated();
+//        $validated = $request->validated();
         if($request->is_closed) {
             foreach($request->products as $product) {
                 Product::where('id', $product['id'])->update(['count'=> $product['count'] - $product['in_basket']]);
             }
         }
 
-        $basket = $basket->update($validated);
+        $basket = $basket->update($request->all());
 
         if($basket) {return response()->json(['status' => true, 'message' => 'Успешно обновлен!']);}
         else {return response()->json(['status' => false, 'message' => 'Заказ не обнавлен.']);}
@@ -77,7 +90,9 @@ class BasketController extends Controller
             $validated = $request->validated();
             $basket = Basket::create($validated);
 
-            if($basket) {return response()->json(['status' => true, 'message' => 'Успешно создан!']);}
+            if($basket) {
+
+                return response()->json(['status' => true, 'message' => 'Успешно создан!']);}
             else {return response()->json(['status' => false, 'message' => 'Заказ не создан.']);}
         }
     }

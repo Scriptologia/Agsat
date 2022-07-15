@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Artisan;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 Route::group(['prefix' => 'adminka', 'as' => 'admin.'], function () {
     /** Миграции со сбросом данных **/
     Route::get('/migrate/fresh', function () {
@@ -65,24 +66,16 @@ Route::group(['domain' => 'adminka.'.env('APP_DOMAIN'), 'as' => 'admin.', 'names
        Route::get('/{any}', 'HomeController@index')->where('any', '.*' );
 });
 
-
 Route::group([ 'prefix' => SetLocale::getLocale()], function () {
-
-//    dd(App::getLocale());
+    Auth::routes();
+    Route::get('/', 'HomeController@index')->name('home');
+    Route::get('/chat', 'ChatController@index')->middleware('auth')->name('chat');
     Route::get('/contacts', function() {
        return view('contacts', ['company' =>  \App\Models\Company::first()]);
     })->name('contacts');
     Route::get('/page/{page}', 'HomeController@page')->name('page' );
     Route::get('/basket', 'HomeController@basket')->name('basket');
     Route::get('/{category}/{any?}', 'HomeController@productsOfCategory')->where('any', '.*' )->name('category');
-    Route::get('/', 'HomeController@index')->name('home');
+
+
 });
-
-//Route::group([ 'namespace' => 'Api'], function () {
-//    Route::post('/api/basket-from-frontend', 'BasketController@createFromFrontend');
-//});
-
-//Route::group(['namespace' => 'Api'], function () {
-//    Route::post('/basket-from-frontend', 'BasketController@createFromFrontend');
-//});
-Auth::routes();

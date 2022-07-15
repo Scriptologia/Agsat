@@ -12,6 +12,7 @@ const mix = require('laravel-mix');
  */
 
 mix.js('resources/js/adminka/main.js', 'public/admin/js/app.js')
+     .js('resources/js/public/chat.js', 'public/js/chat.js')
     .vue( {"globalStyles": "resources/sass/app.scss"})
     .sass('resources/sass/app.scss', 'public/admin/css')
     .sourceMaps()

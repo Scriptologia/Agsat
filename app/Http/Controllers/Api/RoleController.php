@@ -12,6 +12,15 @@ use Illuminate\Validation\Rule;
 class RoleController extends Controller
 {
     /**
+     * Create the controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->authorizeResource(Role::class, 'role');
+    }
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response

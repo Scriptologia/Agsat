@@ -11,6 +11,15 @@ use Illuminate\Support\Facades\Validator;
 class CompanyController extends Controller
 {
     /**
+     * Create the controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->authorizeResource(Company::class, 'company');
+    }
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response

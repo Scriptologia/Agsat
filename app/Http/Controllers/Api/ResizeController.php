@@ -10,6 +10,15 @@ use Illuminate\Support\Facades\Validator;
 class ResizeController extends Controller
 {
     /**
+     * Create the controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->authorizeResource(Resize::class, 'resize');
+    }
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
