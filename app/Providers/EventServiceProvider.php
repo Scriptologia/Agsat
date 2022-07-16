@@ -20,7 +20,7 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        User::class => UserPolicy::class,
+//        User::class => UserPolicy::class,
     ];
     /**
      * The event listener mappings for the application.
