@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\BasketRequest;
 use App\Models\Basket;
 use App\Models\Product;
-use App\Notifications\SendZakazToTelegramNotification;
+use App\Jobs\SendZakazToTelegramJob;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Validator;
@@ -91,7 +91,7 @@ class BasketController extends Controller
             $basket = Basket::create($validated);
 
             if($basket) {
-
+                dispatch(new SendZakazToTelegramJob($basket));
                 return response()->json(['status' => true, 'message' => 'Успешно создан!']);}
             else {return response()->json(['status' => false, 'message' => 'Заказ не создан.']);}
         }
