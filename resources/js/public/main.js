@@ -317,7 +317,7 @@ const app = new Vue({
         arrN = arr.filter(it => !this.arrLang.includes(it))
         this.category = arrN[0]
         if(arrN[0] && !this.noLinks.includes(arrN[0])) {
-            axios(this.domain+`api/get-filters/${arrN[0]}`)
+            axios(this.domain+`/api/get-filters/${arrN[0]}`)
                 .then(res => {
                   filters = res.data.message;
                     if(filters.length) {

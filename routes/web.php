@@ -54,11 +54,9 @@ Route::group(['prefix' => 'adminka', 'as' => 'admin.'], function () {
     });
 });
 
-Route::get('setlocale/{locale}', function (\Illuminate\Http\Request  $request, $locale) {
-    if (! in_array($locale, ['uk', 'ru'])) {abort(400); }
-    App::setLocale($locale);
-    $url = url()->previous();
-    $url = SetLocale::getUrl($locale, $url);
+Route::get('setlocale/{locale}', function ($locale, \Illuminate\Http\Request $request) {
+//    if ( ! in_array($locale, SetLocale::$languages)) {abort(400); }
+    $url = SetLocale::getUrl($locale);
     return redirect()->to($url );
 })->name('setlocale');
 

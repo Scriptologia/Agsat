@@ -10,33 +10,35 @@ class SetLocale
     public static $mainLanguage = 'uk'; //основной язык, который не должен отображаться в URl
 
     public static $languages = ['uk', 'ru']; // Указываем, какие языки будем использовать в приложении.
-    /*
-     * Проверяет наличие корректной метки языка в текущем URL
-     * Возвращает метку или значеие null, если нет метки
-     */
+
     public static function getLocale()
     {
         $locale = Request()->segment(1);
-        //Проверяем метку языка  - есть ли она среди доступных языков
-        if (!empty($locale) && in_array($locale, self::$languages)) {
-//            if ($locale !== self::$mainLanguage) return null;
+        if (!empty($locale) && in_array($locale, self::$languages) && $locale !== self::$mainLanguage) {
             return $locale;
         }
-        return null;
+        return '';
     }
 
-    public static function getUrl ($locale, $url){
+    public static function getUrl ($locale) {
+        app()->setLocale($locale);
+        $url = url()->previous();
         $url = parse_url($url)['path'];
         $loc = explode('/',$url);
-        if (!empty($loc[1]) && in_array($loc[1], self::$languages)) {
+        if (!empty($loc[1]) && in_array($loc[1], self::$languages) ) {
             $loc[1] = $locale;
-//            if($locale === self::$mainLanguage)  unset($loc[1]);
+            if($locale === self::$mainLanguage) {
+                unset($loc[1]);
+            }
             $url = implode("/", $loc);
-            return $url ;
         }
-        if ( in_array($locale, self::$languages)) {
-            return $url = $locale.$url ;
+        else {
+            if($locale === self::$mainLanguage) {
+                $locale = '';
+            }
+            $url = $locale.implode("/", $loc);
         }
+        return $url;
     }
     /**
      * Handle an incoming request.
@@ -47,9 +49,9 @@ class SetLocale
      */
     public function handle(Request $request, Closure $next)
     {
+//        $locale = ltrim(Request()->route()->getPrefix(), '/');
         $locale = self::getLocale();
         if($locale) app()->setLocale($locale);
-        //если метки нет - устанавливаем основной язык $mainLanguage
         else app()->setLocale(self::$mainLanguage);
         return $next($request);
     }

@@ -49,10 +49,10 @@
             <div class="mega-menu_second-level">
                 <div class="item" v-for="(category, index) in children_categories" :key="index">
                     <div class="category-header">
-                        <a :href="'/'+lang+'/'+category.slug">@{{ category['name_'+lang] }}</a>
+                        <a :href="lang+'/'+category.slug">@{{ category['name_'+lang] }}</a>
                     </div>
                     <div class="category-items" v-if="category.children_categories.length">
-                        <a :href="'/'+lang+'/'+subcategory.slug" v-for="(subcategory, index) in category.children_categories.filter(item => item.visible == true)" :key="index">@{{ subcategory['name_'+lang] }}</a>
+                        <a :href="lang+'/'+subcategory.slug" v-for="(subcategory, index) in category.children_categories.filter(item => item.visible == true)" :key="index">@{{ subcategory['name_'+lang] }}</a>
                     </div>
                 </div>
             </div>
