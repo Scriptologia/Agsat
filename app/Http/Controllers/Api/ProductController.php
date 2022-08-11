@@ -28,11 +28,10 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-
         $products = Cache::remember('products', 60*60*24, function() {
-            return Product::with(['filters', 'service', 'categories'])->where('type','product')->get();
+            return Product::with(['filters', 'service', 'categories'])->search($request)->where('type','product')->get();
         });
         if(!$products)  return response()->json(['status' => false, 'message' => 'Ошибка получения товаров из базы']);
 

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory, Searchable;
     protected $casts = [
         'visible' => 'boolean',
         'dop_products' => 'array',
@@ -17,6 +17,10 @@ class Product extends Model
         'price' => 'float',
         'scidka' => 'float',
         'img' => 'array',
+    ];
+    protected $searchFields = [
+        'name_ru', 'name_uk', 'description_ru', 'description_uk', 'text_ru',
+        'text_uk', 'price', 'skidka'
     ];
     protected $guarded = [];
 

@@ -64,8 +64,10 @@ Route::group(['domain' => 'adminka.'.env('APP_DOMAIN'), 'as' => 'admin.', 'names
        Route::get('/{any}', 'HomeController@index')->where('any', '.*' );
 });
 
-Route::group([ 'prefix' => SetLocale::getLocale()], function () {
+Route::group(['prefix' => SetLocale::getLocale()], function () {
+
     Auth::routes();
+
     Route::get('/', 'HomeController@index')->name('home');
     Route::get('/chat', 'ChatController@index')->middleware('auth')->name('chat');
     Route::get('/contacts', function() {

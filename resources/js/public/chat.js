@@ -67,7 +67,7 @@ const app = new Vue({
     methods: {
         send (){
             if(this.text !== '') {
-                axios.post('api/chat', {body: this.text, client_1 : this.auth.id, client_2 : this.user.id})
+                axios.post('api/chat', { body: this.text, client_1 : this.auth.id, client_2 : this.user.id })
                 this.messages.push(this.text)
                 this.text = ''
             }
@@ -82,8 +82,8 @@ const app = new Vue({
     computed: {
         channel () {
             let chat
-            if(this.auth.id > this.user.id ) {chat = this.user.id + '.' + this.auth.id}
-            else{chat = this.auth.id + '.' + this.user.id}
+            if(this.auth.id > this.user.id ) { chat = this.user.id + '.' + this.auth.id }
+            else{ chat = this.auth.id + '.' + this.user.id }
             return  window.Echo.join('chat.' + chat)
         }
     },
